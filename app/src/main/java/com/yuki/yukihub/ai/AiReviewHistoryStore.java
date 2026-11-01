@@ -31,8 +31,8 @@ public final class AiReviewHistoryStore {
         public AiReviewResult result;
 
         public String displayTitle() {
-            String title = result == null ? "AI 周点评" : result.title;
-            String date = createdAt > 0 ? new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(new Date(createdAt)) : "未知时间";
+            String title = result == null ? "AI Week Review" : result.title;
+            String date = createdAt > 0 ? new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(new Date(createdAt)) : "Unknown time";
             return date + " · " + title;
         }
 
@@ -44,7 +44,7 @@ public final class AiReviewHistoryStore {
                         .append(new SimpleDateFormat("MM-dd", Locale.getDefault()).format(new Date(periodEnd)))
                         .append(" · ");
             }
-            sb.append(gameCount).append(" 款 · ").append(sessionCount).append(" 次");
+            sb.append(gameCount).append("Payment ·").append(sessionCount).append(" 次");
             if (provider != null && !provider.isEmpty()) sb.append(" · ").append(AiReviewSettings.providerLabel(provider));
             if (model != null && !model.isEmpty()) sb.append("/").append(model);
             if (persona != null && !persona.isEmpty()) sb.append(" · ").append(AiReviewSettings.personaLabel(persona));

@@ -664,7 +664,7 @@ private void handleHomeTargetIntent(Intent intent) {
 
     private void launchGameFromHome(long gameId) {
         if (gameId <= 0L) {
-            Toast.makeText(this, "无法识别要启动的游戏", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The game to launch cannot be recognized", Toast.LENGTH_SHORT).show();
             return;
         }
         Game target = null;
@@ -686,7 +686,7 @@ private void handleHomeTargetIntent(Intent intent) {
             }
         }
         if (target == null) {
-            Toast.makeText(this, "游戏不存在或已被删除", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The game does not exist or has been deleted", Toast.LENGTH_SHORT).show();
             return;
         }
         selectedGame = target;
@@ -741,9 +741,9 @@ private void handleHomeTargetIntent(Intent intent) {
             if (Build.VERSION.SDK_INT >= 30) {
                 if (!Environment.isExternalStorageManager()) {
                     new AlertDialog.Builder(this)
-                            .setTitle("需要文件访问权限")
+                            .setTitle("File access required")
                             .setMessage("内置引擎（KRKR / FVP）需要访问外部存储来读取游戏文件。请在系统页面允许“管理所有文件”。")
-                            .setPositiveButton("去授权", (d, w) -> {
+                            .setPositiveButton("To authorize", (d, w) -> {
                                 try {
                                     Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                                     intent.setData(Uri.parse("package:" + getPackageName()));
@@ -752,7 +752,7 @@ private void handleHomeTargetIntent(Intent intent) {
                                     try { startActivity(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)); } catch (Throwable ignored) { }
                                 }
                             })
-                            .setNegativeButton("稍后", null)
+                            .setNegativeButton("Later", null)
                             .show();
                 }
             } else if (Build.VERSION.SDK_INT >= 23) {
@@ -798,7 +798,7 @@ boolean changed = addOrReplaceScanRoot(uri.toString(), pendingScanRootReplaceInd
 pendingScanRootReplaceIndex = -2;
 if (changed) {
 refreshActiveScanRootListUi();
-Toast.makeText(MainActivity.this, "扫描目录已更新", Toast.LENGTH_SHORT).show();
+Toast.makeText(MainActivity.this, "Scan catalog updated", Toast.LENGTH_SHORT).show();
 maybePromptNoMedia(uri.toString());
 }
 } else {
@@ -819,7 +819,7 @@ pendingScanRootReplaceIndex = -2;
                     List<String> options = buildLaunchOptions(pendingDirUri);
                     ArrayAdapter<String> adapter = krSpinnerAdapter(options.toArray(new String[0]));
                     launchSp.setAdapter(adapter);
-                    ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedCover)).setText(emptyText(pendingCoverUri, "未选择封面"));
+                    ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedCover)).setText(emptyText(pendingCoverUri, "No cover selected"));
                     updateClearDirButton(pendingEditDialog.findViewById(R.id.btnClearDir), pendingDirUri);
                 }
             }
@@ -828,11 +828,11 @@ pendingScanRootReplaceIndex = -2;
             if (uri != null) {
                 pendingCoverUri = copyCoverToInternalStorage(uri);
                 if (pendingEditDialog != null) {
-                    ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedCover)).setText(pendingCoverUri == null ? "封面复制失败" : pendingCoverUri);
+                    ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedCover)).setText(pendingCoverUri == null ? "Cover copy failed" : pendingCoverUri);
                 } else {
                     // 对话框已随 Activity 重建丢失：不再静默，提示并尝试用快照恢复
                     Toast.makeText(MainActivity.this,
-                            pendingCoverUri == null ? "封面复制失败" : "封面已选择，正在恢复编辑窗口…",
+                            pendingCoverUri == null ? "Cover copy failed" : "Cover selected, restoring editing window...",
                             Toast.LENGTH_SHORT).show();
                     if (lastEditDialogState != null) {
                         final Bundle s = lastEditDialogState;
@@ -846,7 +846,7 @@ profileAvatarLauncher = registerForActivityResult(new ActivityResultContracts.Ge
             if (uri != null) {
                 String avatar = copyImageToInternalStorage(uri, "avatars", "avatar_", 320, 90);
                 if (avatar == null || avatar.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "头像保存失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Avatar failed to save", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 prefs.edit().putString(KEY_PROFILE_AVATAR, avatar).remove(KEY_AUTH_AVATAR).apply();
@@ -865,24 +865,24 @@ profileAvatarLauncher = registerForActivityResult(new ActivityResultContracts.Ge
             if (uri != null) {
 String bg = copyImageToInternalStorage(uri, "backgrounds", "bg_", 1920, 88);
                 if (bg == null || bg.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "背景保存失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Background saving failed", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 replaceCustomBackground(bg, "image");
                 applyCustomBackground();
-                Toast.makeText(MainActivity.this, "已设置图片背景", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Image background set", Toast.LENGTH_SHORT).show();
             }
         });
         videoBackgroundPickerLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
             if (uri != null) {
                 String bg = copyVideoToInternalStorage(uri);
                 if (bg == null || bg.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "视频背景保存失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Video background saving failed", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 replaceCustomBackground(bg, "video");
                 applyCustomBackground();
-                Toast.makeText(MainActivity.this, "已设置视频背景", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Video background set", Toast.LENGTH_SHORT).show();
             }
         });
         // 游戏内虚拟鼠标：光标图标选择（复制到内部存储，避免 content Uri 授权失效）
@@ -890,7 +890,7 @@ String bg = copyImageToInternalStorage(uri, "backgrounds", "bg_", 1920, 88);
             if (uri == null) return;
             String saved = copyImageToInternalStorage(uri, "cursors", "cursor_", 512, 100);
             if (saved == null || saved.isEmpty()) {
-                Toast.makeText(MainActivity.this, "光标图标保存失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Cursor icon failed to save", Toast.LENGTH_SHORT).show();
                 return;
             }
             // 必须改设置对话框正在持有的那个 cfg，不能另 load 一份 ——
@@ -906,8 +906,8 @@ String bg = copyImageToInternalStorage(uri, "backgrounds", "bg_", 1920, 88);
             }
             cfg.save(this);
             if (gameCursorPreview != null) gameCursorPreview.refresh(cfg);
-            if (gameCursorSourceStatus != null) gameCursorSourceStatus.setText("当前：自定义图片");
-            Toast.makeText(MainActivity.this, "光标图标已更新，游戏内实时生效", Toast.LENGTH_SHORT).show();
+            if (gameCursorSourceStatus != null) gameCursorSourceStatus.setText("Current: Custom image");
+            Toast.makeText(MainActivity.this, "The cursor icon has been updated and takes effect in real time in the game", Toast.LENGTH_SHORT).show();
         });
         // 游戏内虚拟鼠标：Windows 光标包（.ani/.cur）整包导入
         cursorSchemePickerLauncher = registerForActivityResult(
@@ -920,7 +920,7 @@ String bg = copyImageToInternalStorage(uri, "backgrounds", "bg_", 1920, 88);
             if (uri == null) return;
             String saved = copyFvpFontToInternalStorage(uri);
             if (saved == null || saved.isEmpty()) {
-                Toast.makeText(MainActivity.this, "字体文件保存失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Failed to save font file", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (fvpEditingPrefs != null) {
@@ -932,9 +932,9 @@ String bg = copyImageToInternalStorage(uri, "backgrounds", "bg_", 1920, 88);
                 p.save(this, fvpEditingGameId);
             }
             if (fvpFontPathView != null) {
-                fvpFontPathView.setText("当前：自定义字体（" + new File(saved).getName() + "）");
+                fvpFontPathView.setText("Current: Custom font (" + new File(saved).getName() + "）");
             }
-            Toast.makeText(MainActivity.this, "已选择字体，点「保存」后下次启动生效", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "The font has been selected. Click \"Save\" to take effect next time you start it.", Toast.LENGTH_SHORT).show();
         });
 
         backupCreateLauncher = registerForActivityResult(new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
@@ -1055,7 +1055,7 @@ private void repairMissingMetadataCoversIfNeeded() {
                         if (g.id == selectedGame.id) { selectedGame = g; break; }
                     }
                 }
-                Toast.makeText(MainActivity.this, "已恢复 " + finalChanged + " 个同步封面", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Restored" + finalChanged + "Synchronized covers", Toast.LENGTH_SHORT).show();
             }
         });
     });
@@ -1254,7 +1254,7 @@ private void scheduleVideoThemeExtraction() {
                 applyDynamicThemeInner(null);
             } catch (Throwable ignored) { }
             try {
-                Toast.makeText(this, "主题颜色异常，已恢复默认主题", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "The theme color is abnormal and the default theme has been restored", Toast.LENGTH_SHORT).show();
             } catch (Throwable ignored) { }
         }
     }
@@ -1572,9 +1572,9 @@ private void refreshLibraryActionStyles(ThemeColorExtractor.ThemeColors colors) 
     View scan = findViewById(R.id.btnScan);
     ActionButtonStyle.apply(scan, ActionButtonStyle.TOOL, colors);
     styleIconAction(findViewById(R.id.tvScanLabel), ActionButtonStyle.TOOL,
-            R.drawable.ic_st_search, " 扫描", colors);
+            R.drawable.ic_st_search, "Scanning", colors);
     styleIconAction(findViewById(R.id.btnAdd), ActionButtonStyle.TOOL,
-            R.drawable.ic_st_plus, " 添加", colors);
+            R.drawable.ic_st_plus, "Add to", colors);
     styleIconAction(findViewById(R.id.btnSettings), ActionButtonStyle.TOOL,
             R.drawable.ic_btn_settings, " 设置", colors);
     styleIconAction(findViewById(R.id.sideBtnLaunch), ActionButtonStyle.PRIMARY,
@@ -1855,7 +1855,7 @@ private void startBackgroundMediaPlayer(TextureView textureView, Uri uri) {
             player.start();
         });
         mp.setOnErrorListener((player, what, extra) -> {
-            Toast.makeText(MainActivity.this, "视频背景播放失败，请尝试更换视频格式", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Video background playback failed, please try changing the video format", Toast.LENGTH_SHORT).show();
             releaseBackgroundMediaPlayer();
             return true;
         });
@@ -1949,11 +1949,11 @@ private String copyImageToInternalStorage(Uri uri, String folder, String prefix,
                 Log.i("YukiHub", "persisted read-only tree permission: " + uri);
             } catch (Exception readDenied) {
                 Log.w("YukiHub", "persist tree permission failed: " + uri, readDenied);
-                Toast.makeText(this, "目录授权保存失败，请重新选择 TF 卡目录", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Directory authorization saving failed, please select the TF card directory again.", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             Log.w("YukiHub", "persist tree permission failed: " + uri, e);
-            Toast.makeText(this, "目录授权保存失败，请重新选择 TF 卡目录", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Directory authorization saving failed, please select the TF card directory again.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -2033,7 +2033,7 @@ if (dir == null || !dir.isDirectory()) return null;
         String lower = name.toLowerCase(Locale.ROOT);
         if (lower.equals("cover.jpg") || lower.equals("cover.png") || lower.equals("cover.webp")) return 100;
         if (lower.equals("folder.jpg") || lower.equals("folder.png") || lower.equals("folder.webp")) return 95;
-        if (lower.contains("cover") || lower.contains("folder") || lower.contains("封面")) return 80;
+        if (lower.contains("cover") || lower.contains("folder") || lower.contains("Cover")) return 80;
         if (lower.contains("poster") || lower.contains("package") || lower.contains("main")) return 60;
         return 10;
     }
@@ -2078,7 +2078,7 @@ sideBtnLaunch = findViewById(R.id.sideBtnLaunch);
         prepareManualClickFeedback(sideTranslateToggle);
         // 用 ImageSpan 把开始/选项图标紧贴文字并垂直居中（不走 drawableStart，避免图标与文字分离）
         setIconedText(sideBtnLaunch, R.drawable.ic_btn_play, " 开始", getColorCompat(R.color.yh_action_primary_text));
-        setIconedText(sideBtnOptions, R.drawable.ic_btn_settings, " 选项", -1);
+        setIconedText(sideBtnOptions, R.drawable.ic_btn_settings, "Options", -1);
         sideBtnLaunch.setOnClickListener(v -> { clickFeedback(v); if (selectedGame != null) launchGame(selectedGame); });
         sideBtnOptions.setOnClickListener(v -> { clickFeedback(v); if (selectedGame != null) showSideOptions(selectedGame); });
         sideDescToggle.setOnClickListener(v -> { clickFeedback(v); sideDescExpanded = !sideDescExpanded; renderSideDescription(); });
@@ -2123,12 +2123,12 @@ View addButton = findViewById(R.id.btnAdd);
         // 顶栏深色工具按钮：浅色文字，图标同色
         if (addButton instanceof TextView) {
             com.yuki.yukihub.util.IconedText.set((TextView) addButton,
-                    R.drawable.ic_st_plus, " 添加", 9f, getColorCompat(R.color.yh_action_tool_text));
+                    R.drawable.ic_st_plus, "Add to", 9f, getColorCompat(R.color.yh_action_tool_text));
         }
         TextView scanLabel = findViewById(R.id.tvScanLabel);
         if (scanLabel != null) {
             com.yuki.yukihub.util.IconedText.set(scanLabel,
-                    R.drawable.ic_st_search, " 扫描", 9f, getColorCompat(R.color.yh_action_tool_text));
+                    R.drawable.ic_st_search, "Scanning", 9f, getColorCompat(R.color.yh_action_tool_text));
         }
         ivScanLoading = findViewById(R.id.ivScanLoading);
         applyTopActionFeedback(addButton);
@@ -2335,7 +2335,7 @@ private void showProfileDialog() {
         editNameBtn.setImageResource(R.drawable.ic_edit_pencil);
         editNameBtn.setColorFilter(getColorCompat(R.color.yh_text_muted));
         editNameBtn.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        editNameBtn.setContentDescription("修改昵称");
+        editNameBtn.setContentDescription("Modify nickname");
         int ep = dp(4);
         editNameBtn.setPadding(ep, ep, ep, ep);
         editNameBtn.setOnClickListener(v -> showCloudNicknameDialog(nameView));
@@ -2346,7 +2346,7 @@ private void showProfileDialog() {
     TextView statsView = new TextView(this);
     String uid = prefs == null ? "" : prefs.getString(KEY_AUTH_UID, "");
     String uidStr = uid.isEmpty() ? "" : "UID: " + uid + "  ·  ";
-    statsView.setText(uidStr + allGames.size() + " Games · " + TimeFormatUtil.playTime(total) + "\n" + emptyText(currentSignature, "这个人还没有写签名"));
+    statsView.setText(uidStr + allGames.size() + " Games · " + TimeFormatUtil.playTime(total) + "\n" + emptyText(currentSignature, "This person has not written a signature yet"));
     statsView.setTextColor(getColorCompat(R.color.yh_text_muted));
     statsView.setTextSize(12);
     statsView.setPadding(0, dp(5), 0, 0);
@@ -2381,8 +2381,8 @@ private void showProfileDialog() {
                 final boolean checked = lv.optBoolean("todayCheckedIn", false);
                 runOnUiThread(() -> {
                     levelView.setText(maxed
-                            ? ("Lv." + level + " · " + totalExp + " EXP · 已满级")
-                            : ("Lv." + level + " · " + totalExp + "/" + nextTotal + " EXP") + (checked ? " · 已签到" : ""));
+                            ? ("Lv." + level + " · " + totalExp + "EXP·Maximum level")
+                            : ("Lv." + level + " · " + totalExp + "/" + nextTotal + " EXP") + (checked ? "· Signed in" : ""));
                     levelView.setTextColor(levelColorForLevel(level));
                 });
             } catch (Throwable t) {
@@ -2396,7 +2396,7 @@ private void showProfileDialog() {
     root.addView(header);
 
     TextView avatarHint = new TextView(this);
-    avatarHint.setText(isLoggedIn() ? "当前为云账户，退出登录后会恢复本地资料显示。" : "当前为本地账户：昵称、头像和游戏数据只保存在本机。登录后可开启云同步和好友/聊天。点击头像可更换头像。");
+    avatarHint.setText(isLoggedIn() ? "It is currently a cloud account. After logging out, local data display will be restored." : "Currently a local account: nickname, avatar and game data are only saved locally. After logging in, you can enable cloud synchronization and friends/chat. Click on the avatar to change the avatar.");
     avatarHint.setTextColor(primaryTextColor());
     avatarHint.setTextSize(11);
     avatarHint.setPadding(0, dp(6), 0, dp(8));
@@ -2404,15 +2404,15 @@ private void showProfileDialog() {
 
     LinearLayout accountRow = new LinearLayout(this);
     accountRow.setOrientation(LinearLayout.HORIZONTAL);
-    Button loginBtn = krButton(isLoggedIn() ? "账号设置" : "登录 / 注册");
-    Button syncBtn = krButton("云同步");
+    Button loginBtn = krButton(isLoggedIn() ? "Account settings" : "登录 / 注册");
+    Button syncBtn = krButton("Cloud sync");
     loginBtn.setTextColor(primaryTextColor());
     syncBtn.setTextColor(isLoggedIn() ? primaryTextColor() : getColorCompat(R.color.yh_text_muted));
     syncBtn.setEnabled(isLoggedIn());
     loginBtn.setOnClickListener(v -> showAuthPlaceholderDialog());
     syncBtn.setOnClickListener(v -> {
         if (!isLoggedIn()) {
-            Toast.makeText(this, "登录后即可使用云同步", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Log in to use cloud sync", Toast.LENGTH_SHORT).show();
             return;
         }
         doServerSync(false);
@@ -2435,12 +2435,12 @@ private void showProfileDialog() {
     iconLp.setMargins(0, 0, dp(6), 0);
     kunRow.addView(kunIcon, iconLp);
     TextView kunStatus = new TextView(this);
-    kunStatus.setText(kungalBound() ? "NextMoe · 已绑定" : "NextMoe · 未绑定");
+    kunStatus.setText(kungalBound() ? "NextMoe · Bound" : "NextMoe · Unbound");
     kunStatus.setTextColor(kungalBound() ? 0xFFE8FFE9 : getColorCompat(R.color.yh_text_muted));
     kunStatus.setTextSize(12);
     kunStatus.setGravity(android.view.Gravity.CENTER_VERTICAL);
     kunRow.addView(kunStatus, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-    Button kunBindBtn = krButton(kungalBound() ? "已绑定" : "绑定 NextMoe");
+    Button kunBindBtn = krButton(kungalBound() ? "Bound" : "Bind NextMoe");
     kunBindBtn.setTextColor(kungalBound() ? getColorCompat(R.color.yh_text_muted) : primaryTextColor());
     kunBindBtn.setEnabled(isLoggedIn() && !kungalBound());
     kunBindBtn.setOnClickListener(v -> startKungalBindOAuth());
@@ -2461,12 +2461,12 @@ private void showProfileDialog() {
     hikariIconLp.setMargins(0, 0, dp(6), 0);
     hikariRow.addView(hikariIcon, hikariIconLp);
     TextView hikariStatus = new TextView(this);
-    hikariStatus.setText(hikarinagiBound() ? "Hikarinagi · 已绑定" : "Hikarinagi · 未绑定");
+    hikariStatus.setText(hikarinagiBound() ? "Hikarinagi · Bound" : "Hikarinagi · Unbound");
     hikariStatus.setTextColor(hikarinagiBound() ? 0xFFE8FFE9 : getColorCompat(R.color.yh_text_muted));
     hikariStatus.setTextSize(12);
     hikariStatus.setGravity(android.view.Gravity.CENTER_VERTICAL);
     hikariRow.addView(hikariStatus, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-    Button hikariBindBtn = krButton(hikarinagiBound() ? "已绑定" : "绑定 Hikarinagi");
+    Button hikariBindBtn = krButton(hikarinagiBound() ? "Bound" : "Binding Hikarinagi");
     hikariBindBtn.setTextColor(hikarinagiBound() ? getColorCompat(R.color.yh_text_muted) : primaryTextColor());
     hikariBindBtn.setEnabled(isLoggedIn() && !hikarinagiBound());
     hikariBindBtn.setOnClickListener(v -> startHikarinagiBindOAuth());
@@ -2478,39 +2478,39 @@ private void showProfileDialog() {
     LinearLayout statCards = new LinearLayout(this);
     statCards.setOrientation(LinearLayout.HORIZONTAL);
     statCards.setPadding(0, dp(2), 0, dp(10));
-    statCards.addView(profileStatCard("游戏", String.valueOf(allGames.size())), new LinearLayout.LayoutParams(0, dp(48), 1));
+    statCards.addView(profileStatCard("Games", String.valueOf(allGames.size())), new LinearLayout.LayoutParams(0, dp(48), 1));
     LinearLayout.LayoutParams statMid = new LinearLayout.LayoutParams(0, dp(48), 1);
     statMid.setMargins(dp(6), 0, dp(6), 0);
-    statCards.addView(profileStatCard("总时长", TimeFormatUtil.playTime(total)), statMid);
-    statCards.addView(profileStatCard("今日", TimeFormatUtil.playTime(todayTotalPlayTime())), new LinearLayout.LayoutParams(0, dp(48), 1));
+    statCards.addView(profileStatCard("Total duration", TimeFormatUtil.playTime(total)), statMid);
+    statCards.addView(profileStatCard("Today", TimeFormatUtil.playTime(todayTotalPlayTime())), new LinearLayout.LayoutParams(0, dp(48), 1));
     root.addView(statCards);
 
-    Button aiReviewBtn = krButton("AI 周点评");
+    Button aiReviewBtn = krButton("AI Week Review");
     aiReviewBtn.setTextColor(primaryTextColor());
     aiReviewBtn.setOnClickListener(v -> aiReviewController.showAiReviewDialog());
     root.addView(aiReviewBtn, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
     TextView aiReviewHint = new TextView(this);
-    aiReviewHint.setText("根据最近 7 天游玩记录生成小恶魔式锐评；只发送游戏名和统计，不发送路径、存档或账号信息。");
+    aiReviewHint.setText("Generate a little devil's critical review based on the play records of the last 7 days; only the game name and statistics will be sent, but the path, archive or account information will not be sent.");
     aiReviewHint.setTextColor(getColorCompat(R.color.yh_text_muted));
     aiReviewHint.setTextSize(10);
     aiReviewHint.setPadding(0, dp(5), 0, dp(8));
     root.addView(aiReviewHint);
 
-    TextView nameLabel = profileLabel("昵称");
+    TextView nameLabel = profileLabel("Nickname");
     root.addView(nameLabel);
-    EditText nameInput = profileEdit(localName, "输入昵称");
+    EditText nameInput = profileEdit(localName, "Enter nickname");
     root.addView(nameInput, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
 
-    TextView signLabel = profileLabel("个人签名");
+    TextView signLabel = profileLabel("Personal signature");
     signLabel.setPadding(0, dp(10), 0, dp(4));
     root.addView(signLabel);
-    EditText signatureInput = profileEdit(currentSignature, "写点什么，比如：今天也要认真补完一部作品");
+    EditText signatureInput = profileEdit(currentSignature, "Write something, for example: I have to finish a work seriously today.");
     signatureInput.setSingleLine(false);
     signatureInput.setMinLines(2);
     signatureInput.setGravity(android.view.Gravity.TOP | android.view.Gravity.START);
     root.addView(signatureInput, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(62)));
 
-    TextView activityTitle = profileLabel("今日动态");
+    TextView activityTitle = profileLabel("Today's news");
     activityTitle.setPadding(0, dp(12), 0, dp(4));
     root.addView(activityTitle);
     TextView activity = new TextView(this);
@@ -2522,7 +2522,7 @@ private void showProfileDialog() {
     activity.setPadding(dp(10), dp(8), dp(10), dp(8));
     root.addView(activity, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-    TextView recentTitle = profileLabel("最近动态");
+    TextView recentTitle = profileLabel("Latest news");
     recentTitle.setPadding(0, dp(12), 0, dp(4));
     root.addView(recentTitle);
     LinearLayout feedList = new LinearLayout(this);
@@ -2530,15 +2530,15 @@ private void showProfileDialog() {
     buildRecentActivityViews(feedList);
     root.addView(feedList, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-    TextView backupTitle = profileLabel("同步中心");
+    TextView backupTitle = profileLabel("Sync center");
     backupTitle.setPadding(0, dp(12), 0, dp(4));
     root.addView(backupTitle);
-    Button syncCenterBtn = krButton("打开同步中心");
+    Button syncCenterBtn = krButton("Open sync center");
     syncCenterBtn.setTextColor(primaryTextColor());
     syncCenterBtn.setOnClickListener(v -> showWebDavSettingsDialog());
     root.addView(syncCenterBtn, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
     TextView backupHint = new TextView(this);
-    backupHint.setText("同步中心里包含 WebDAV 云同步、测试连接、自动同步和本地备份/导入。\n本地备份与云同步使用同一套数据结构，避免导入导出逻辑不一致。");
+    backupHint.setText("The Sync Center includes WebDAV cloud synchronization, test connection, automatic synchronization and local backup/import.\nLocal backup and cloud synchronization use the same data structure to avoid inconsistent import and export logic.");
     backupHint.setTextColor(getColorCompat(R.color.yh_text_muted));
     backupHint.setTextSize(10);
     backupHint.setPadding(0, dp(6), 0, 0);
@@ -2551,11 +2551,11 @@ private void showProfileDialog() {
     scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
     AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle("个人资料")
+            .setTitle("Profile")
             .setView(scroll)
-            .setPositiveButton("保存", null)
-            .setNeutralButton("更换头像", null)
-            .setNegativeButton("关闭", null)
+            .setPositiveButton("Save", null)
+            .setNeutralButton("Change avatar", null)
+            .setNegativeButton("Close", null)
             .show();
     styleAlertDialogDark(dialog);
     pendingProfileDialog = dialog;
@@ -2567,12 +2567,12 @@ private void showProfileDialog() {
         String name = nameInput.getText() == null ? "" : nameInput.getText().toString().trim();
         String sign = signatureInput.getText() == null ? "" : signatureInput.getText().toString().trim();
         if (name.isEmpty()) {
-            Toast.makeText(MainActivity.this, "昵称不能为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Nickname cannot be empty", Toast.LENGTH_SHORT).show();
             return;
         }
         prefs.edit().putString(KEY_PROFILE_NAME, name).putString(KEY_PROFILE_SIGNATURE, sign).apply();
         updateProfilePanel();
-        Toast.makeText(MainActivity.this, "个人资料已保存", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Profile saved", Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     });
     dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> profileAvatarLauncher.launch("image/*"));
@@ -2601,14 +2601,14 @@ private int levelColorForLevel(int level) {
  */
 private void showCloudNicknameDialog(final TextView nameViewToUpdate) {
     if (!isLoggedIn()) {
-        Toast.makeText(this, "登录后才能修改云端昵称", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "You must log in to modify your cloud nickname.", Toast.LENGTH_SHORT).show();
         return;
     }
     final String current = displayProfileName();
 
     final EditText input = new EditText(this);
     input.setText(current);
-    input.setHint("2-20 个字符");
+    input.setHint("2-20 characters");
     input.setSingleLine(true);
     input.setTextColor(getColorCompat(R.color.yh_text));
     input.setHintTextColor(getColorCompat(R.color.yh_text_muted));
@@ -2623,28 +2623,28 @@ private void showCloudNicknameDialog(final TextView nameViewToUpdate) {
     wrap.setPadding(dp(18), dp(14), dp(18), dp(10));
     wrap.addView(input, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(44)));
     TextView tip = new TextView(this);
-    tip.setText("昵称会同步到云端，好友和社区都能看到。不能包含 < > { } [ ] / \\ 等特殊字符。");
+    tip.setText("The nickname will be synced to the cloud and can be seen by friends and the community. It cannot contain special characters such as < > { } [ ] / \\ etc.");
     tip.setTextColor(getColorCompat(R.color.yh_text_muted));
     tip.setTextSize(11);
     tip.setPadding(dp(2), dp(8), dp(2), 0);
     wrap.addView(tip);
 
     AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle("修改昵称")
+            .setTitle("Modify nickname")
             .setView(wrap)
-            .setPositiveButton("保存", null)
-            .setNegativeButton("取消", null)
+            .setPositiveButton("Save", null)
+            .setNegativeButton("Cancel", null)
             .show();
     styleAlertDialogDark(dialog);
 
     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
         final String name = input.getText() == null ? "" : input.getText().toString().trim();
         if (name.length() < 2 || name.length() > 20) {
-            Toast.makeText(MainActivity.this, "昵称需要2-20个字符", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Nickname requires 2-20 characters", Toast.LENGTH_SHORT).show();
             return;
         }
         if (name.matches(".*[<>{}\\[\\]/\\\\].*")) {
-            Toast.makeText(MainActivity.this, "昵称包含不允许的字符", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Nickname contains disallowed characters", Toast.LENGTH_SHORT).show();
             return;
         }
         v.setEnabled(false);
@@ -2662,13 +2662,13 @@ private void showCloudNicknameDialog(final TextView nameViewToUpdate) {
                     }
                     if (nameViewToUpdate != null) nameViewToUpdate.setText(newName);
                     updateProfilePanel();
-                    Toast.makeText(MainActivity.this, "昵称已修改", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Nickname has been modified", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 });
             } catch (Throwable t) {
                 runOnUiThread(() -> {
                     v.setEnabled(true);
-                    Toast.makeText(MainActivity.this, "修改失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Modification failed:" + t.getMessage(), Toast.LENGTH_LONG).show();
                 });
             }
         });
@@ -2693,11 +2693,11 @@ private long totalPlayTime() {
 
 private String accountStatusLabelForDialog() {
     String s = accountStatus();
-    if ("local".equals(s)) return "本地账户";
-    if (AUTH_STATUS_ONLINE.equals(s)) return "云账户 · 在线";
-    if (AUTH_STATUS_SYNCING.equals(s)) return "云账户 · 同步中";
-    if (AUTH_STATUS_EXPIRED.equals(s)) return "云账户 · 登录过期";
-    return "云账户 · 离线";
+    if ("local".equals(s)) return "Local account";
+    if (AUTH_STATUS_ONLINE.equals(s)) return "Cloud Account · Online";
+    if (AUTH_STATUS_SYNCING.equals(s)) return "Cloud account · Synchronizing";
+    if (AUTH_STATUS_EXPIRED.equals(s)) return "Cloud account · Login expired";
+    return "Cloud Account · Offline";
 }
 
 private int accountStatusBackground() {
@@ -2724,7 +2724,7 @@ private boolean kungalBound() {
 
 private void startKungalBindOAuth() {
     if (!isLoggedIn()) {
-        Toast.makeText(this, "请先登录 YukiHub 账号", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Please log in to your YukiHub account first", Toast.LENGTH_SHORT).show();
         return;
     }
     try {
@@ -2748,7 +2748,7 @@ private void startKungalBindOAuth() {
                 .build();
         startActivity(new Intent(Intent.ACTION_VIEW, uri).addCategory(Intent.CATEGORY_BROWSABLE));
     } catch (Throwable t) {
-        Toast.makeText(this, "无法打开 NextMoe·未萌 绑定页面：" + emptyText(t.getMessage(), "请检查浏览器"), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Unable to open NextMoe·Weimeng binding page:" + emptyText(t.getMessage(), "Please check your browser"), Toast.LENGTH_LONG).show();
     }
 }
 
@@ -2758,7 +2758,7 @@ private boolean hikarinagiBound() {
 
 private void startHikarinagiBindOAuth() {
     if (!isLoggedIn()) {
-        Toast.makeText(this, "请先登录 YukiHub 账号", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Please log in to your YukiHub account first", Toast.LENGTH_SHORT).show();
         return;
     }
     try {
@@ -2785,7 +2785,7 @@ private void startHikarinagiBindOAuth() {
                 .build();
         startActivity(new Intent(Intent.ACTION_VIEW, uri).addCategory(Intent.CATEGORY_BROWSABLE));
     } catch (Throwable t) {
-        Toast.makeText(this, "无法打开 Hikarinagi 绑定页面：" + emptyText(t.getMessage(), "请检查浏览器"), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Unable to open Hikarinagi binding page:" + emptyText(t.getMessage(), "Please check your browser"), Toast.LENGTH_LONG).show();
     }
 }
 
@@ -2815,23 +2815,23 @@ private void showFriendsChatPlaceholder() {
 }
 
 private void showSortDialog() {
-    String[] items = {"最近游玩", "最近添加", "名称排序"};
+    String[] items = {"Recently visited", "Recently added", "Name sort"};
     String current = prefs == null ? SORT_MODE_RECENT : prefs.getString(KEY_SORT_MODE, SORT_MODE_RECENT);
     int checkedItem = SORT_MODE_NEWEST.equals(current) ? 1 : (SORT_MODE_NAME.equals(current) ? 2 : 0);
     final int[] selected = {checkedItem};
     AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle("排序方式")
+            .setTitle("Sort by")
             .setSingleChoiceItems(items, checkedItem, (d, which) -> {
                 selected[0] = which;
             })
-            .setPositiveButton("确定", (d, w) -> {
+            .setPositiveButton("OK", (d, w) -> {
                 String mode = SORT_MODE_RECENT;
                 if (selected[0] == 1) mode = SORT_MODE_NEWEST;
                 else if (selected[0] == 2) mode = SORT_MODE_NAME;
                 if (prefs != null) prefs.edit().putString(KEY_SORT_MODE, mode).apply();
                 applyFilter();
             })
-            .setNegativeButton("取消", null)
+            .setNegativeButton("Cancel", null)
             .show();
     styleAlertDialogDark(dialog);
     // Color the radio list items (needs post to run after ListView measures children)
@@ -2869,9 +2869,9 @@ private void showNoticeDialog() {
     View dot = findViewById(R.id.noticeRedDot);
     if (dot != null) dot.setVisibility(View.GONE);
     AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle("消息通知")
-            .setMessage("暂无新消息。")
-            .setPositiveButton("知道了", null)
+            .setTitle("Message notification")
+            .setMessage("No new news yet.")
+            .setPositiveButton("Knew", null)
             .show();
     styleAlertDialogDark(dialog);
 }
@@ -3004,29 +3004,29 @@ private void showAccountSettingsDialog() {
     boolean sharePlaying = prefs == null || prefs.getBoolean(KEY_SHARE_PLAYING, true);
     boolean friendNotify = prefs == null || prefs.getBoolean(KEY_FRIEND_PLAY_NOTIFY, true);
     long lastSync = prefs == null ? 0 : prefs.getLong(KEY_LAST_SYNC_AT, 0);
-    info.setText("账号：" + name + "\nUID：" + (uid.isEmpty() ? "-" : uid) + "\n邮箱：" + emptyText(email, "-") + "\n状态：" + accountStatusLabelForDialog() + "\n自动同步：" + (syncEnabled ? "开启" : "关闭") + "\n最后同步：" + (lastSync > 0 ? TimeFormatUtil.date(lastSync) : "尚未同步"));
+    info.setText("Account:" + name + "\nUID：" + (uid.isEmpty() ? "-" : uid) + "Mail:" + emptyText(email, "-") + "State:" + accountStatusLabelForDialog() + "Automatic synchronization:" + (syncEnabled ? "Turn on" : "Close") + "Last sync:" + (lastSync > 0 ? TimeFormatUtil.date(lastSync) : "Not synced yet"));
     info.setTextColor(getColorCompat(R.color.yh_text_muted));
     info.setTextSize(13);
     info.setLineSpacing(dp(2), 1.0f);
     root.addView(info);
-    CheckBox syncCheck = krCheckBox("开启自动同步（启动时自动云同步）", syncEnabled);
+    CheckBox syncCheck = krCheckBox("Turn on automatic synchronization (automatic cloud synchronization at startup)", syncEnabled);
     syncCheck.setPadding(0, dp(10), 0, 0);
     root.addView(syncCheck);
-    CheckBox sharePlayingCheck = krCheckBox("向好友展示正在玩的游戏", sharePlaying);
+    CheckBox sharePlayingCheck = krCheckBox("Show your friends what you're playing", sharePlaying);
     sharePlayingCheck.setPadding(0, dp(8), 0, 0);
     root.addView(sharePlayingCheck);
-    CheckBox friendNotifyCheck = krCheckBox("好友开始玩游戏时通知（后台保活）", friendNotify);
+    CheckBox friendNotifyCheck = krCheckBox("Notify when friends start playing games (background keep-alive)", friendNotify);
     friendNotifyCheck.setPadding(0, dp(8), 0, 0);
     root.addView(friendNotifyCheck);
     TextView notifyHint = new TextView(this);
-    notifyHint.setText("开启后会显示一条低调的常驻通知，用于保持在线并监听好友开玩。");
+    notifyHint.setText("When turned on, a low-key resident notification will be displayed, used to stay online and monitor friends' play.");
     notifyHint.setTextColor(getColorCompat(R.color.yh_text_muted));
     notifyHint.setTextSize(11);
     notifyHint.setPadding(0, dp(4), 0, 0);
     root.addView(notifyHint);
     // 通知通道设置入口：允许用户手动调整横幅/铃声/锁屏
     TextView channelSettingsBtn = new TextView(this);
-    channelSettingsBtn.setText("⚙ 通知样式设置（横幅 · 铃声 · 锁屏）");
+    channelSettingsBtn.setText("⚙ Notification style settings (banner · ringtone · lock screen)");
     channelSettingsBtn.setTextColor(getColorCompat(R.color.yh_primary));
     channelSettingsBtn.setTextSize(12);
     channelSettingsBtn.setPadding(0, dp(8), 0, 0);
@@ -3046,11 +3046,11 @@ private void showAccountSettingsDialog() {
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
     AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle("账号设置")
+            .setTitle("Account settings")
             .setView(scrollView)
-            .setPositiveButton("保存", null)
-            .setNeutralButton("退出登录", null)
-            .setNegativeButton("关闭", null)
+            .setPositiveButton("Save", null)
+            .setNeutralButton("Log out", null)
+            .setNegativeButton("Close", null)
             .show();
     styleAlertDialogDark(dialog);
     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
@@ -3063,7 +3063,7 @@ private void showAccountSettingsDialog() {
         if (enableNotify) ensureNotificationPermission();
         com.yuki.yukihub.social.PresenceService.sync(MainActivity.this);
         updateProfilePanel();
-        Toast.makeText(MainActivity.this, "账号设置已保存", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Account settings saved", Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     });
     dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> confirmLogout(dialog));
@@ -3076,13 +3076,13 @@ private void ensureNotificationPermission() {
                     == android.content.pm.PackageManager.PERMISSION_GRANTED) return;
             // 先弹解释弹窗，再请求权限（QQ 做法）
             new AlertDialog.Builder(this)
-                    .setTitle("需要通知权限")
-                    .setMessage("YukiHub 需要通知权限才能在你玩游戏时提醒你「好友开始玩什么游戏」。\n\n点击「允许」后，系统会弹出权限请求。")
-                    .setPositiveButton("继续", (d, w) -> {
+                    .setTitle("Notification permission required")
+                    .setMessage("YukiHub requires notification permission to remind you \"what games your friends started playing\" when you play games.\n\nAfter clicking \"Allow\", the system will pop up a permission request.")
+                    .setPositiveButton("Continue", (d, w) -> {
                         d.dismiss();
                         requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 9910);
                     })
-                    .setNegativeButton("取消", null)
+                    .setNegativeButton("Cancel", null)
                     .show();
         } catch (Throwable ignored) {}
     }
@@ -3107,13 +3107,13 @@ private void ensureNotificationPermission() {
     private void showNotificationDeniedGuide() {
         try {
             new AlertDialog.Builder(this)
-                    .setTitle("通知权限未开启")
-                    .setMessage("你拒绝了通知权限，好友开玩时将无法收到提醒。\n\n你可以随时去系统设置手动开启。")
-                    .setPositiveButton("去设置", (d, w) -> {
+                    .setTitle("Notification permission is not enabled")
+                    .setMessage("If you deny notification permission, you will not be able to receive reminders when your friends start playing.\n\nYou can go to system settings to turn it on manually at any time.")
+                    .setPositiveButton("Go to settings", (d, w) -> {
                         d.dismiss();
                         openAppNotificationSettings();
                     })
-                    .setNegativeButton("稍后", null)
+                    .setNegativeButton("Later", null)
                     .show();
         } catch (Throwable ignored) {}
     }
@@ -3122,13 +3122,13 @@ private void ensureNotificationPermission() {
     private void showNotificationChannelGuide() {
         try {
             new AlertDialog.Builder(this)
-                    .setTitle("通知已开启")
-                    .setMessage("你可以进一步调整通知样式：是否弹出横幅、是否响铃、是否在锁屏显示。\n\n点击下方按钮进入通知通道设置。")
-                    .setPositiveButton("去设置", (d, w) -> {
+                    .setTitle("Notifications are on")
+                    .setMessage("You can further adjust the notification style: whether to pop up a banner, whether to ring, and whether to display on the lock screen.\n\nClick the button below to enter notification channel settings.")
+                    .setPositiveButton("Go to settings", (d, w) -> {
                         d.dismiss();
                         openChannelSettings();
                     })
-                    .setNegativeButton("保持默认", null)
+                    .setNegativeButton("Keep default", null)
                     .show();
         } catch (Throwable ignored) {}
     }
@@ -3164,9 +3164,9 @@ private void ensureNotificationPermission() {
 
 private void confirmLogout(AlertDialog parent) {
     AlertDialog d = new AlertDialog.Builder(this)
-            .setTitle("退出登录")
+            .setTitle("Log out")
             .setMessage("退出登录不会删除本地游戏库和本地个人资料。云同步、好友/聊天将暂停。")
-            .setPositiveButton("退出登录", (x, w) -> {
+            .setPositiveButton("Log out", (x, w) -> {
                 logoutLocalOnly();
                 if (parent != null) parent.dismiss();
                 refreshRuntimeAccountState();
@@ -3175,7 +3175,7 @@ private void confirmLogout(AlertDialog parent) {
                     if (!isFinishing() && !(android.os.Build.VERSION.SDK_INT >= 17 && isDestroyed())) showProfileDialog();
                 }, 150L);
             })
-            .setNegativeButton("取消", null)
+            .setNegativeButton("Cancel", null)
             .show();
     styleAlertDialogDark(d);
 }
@@ -3203,7 +3203,7 @@ private void maybeAutoWebDavSync() {
                     coverMaintenanceDone = false;
                     loadGames();
                     updateProfilePanel();
-                    Toast.makeText(MainActivity.this, "WebDAV 自动同步完成", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "WebDAV automatic synchronization completed", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -3223,12 +3223,12 @@ private boolean serverSyncRunning = false;
  */
 private void doServerSync(boolean silent) {
     if (serverSyncRunning) {
-        if (!silent) Toast.makeText(this, "正在同步中…", Toast.LENGTH_SHORT).show();
+        if (!silent) Toast.makeText(this, "Syncing...", Toast.LENGTH_SHORT).show();
         return;
     }
     serverSyncRunning = true;
     com.yuki.yukihub.sync.SyncManager sm = new com.yuki.yukihub.sync.SyncManager(this);
-    if (!silent) Toast.makeText(this, "开始云同步…", Toast.LENGTH_SHORT).show();
+    if (!silent) Toast.makeText(this, "Start cloud sync...", Toast.LENGTH_SHORT).show();
     sm.syncToServer(new com.yuki.yukihub.sync.SyncManager.SyncListener() {
         @Override public void onSyncStart() { }
         @Override public void onProgress(String item, boolean changed) { }
@@ -3246,17 +3246,17 @@ private void doServerSync(boolean silent) {
                         int showBytes = result.compressedBytes > 0 ? result.compressedBytes : result.localBytes;
                         String msg;
                         if (result.merged) {
-                            msg = "云同步完成 · 智能合并 · " + (showBytes / 1024) + "KB";
+                            msg = "Cloud synchronization completed·Smart merge·" + (showBytes / 1024) + "KB";
                         } else if (result.downloaded) {
-                            msg = "云同步完成 · 已下载云端数据 · " + (showBytes / 1024) + "KB";
+                            msg = "Cloud synchronization completed · Cloud data downloaded ·" + (showBytes / 1024) + "KB";
                         } else if (result.uploaded) {
-                            msg = "云同步完成 · 已上传本地数据 · " + (showBytes / 1024) + "KB";
+                            msg = "Cloud synchronization completed · Local data has been uploaded ·" + (showBytes / 1024) + "KB";
                         } else if (result.noChanges) {
-                            msg = "云同步完成 · 数据已是最新 · " + (showBytes / 1024) + "KB";
+                            msg = "Cloud synchronization completed · Data is up to date ·" + (showBytes / 1024) + "KB";
                         } else if (result.cancelled) {
-                            msg = "云同步已取消";
+                            msg = "Cloud sync has been canceled";
                         } else {
-                            msg = "云同步完成 · " + (showBytes / 1024) + "KB";
+                            msg = "Cloud synchronization completed ·" + (showBytes / 1024) + "KB";
                         }
                         Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
@@ -3266,7 +3266,7 @@ private void doServerSync(boolean silent) {
         @Override public void onError(String error) {
             runOnUiThread(() -> {
                 serverSyncRunning = false;
-                if (!silent) Toast.makeText(MainActivity.this, "云同步失败：" + error, Toast.LENGTH_LONG).show();
+                if (!silent) Toast.makeText(MainActivity.this, "Cloud sync failed:" + error, Toast.LENGTH_LONG).show();
             });
         }
     });
@@ -3309,17 +3309,17 @@ private void maybeAutoServerSync() {
                     int showBytes = result.compressedBytes > 0 ? result.compressedBytes : result.localBytes;
                     String msg;
                     if (result.merged) {
-                        msg = "自动云同步 · 智能合并 · " + (showBytes / 1024) + "KB";
+                        msg = "Automatic cloud synchronization · Smart merge ·" + (showBytes / 1024) + "KB";
                     } else if (result.downloaded) {
-                        msg = "自动云同步 · 已下载云端数据 · " + (showBytes / 1024) + "KB";
+                        msg = "Automatic cloud synchronization · Downloaded cloud data ·" + (showBytes / 1024) + "KB";
                     } else if (result.uploaded) {
-                        msg = "自动云同步 · 已上传本地数据 · " + (showBytes / 1024) + "KB";
+                        msg = "Automatic cloud synchronization · Local data uploaded ·" + (showBytes / 1024) + "KB";
                     } else if (result.noChanges) {
-                        msg = "自动云同步 · 数据已是最新";
+                        msg = "Automatic cloud synchronization · Data is up to date";
                     } else if (result.cancelled) {
-                        msg = "自动云同步已取消";
+                        msg = "Automatic cloud sync canceled";
                     } else {
-                        msg = "自动云同步完成 · " + (showBytes / 1024) + "KB";
+                        msg = "Automatic cloud synchronization completed ·" + (showBytes / 1024) + "KB";
                     }
                     Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                 }
@@ -3328,7 +3328,7 @@ private void maybeAutoServerSync() {
         @Override public void onError(String error) {
             runOnUiThread(() -> {
                 serverSyncRunning = false;
-                Toast.makeText(MainActivity.this, "自动云同步失败：" + error, Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Automatic cloud sync failed:" + error, Toast.LENGTH_LONG).show();
             });
         }
     });
@@ -3356,7 +3356,7 @@ private void logoutLocalOnly() {
             .putBoolean(KEY_CLOUD_SYNC_ENABLED, false)
             .apply();
     updateProfilePanel();
-    Toast.makeText(MainActivity.this, "已退出登录，本地账户仍可继续使用", Toast.LENGTH_SHORT).show();
+    Toast.makeText(MainActivity.this, "You have logged out, but your local account can still be used.", Toast.LENGTH_SHORT).show();
 }
 
 private String normalizeBaseUrl(String base) {
@@ -3381,7 +3381,7 @@ private void performAuthRequest(boolean register, String email, String password,
             saveAuthSession(resp, email, nickname);
             runOnUiThread(() -> {
                 updateProfilePanel();
-                Toast.makeText(this, register ? "注册并登录成功" : "登录成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, register ? "Registered and logged in successfully" : "Login successful", Toast.LENGTH_SHORT).show();
                 if (onSuccess != null) onSuccess.run();
                 // 登录成功后自动触发一次云同步（有弹窗反馈）
                 doServerSync(false);
@@ -3391,7 +3391,7 @@ private void performAuthRequest(boolean register, String email, String password,
             runOnUiThread(() -> {
                 if (prefs != null && isLoggedIn()) prefs.edit().putString(KEY_AUTH_STATUS, AUTH_STATUS_OFFLINE).apply();
                 updateProfilePanel();
-                Toast.makeText(this, "登录/注册失败：" + emptyText(t.getMessage(), "请检查网络或稍后重试"), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Login/registration failed:" + emptyText(t.getMessage(), "Please check the network or try again later"), Toast.LENGTH_LONG).show();
                 if (onFailureUi != null) onFailureUi.run();
             });
         }
@@ -3411,7 +3411,7 @@ private JSONObject getJson(String urlStr) throws Exception {
     int code = c.getResponseCode();
     String text = readSmallText(code >= 200 && code < 300 ? c.getInputStream() : c.getErrorStream());
     if (text != null && text.trim().startsWith("<")) {
-        throw new RuntimeException("服务器返回了HTML页面，可能是免费主机防护页/缓存页，请稍后重试");
+        throw new RuntimeException("The server returned an HTML page, which may be a free host protection page/cache page. Please try again later.");
     }
     if (code < 200 || code >= 300) throw new RuntimeException("HTTP " + code + ": " + text);
     return text == null || text.trim().isEmpty() ? new JSONObject() : new JSONObject(text);
@@ -3498,7 +3498,7 @@ private JSONObject postJsonWithAuth(String url, JSONObject body) throws Exceptio
         return postJson(url, body, token);
     } catch (RuntimeException e) {
         // 检查是否是 403 禁用
-        if (e.getMessage() != null && e.getMessage().contains("HTTP 403") && e.getMessage().contains("禁用")) {
+        if (e.getMessage() != null && e.getMessage().contains("HTTP 403") && e.getMessage().contains("Disable")) {
             if (prefs != null) {
                 prefs.edit()
                         .remove(KEY_AUTH_ACCESS_TOKEN)
@@ -3508,9 +3508,9 @@ private JSONObject postJsonWithAuth(String url, JSONObject body) throws Exceptio
             }
             runOnUiThread(() -> {
                 updateProfilePanel();
-                Toast.makeText(this, "您的账号已被管理员禁用", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Your account has been disabled by the administrator", Toast.LENGTH_LONG).show();
             });
-            throw new RuntimeException("账号已被禁用");
+            throw new RuntimeException("Account has been disabled");
         }
         // 检查是否是 401 错误
         if (e.getMessage() != null && e.getMessage().contains("HTTP 401")) {
@@ -3524,7 +3524,7 @@ private JSONObject postJsonWithAuth(String url, JSONObject body) throws Exceptio
                 if (prefs != null) {
                     prefs.edit().putString(KEY_AUTH_STATUS, AUTH_STATUS_EXPIRED).apply();
                 }
-                throw new RuntimeException("登录已过期，请重新登录");
+                throw new RuntimeException("Login has expired, please log in again");
             }
         }
         throw e;
@@ -3541,7 +3541,7 @@ private void saveAuthSession(JSONObject resp, String emailFallback, String nickn
     String nickname = user == null ? firstJsonString(resp, "nickname", "name", "username") : firstJsonString(user, "nickname", "name", "username");
     String email = user == null ? firstJsonString(resp, "email") : firstJsonString(user, "email");
     String avatar = user == null ? firstJsonString(resp, "avatarUrl", "avatar_url", "avatar") : firstJsonString(user, "avatarUrl", "avatar_url", "avatar");
-    if (access == null || access.trim().isEmpty()) throw new RuntimeException("登录失败，请稍后重试");
+    if (access == null || access.trim().isEmpty()) throw new RuntimeException("Login failed, please try again later");
     if (nickname == null || nickname.trim().isEmpty()) nickname = nicknameFallback;
     if (email == null || email.trim().isEmpty()) email = emailFallback;
     prefs.edit()
@@ -3631,9 +3631,9 @@ private void exportLocalBackup(Uri uri) {
             out.write(compressed);
             out.flush();
         }
-        Toast.makeText(this, "备份完成：" + (compressed.length / 1024) + "KB（压缩后，原始 " + (jsonBytes.length / 1024) + "KB）", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Backup completed:" + (compressed.length / 1024) + "KB (compressed, original" + (jsonBytes.length / 1024) + "KB）", Toast.LENGTH_LONG).show();
 } catch (Throwable t) {
-            Toast.makeText(this, "备份失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Backup failed:" + t.getMessage(), Toast.LENGTH_LONG).show();
             Log.e("YukiHub", "export backup failed", t);
         }
 }
@@ -3665,13 +3665,13 @@ private void importLocalBackup(Uri uri) {
          }
          JSONObject root = new JSONObject(text);
          if (!"YukiHub".equals(root.optString("app", ""))) {
-             Toast.makeText(this, "不是有效的 YukiHub 备份", Toast.LENGTH_LONG).show();
+             Toast.makeText(this, "Not a valid YukiHub backup", Toast.LENGTH_LONG).show();
              return;
          }
          // 显示导入预览
          showYukiHubBackupPreview(root);
      } catch (Throwable t) {
-         Toast.makeText(this, "读取备份失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
+         Toast.makeText(this, "Failed to read backup:" + t.getMessage(), Toast.LENGTH_LONG).show();
          Log.e("YukiHub", "read backup failed", t);
      }
  }
@@ -3687,7 +3687,7 @@ private void importLocalBackup(Uri uri) {
      String note = root.optString("note", "");
      // 备份 JSON 写的字段名是 "schema"（整数），不是 "schema_version"
      int schemaInt = root.optInt("schema", -1);
-     String schemaVersion = schemaInt > 0 ? String.valueOf(schemaInt) : root.optString("schema_version", "未知");
+     String schemaVersion = schemaInt > 0 ? String.valueOf(schemaInt) : root.optString("schema_version", "Unknown");
      long createdAt = root.optLong("created_at", 0);
 
      // 统计新游戏 vs 已存在
@@ -3731,7 +3731,7 @@ private void importLocalBackup(Uri uri) {
 
 
      TextView infoHeader = new TextView(this);
-     infoHeader.setText("📁 备份信息");
+     infoHeader.setText("📁 Backup information");
      infoHeader.setTextColor(getColorCompat(R.color.yh_text));
      infoHeader.setTextSize(14);
      infoHeader.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -3739,9 +3739,9 @@ private void importLocalBackup(Uri uri) {
      infoCard.addView(infoHeader);
 
      // 用表格风格的两列展示信息
-     infoCard.addView(makeInfoRow("版本", schemaVersion));
-     infoCard.addView(makeInfoRow("类型", backupType));
-     if (!dateStr.isEmpty()) infoCard.addView(makeInfoRow("备份时间", dateStr));
+     infoCard.addView(makeInfoRow("Version", schemaVersion));
+     infoCard.addView(makeInfoRow("Type", backupType));
+     if (!dateStr.isEmpty()) infoCard.addView(makeInfoRow("Backup time", dateStr));
 
      listRoot.addView(infoCard);
 
@@ -3755,7 +3755,7 @@ private void importLocalBackup(Uri uri) {
      statCard.setBackgroundResource(R.drawable.bg_card);
 
      TextView statHeader = new TextView(this);
-     statHeader.setText("📊 数据概览");
+     statHeader.setText("📊 Data Overview");
      statHeader.setTextColor(getColorCompat(R.color.yh_text));
      statHeader.setTextSize(14);
      statHeader.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -3767,16 +3767,16 @@ private void importLocalBackup(Uri uri) {
      statRow.setOrientation(LinearLayout.HORIZONTAL);
      statRow.setGravity(android.view.Gravity.CENTER_VERTICAL);
 
-     statRow.addView(makeStatBlock(gameCount + "", "游戏",
+     statRow.addView(makeStatBlock(gameCount + "", "Games",
              newGames > 0 ? getColorCompat(R.color.yh_primary) : getColorCompat(R.color.yh_text)));
-     statRow.addView(makeStatBlock(sessionCount + "", "游玩记录", getColorCompat(R.color.yh_text)));
-     statRow.addView(makeStatBlock(metaCount + "", "元数据", getColorCompat(R.color.yh_text)));
+     statRow.addView(makeStatBlock(sessionCount + "", "Play records", getColorCompat(R.color.yh_text)));
+     statRow.addView(makeStatBlock(metaCount + "", "Metadata", getColorCompat(R.color.yh_text)));
 
      statCard.addView(statRow);
 
      // 新增/已存在标签
      TextView existInfo = new TextView(this);
-     existInfo.setText("┃ 新增 " + newGames + " 个  ·  已存在 " + existingGames + " 个（将合并更新）");
+     existInfo.setText("┃ New" + newGames + "· already exists" + existingGames + "(will be merged and updated)");
      existInfo.setTextColor(newGames > 0 ? getColorCompat(R.color.yh_primary) : getColorCompat(R.color.yh_text_muted));
      existInfo.setTextSize(11);
      existInfo.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -3794,7 +3794,7 @@ private void importLocalBackup(Uri uri) {
      strategyCard.setBackgroundResource(R.drawable.bg_card);
 
      TextView strategyHeader = new TextView(this);
-     strategyHeader.setText("ℹ️ 导入策略");
+     strategyHeader.setText("ℹ️ Import strategy");
      strategyHeader.setTextColor(getColorCompat(R.color.yh_text));
      strategyHeader.setTextSize(14);
      strategyHeader.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -3803,8 +3803,8 @@ private void importLocalBackup(Uri uri) {
 
      String[] strategies = {
          "游戏按 rootUri/标题去重合并（字段更新，非跳过）",
-         "游玩记录按 session_uuid 去重",
-         "元数据缓存按来源 + source_id 匹配",
+         "Game records are deduplicated by session_uuid",
+         "Metadata cache matches by source + source_id",
          "图片只恢复 URI/URL，不复制图片文件"
      };
      for (String s : strategies) {
@@ -3838,10 +3838,10 @@ private void importLocalBackup(Uri uri) {
      scroll.addView(listRoot, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
      AlertDialog dialog = new AlertDialog.Builder(this)
-             .setTitle("YukiHub 备份导入预览")
+             .setTitle("YukiHub backup import preview")
              .setView(scroll)
-             .setPositiveButton("确认导入", null)
-             .setNegativeButton("取消", null)
+             .setPositiveButton("Confirm import", null)
+             .setNegativeButton("Cancel", null)
              .show();
      styleAlertDialogDark(dialog);
      if (dialog.getWindow() != null) {
@@ -3918,7 +3918,7 @@ private void importLocalBackup(Uri uri) {
  }
 
  private void executeYukiHubBackupImport(JSONObject root) {
-     showImportLoading("正在导入 YukiHub 备份…");
+     showImportLoading("Importing YukiHub backup...");
      new Thread(() -> {
          try {
              new com.yuki.yukihub.sync.SyncManager(this).importSnapshotFromLocalBackup(root);
@@ -3931,12 +3931,12 @@ private void importLocalBackup(Uri uri) {
                  int gameCount = root.optJSONArray("games") == null ? 0 : root.optJSONArray("games").length();
                  int sessionCount = root.optJSONArray("play_sessions") == null ? 0 : root.optJSONArray("play_sessions").length();
                  int metaCount = root.optJSONArray("metadata_cache") == null ? 0 : root.optJSONArray("metadata_cache").length();
-                 Toast.makeText(this, "导入完成：游戏 " + gameCount + "，记录 " + sessionCount + "，元数据 " + metaCount, Toast.LENGTH_LONG).show();
+                 Toast.makeText(this, "Import completed: game" + gameCount + ",Record" + sessionCount + ", metadata" + metaCount, Toast.LENGTH_LONG).show();
              });
          } catch (Exception e) {
              runOnUiThread(() -> {
                  hideImportLoading();
-                 Toast.makeText(this, "导入失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                 Toast.makeText(this, "Import failed:" + e.getMessage(), Toast.LENGTH_LONG).show();
                  Log.e("YukiHub", "backup import failed", e);
              });
          }
@@ -3968,7 +3968,7 @@ private void importLocalBackup(Uri uri) {
 
       // 说明文字
       TextView intro = new TextView(this);
-      intro.setText("选择要导入数据的平台，导入前会先预览所有可导入的游戏。");
+      intro.setText("Select the platform to which you want to import data. All games that can be imported will be previewed before importing.");
       intro.setTextColor(getColorCompat(R.color.yh_text_muted));
       intro.setTextSize(11);
       intro.setLineSpacing(dp(2), 1.0f);
@@ -3977,13 +3977,13 @@ private void importLocalBackup(Uri uri) {
 
       // 四个平台卡片
       String[][] platforms = {
-          {"🎮  Playnite", "JSON 文件", "在 Playnite 中导出游戏库为 JSON",
+          {"🎮  Playnite", "JSON file", "Export game library to JSON in Playnite",
            "application/json", "text/*", "*/*"},
-          {"🥔  PotatoVN", "ZIP 文件", "包含游戏列表、封面和游玩记录",
+          {"🥔  PotatoVN", "ZIP file", "Contains game list, cover and play history",
            "application/zip", "application/octet-stream", "*/*"},
-          {"📁  Vnite", "导出目录", "选择 Vnite 的导出文件夹",
+          {"📁  Vnite", "Export directory", "Select the export folder for Vnite",
            null, null, null},
-          {"🌙  LunaBox", "ZIP 备份", "LunaBox 完整备份（游戏 + 封面 + 游玩记录）",
+          {"🌙  LunaBox", "ZIP backup", "LunaBox full backup (game + cover + play history)",
            "application/zip", "application/octet-stream", "*/*"}
       };
 
@@ -4050,7 +4050,7 @@ private void importLocalBackup(Uri uri) {
       // 底部注意事项
       addVerticalSpace(root, dp(12));
       TextView notice = new TextView(this);
-      notice.setText("⚠️ 注意：游戏路径是 PC 路径，导入后不设游戏目录。已存在的同名游戏会自动跳过。游玩记录会自动导入。");
+      notice.setText("⚠️ Note: The game path is the PC path, and there is no game directory after import. Existing games with the same name will be automatically skipped. Play records will be imported automatically.");
       notice.setTextColor(getColorCompat(R.color.yh_text_muted));
       notice.setTextSize(9);
       notice.setLineSpacing(dp(2), 1.0f);
@@ -4063,9 +4063,9 @@ private void importLocalBackup(Uri uri) {
       scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
       AlertDialog dialog = new AlertDialog.Builder(this)
-              .setTitle("从其他平台导入")
+              .setTitle("Import from other platforms")
               .setView(scroll)
-              .setNegativeButton("关闭", null)
+              .setNegativeButton("Close", null)
               .show();
       styleAlertDialogDark(dialog);
       if (dialog.getWindow() != null) {
@@ -4082,7 +4082,7 @@ private void importLocalBackup(Uri uri) {
   * 执行 Playnite JSON 导入（解析 → 预览）
   */
  private void doImportFromPlaynite(Uri uri) {
-     showImportLoading("正在解析 Playnite 数据…");
+     showImportLoading("Parsing Playnite data…");
      new Thread(() -> {
          try {
              java.util.List<com.yuki.yukihub.importer.ImportGameData> games =
@@ -4099,7 +4099,7 @@ private void importLocalBackup(Uri uri) {
          } catch (Exception e) {
              runOnUiThread(() -> {
                  hideImportLoading();
-                 Toast.makeText(this, "Playnite 解析失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                 Toast.makeText(this, "Playnite parsing failed:" + e.getMessage(), Toast.LENGTH_LONG).show();
                  Log.e("YukiHub", "Playnite parse failed", e);
              });
          }
@@ -4110,7 +4110,7 @@ private void importLocalBackup(Uri uri) {
   * 执行 PotatoVN ZIP 导入（解析 → 预览）
   */
  private void doImportFromPotatoVN(Uri uri) {
-     showImportLoading("正在解析 PotatoVN 数据…");
+     showImportLoading("Parsing PotatoVN data…");
      new Thread(() -> {
          try {
              java.util.List<com.yuki.yukihub.importer.ImportGameData> games =
@@ -4127,7 +4127,7 @@ private void importLocalBackup(Uri uri) {
          } catch (Exception e) {
              runOnUiThread(() -> {
                  hideImportLoading();
-                 Toast.makeText(this, "PotatoVN 解析失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                 Toast.makeText(this, "PotatoVN parsing failed:" + e.getMessage(), Toast.LENGTH_LONG).show();
                  Log.e("YukiHub", "PotatoVN parse failed", e);
              });
          }
@@ -4138,7 +4138,7 @@ private void importLocalBackup(Uri uri) {
      * 执行 Vnite 目录导入（解析 → 预览）
      */
     private void doImportFromVnite(Uri uri) {
-        showImportLoading("正在解析 Vnite 数据…");
+        showImportLoading("Parsing Vnite data…");
         new Thread(() -> {
             try {
                 java.util.List<com.yuki.yukihub.importer.ImportGameData> games =
@@ -4155,7 +4155,7 @@ private void importLocalBackup(Uri uri) {
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     hideImportLoading();
-                    Toast.makeText(this, "Vnite 解析失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Vnite parsing failed:" + e.getMessage(), Toast.LENGTH_LONG).show();
                     Log.e("YukiHub", "Vnite parse failed", e);
                 });
             }
@@ -4166,7 +4166,7 @@ private void importLocalBackup(Uri uri) {
      * 执行 LunaBox ZIP 备份导入（解析 → 预览）
      */
     private void doImportFromLunaBox(Uri uri) {
-        showImportLoading("正在解析 LunaBox 备份…");
+        showImportLoading("Parsing LunaBox backup...");
         new Thread(() -> {
             try {
                 java.util.List<com.yuki.yukihub.importer.ImportGameData> games =
@@ -4183,7 +4183,7 @@ private void importLocalBackup(Uri uri) {
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     hideImportLoading();
-                    Toast.makeText(this, "LunaBox 解析失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "LunaBox parsing failed:" + e.getMessage(), Toast.LENGTH_LONG).show();
                     Log.e("YukiHub", "LunaBox parse failed", e);
                 });
             }
@@ -4200,7 +4200,7 @@ private void importLocalBackup(Uri uri) {
   */
  private void showImportPreviewDialog(java.util.List<com.yuki.yukihub.importer.ImportGameData> games, String sourceLabel) {
      if (games == null || games.isEmpty()) {
-         Toast.makeText(this, "未找到可导入的游戏数据", Toast.LENGTH_SHORT).show();
+         Toast.makeText(this, "No game data found to import", Toast.LENGTH_SHORT).show();
          return;
      }
 
@@ -4220,9 +4220,9 @@ if (g.playedTimeMap != null) sessionCount += g.playedTimeMap.size();
 
      // 摘要
      TextView summary = new TextView(this);
-     summary.setText("来源：" + sourceLabel + "  ·  共 " + games.size() + " 个游戏"
-             + "  ·  新增 " + newCount + "  ·  已存在 " + existCount
-             + (sessionCount > 0 ? "  ·  游玩记录 " + sessionCount : ""));
+     summary.setText("Source:" + sourceLabel + "·  common" + games.size() + "Games"
+             + "· New" + newCount + "· Already exists" + existCount
+             + (sessionCount > 0 ? "· Play records" + sessionCount : ""));
      summary.setTextColor(getColorCompat(R.color.yh_text_muted));
      summary.setTextSize(11);
      summary.setPadding(dp(4), dp(4), dp(4), dp(8));
@@ -4232,8 +4232,8 @@ if (g.playedTimeMap != null) sessionCount += g.playedTimeMap.size();
      LinearLayout actionRow = new LinearLayout(this);
      actionRow.setOrientation(LinearLayout.HORIZONTAL);
      actionRow.setGravity(android.view.Gravity.CENTER_VERTICAL);
-     Button selectAllBtn = krButton("全选新游戏");
-     Button deselectAllBtn = krButton("取消选择");
+     Button selectAllBtn = krButton("Select all new games");
+     Button deselectAllBtn = krButton("Deselect");
      selectAllBtn.setTextColor(primaryTextColor());
      deselectAllBtn.setTextColor(getColorCompat(R.color.yh_text));
      actionRow.addView(selectAllBtn, new LinearLayout.LayoutParams(0, dp(36), 1));
@@ -4289,21 +4289,21 @@ if (g.playedTimeMap != null) sessionCount += g.playedTimeMap.size();
          TextView infoText = new TextView(this);
          StringBuilder info = new StringBuilder();
          if (g.exists) {
-             info.append("已存在，将跳过");
+             info.append("Already exists and will be skipped");
          } else {
-             info.append("新增");
+             info.append("New");
          }
          // 游玩状态标签（此处是拼接进 StringBuilder 的长句，用纯文字，不挂图标）
          if (g.playStatus != null && !g.playStatus.isEmpty() && !"unplayed".equals(g.playStatus)) {
              info.append("  · ").append(com.yuki.yukihub.util.IconedText.labelForStatus(g.playStatus));
          }
 if (g.nsfw) info.append("  · NSFW");
-if (g.playedTimeMap != null && !g.playedTimeMap.isEmpty()) info.append("  · 游玩记录 ").append(g.playedTimeMap.size()).append(" 天");
-          if (g.vniteTimers != null && !g.vniteTimers.isEmpty()) info.append("  · 游玩记录 ").append(g.vniteTimers.size()).append(" 条");
-          if (g.lunaBoxSessions != null && !g.lunaBoxSessions.isEmpty()) info.append("  · 游玩记录 ").append(g.lunaBoxSessions.size()).append(" 条");
-         if (g.coverUrl != null && !g.coverUrl.isEmpty()) info.append("  · 有封面");
-         if (g.coverLocalPath != null && !g.coverLocalPath.isEmpty()) info.append("  · 有封面");
-         if (g.description != null && !g.description.isEmpty()) info.append("  · 有简介");
+if (g.playedTimeMap != null && !g.playedTimeMap.isEmpty()) info.append("· Play records").append(g.playedTimeMap.size()).append("Sky");
+          if (g.vniteTimers != null && !g.vniteTimers.isEmpty()) info.append("· Play records").append(g.vniteTimers.size()).append(" 条");
+          if (g.lunaBoxSessions != null && !g.lunaBoxSessions.isEmpty()) info.append("· Play records").append(g.lunaBoxSessions.size()).append(" 条");
+         if (g.coverUrl != null && !g.coverUrl.isEmpty()) info.append("· With cover");
+         if (g.coverLocalPath != null && !g.coverLocalPath.isEmpty()) info.append("· With cover");
+         if (g.description != null && !g.description.isEmpty()) info.append("· With introduction");
          infoText.setText(info.toString());
          infoText.setTextColor(getColorCompat(R.color.yh_text_muted));
          infoText.setTextSize(10);
@@ -4346,10 +4346,10 @@ if (g.playedTimeMap != null && !g.playedTimeMap.isEmpty()) info.append("  · 游
      scroll.addView(listRoot, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
      AlertDialog dialog = new AlertDialog.Builder(this)
-             .setTitle("导入预览 — " + sourceLabel)
+             .setTitle("Import preview —" + sourceLabel)
              .setView(scroll)
-             .setPositiveButton("确认导入", null)
-             .setNegativeButton("取消", null)
+             .setPositiveButton("Confirm import", null)
+             .setNegativeButton("Cancel", null)
              .show();
      styleAlertDialogDark(dialog);
      if (dialog.getWindow() != null) {
@@ -4372,14 +4372,14 @@ private void executeExternalImport(java.util.List<com.yuki.yukihub.importer.Impo
               if (g != null && g.selected && !g.exists) selectedCount++;
           }
       }
-      showImportLoading("正在导入" + sourceLabel + "数据…\n准备处理 " + selectedCount + " 个游戏", true, Math.max(1, selectedCount));
+      showImportLoading("Importing" + sourceLabel + "Data…\nready to process" + selectedCount + "Games", true, Math.max(1, selectedCount));
       new Thread(() -> {
           try {
               com.yuki.yukihub.importer.ImporterService service =
                       new com.yuki.yukihub.importer.ImporterService(this);
               final com.yuki.yukihub.importer.ImportResult result = service.importSelected(games, (current, total, itemName) -> {
-                  String name = itemName == null || itemName.trim().isEmpty() ? "未命名游戏" : itemName.trim();
-                  runOnUiThread(() -> updateImportLoading("正在导入 " + sourceLabel + " 数据…\n" + current + "/" + total + "  《" + name + "》", current, total));
+                  String name = itemName == null || itemName.trim().isEmpty() ? "Unnamed game" : itemName.trim();
+                  runOnUiThread(() -> updateImportLoading("Importing" + sourceLabel + "Data…" + current + "/" + total + "  《" + name + "》", current, total));
               });
               runOnUiThread(() -> {
                   hideImportLoading();
@@ -4388,7 +4388,7 @@ private void executeExternalImport(java.util.List<com.yuki.yukihub.importer.Impo
           } catch (Exception e) {
               runOnUiThread(() -> {
                   hideImportLoading();
-                  Toast.makeText(this, sourceLabel + " 导入失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                  Toast.makeText(this, sourceLabel + "Import failed:" + e.getMessage(), Toast.LENGTH_LONG).show();
                   Log.e("YukiHub", sourceLabel + " import failed", e);
               });
           }
@@ -4402,12 +4402,12 @@ private void executeExternalImport(java.util.List<com.yuki.yukihub.importer.Impo
      coverMaintenanceDone = false;
      loadGames();
      updateProfilePanel();
-     String msg = "导入完成：" + result.toString();
+     String msg = "Import completed:" + result.toString();
      if (!result.skippedNames.isEmpty()) {
-         msg += "\n跳过：" + String.join("、", result.skippedNames);
+         msg += "Jump over:" + String.join("、", result.skippedNames);
      }
      if (!result.failedNames.isEmpty()) {
-         msg += "\n失败：" + String.join("、", result.failedNames);
+         msg += "Fail:" + String.join("、", result.failedNames);
      }
      Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
  }
@@ -4443,7 +4443,7 @@ private void executeExternalImport(java.util.List<com.yuki.yukihub.importer.Impo
       root.addView(importProgressBar, barLp);
 
       importLoadingDialog = new AlertDialog.Builder(this)
-              .setTitle("数据导入")
+              .setTitle("Data import")
               .setView(root)
               .setCancelable(false)
               .show();
@@ -4473,7 +4473,7 @@ private void buildRecentActivityViews(LinearLayout container) {
     List<PlayActivity> activities = repository == null ? new ArrayList<>() : repository.getRecentPlayActivities(8);
     if (activities.isEmpty()) {
         TextView empty = new TextView(this);
-        empty.setText("暂无动态。开始游玩后，这里会记录你的足迹。");
+        empty.setText("No updates yet. After you start playing, your footprints will be recorded here.");
         empty.setTextColor(getColorCompat(R.color.yh_text_muted));
         empty.setTextSize(12);
         empty.setBackgroundResource(R.drawable.bg_input);
@@ -4483,7 +4483,7 @@ private void buildRecentActivityViews(LinearLayout container) {
     }
     for (PlayActivity a : activities) {
         TextView item = new TextView(this);
-        item.setText("玩了《" + a.gameTitle + "》 " + TimeFormatUtil.playTime(a.duration) + "\n" + TimeFormatUtil.date(a.endTime) + " · " + launchTypeLabel(a.launchType));
+        item.setText("Played \"" + a.gameTitle + "》 " + TimeFormatUtil.playTime(a.duration) + "\n" + TimeFormatUtil.date(a.endTime) + " · " + launchTypeLabel(a.launchType));
         item.setTextColor(getColorCompat(R.color.yh_text));
         item.setTextSize(12);
         item.setLineSpacing(dp(1), 1.0f);
@@ -4498,28 +4498,28 @@ private void buildRecentActivityViews(LinearLayout container) {
 
 private void showPlayActivityDetail(PlayActivity a) {
     if (a == null) return;
-    String text = "游戏：" + a.gameTitle + "\n"
-            + "开始：" + TimeFormatUtil.date(a.startTime) + "\n"
-            + "结束：" + TimeFormatUtil.date(a.endTime) + "\n"
-            + "时长：" + TimeFormatUtil.playTime(a.duration) + "\n"
-            + "启动类型：" + launchTypeLabel(a.launchType) + "\n"
-            + "会话ID：" + emptyText(a.sessionUuid, String.valueOf(a.sessionId));
+    String text = "Game:" + a.gameTitle + "\n"
+            + "Start:" + TimeFormatUtil.date(a.startTime) + "\n"
+            + "Finish:" + TimeFormatUtil.date(a.endTime) + "\n"
+            + "Duration:" + TimeFormatUtil.playTime(a.duration) + "\n"
+            + "Startup type:" + launchTypeLabel(a.launchType) + "\n"
+            + "Session ID:" + emptyText(a.sessionUuid, String.valueOf(a.sessionId));
     AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle("动态详情")
+            .setTitle("Dynamic details")
             .setMessage(text)
-            .setPositiveButton("关闭", null)
+            .setPositiveButton("Close", null)
             .show();
     styleAlertDialogDark(dialog);
 }
 
 private String launchTypeLabel(String launchType) {
     String t = launchType == null ? "" : launchType;
-    if (t.startsWith("internal.krkr")) return "内置 KRKR";
-    if (t.startsWith("internal.ons")) return "内置 ONS";
-    if (t.startsWith("internal.tyrano")) return "内置 Tyrano";
-    if (t.startsWith("internal.artemis")) return "内置 Artemis";
-    if (t.startsWith("internal.fvp")) return "内置 FVP";
-    return "外部模拟器";
+    if (t.startsWith("internal.krkr")) return "Built-in KRKR";
+    if (t.startsWith("internal.ons")) return "Built-in ONS";
+    if (t.startsWith("internal.tyrano")) return "Built-in Tyrano";
+    if (t.startsWith("internal.artemis")) return "Built-in Artemis";
+    if (t.startsWith("internal.fvp")) return "Built-in FVP";
+    return "External emulator";
 }
 
     private void updateProfilePanel() {
@@ -4532,7 +4532,7 @@ private String launchTypeLabel(String launchType) {
         if (tvStatsTime != null) tvStatsTime.setText(TimeFormatUtil.playTime(total));
         if (tvGreeting != null) {
             int hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
-            String period = hour < 5 ? "夜深了" : hour < 11 ? "早上好" : hour < 14 ? "中午好" : hour < 18 ? "下午好" : "晚上好";
+            String period = hour < 5 ? "It's late at night" : hour < 11 ? "Good morning" : hour < 14 ? "Good afternoon" : hour < 18 ? "Good afternoon" : "Good evening";
             tvGreeting.setText(period + "，" + name);
         }
         loadProfileAvatarInto(ivProfileAvatar, tvProfileInitial);
@@ -4611,7 +4611,7 @@ private long todayTotalPlayTime() {
 }
 
 private String buildTodayActivityText() {
-    if (repository == null) return "今天还没有游玩记录。";
+    if (repository == null) return "There are no play records today.";
     Calendar start = Calendar.getInstance();
     start.set(Calendar.HOUR_OF_DAY, 0);
     start.set(Calendar.MINUTE, 0);
@@ -4620,7 +4620,7 @@ private String buildTodayActivityText() {
     Calendar end = (Calendar) start.clone();
     end.add(Calendar.DAY_OF_MONTH, 1);
     Map<String, Long> today = repository.getPlayDurationsBetween(start.getTimeInMillis(), end.getTimeInMillis());
-    if (today.isEmpty()) return "今天还没有游玩记录。\n启动游戏后，返回 YukiHub 就会生成动态。";
+    if (today.isEmpty()) return "There are no play records today.\nAfter launching the game, returning to YukiHub will generate the feed.";
     StringBuilder sb = new StringBuilder();
     int count = 0;
     long total = 0;
@@ -4629,11 +4629,11 @@ private String buildTodayActivityText() {
         long duration = e.getValue() == null ? 0L : e.getValue();
         total += duration;
         if (count > 0) sb.append('\n');
-        sb.append("今天玩了《").append(e.getKey()).append("》 ").append(TimeFormatUtil.playTime(duration));
+        sb.append("Today I played \"").append(e.getKey()).append("》 ").append(TimeFormatUtil.playTime(duration));
         count++;
     }
-    if (today.size() > count) sb.append('\n').append("还有 ").append(today.size() - count).append(" 个游戏的记录...");
-    sb.append("\n今日合计：").append(TimeFormatUtil.playTime(total));
+    if (today.size() > count) sb.append('\n').append("Besides").append(today.size() - count).append("Game records...");
+    sb.append("Today’s total:").append(TimeFormatUtil.playTime(total));
     return sb.toString();
 }
 
@@ -4647,7 +4647,7 @@ private void setupDeveloperToggle() {
         // 两个二级面板互斥：展开一个就收起另一个，避免占两行高度
         if (show) collapseStatusPanel();
         scroll.setVisibility(show ? View.VISIBLE : View.GONE);
-        title.setText(show ? "▾ 开发商" : "▸ 开发商");
+        title.setText(show ? "▾ Developer" : "▸ Developer");
     });
 }
 
@@ -4655,12 +4655,12 @@ private void setupDeveloperToggle() {
 
 /** 游玩状态二级分类：{筛选值, 显示文案}，顺序即展示顺序。 */
 private static final String[][] STATUS_FILTERS = {
-        {"", "全部"},
-        {"PLAYING", "在玩"},
-        {"COMPLETED", "玩过"},
-        {"UNPLAYED", "未玩"},
-        {"ONHOLD", "搁置"},
-        {"DROPPED", "抛弃"},
+        {"", "All"},
+        {"PLAYING", "Playing"},
+        {"COMPLETED", "Played"},
+        {"UNPLAYED", "Not played"},
+        {"ONHOLD", "Put on hold"},
+        {"DROPPED", "Abandon"},
 };
 
 /** 当前选中的游玩状态筛选值，空串表示不按状态过滤。 */
@@ -4690,7 +4690,7 @@ private void collapseDeveloperPanel() {
     View scroll = findViewById(R.id.developerScroll);
     TextView title = findViewById(R.id.filterDeveloper);
     if (scroll != null) scroll.setVisibility(View.GONE);
-    if (title != null) title.setText("▸ 开发商");
+    if (title != null) title.setText("▸ Developer");
 }
 
 /**
@@ -4702,7 +4702,7 @@ private void updateStatusTitle() {
     View scroll = findViewById(R.id.statusScroll);
     if (title == null) return;
     boolean expanded = scroll != null && scroll.getVisibility() == View.VISIBLE;
-    String label = "游玩状态";
+    String label = "Game status";
     if (!expanded && statusFilter != null && !statusFilter.isEmpty()) {
         for (String[] item : STATUS_FILTERS) {
             if (item[0].equals(statusFilter)) { label = item[1]; break; }
@@ -4800,7 +4800,7 @@ private void updateStatusFilterSelection() {
         // 文字色变化时图标 tint 必须一起重建：ImageSpan 持有的是已着色的 Drawable，
         // 只改 setTextColor 不会传导到图标，选中态下图标必须与文字一起着色。
         int fg = selected ? ActionButtonStyle.foreground(this, ActionButtonStyle.FILTER) : getColorCompat(R.color.yh_text);
-        String label = value.isEmpty() ? "全部"
+        String label = value.isEmpty() ? "All"
                 : com.yuki.yukihub.util.IconedText.labelForStatus(
                         value.toLowerCase(java.util.Locale.ROOT));
         tv.setText(com.yuki.yukihub.util.IconedText.build(this,
@@ -4834,17 +4834,17 @@ private void rebuildDeveloperFilters() {
         }
     }
     if (counts.isEmpty()) {
-        TextView empty = sidebarDeveloperItem("暂无开发商", "");
+        TextView empty = sidebarDeveloperItem("No developer yet", "");
         empty.setAlpha(0.45f);
         empty.setEnabled(false);
         list.addView(empty);
         title.setAlpha(0.55f);
         if (scroll != null) scroll.setVisibility(View.GONE);
-        title.setText("▸ 开发商");
+        title.setText("▸ Developer");
         return;
     }
     title.setAlpha(1f);
-    list.addView(sidebarDeveloperItem("全部", ""));
+    list.addView(sidebarDeveloperItem("All", ""));
     // 按游戏数降序，数量相同按名称，常玩的开发商排在前面便于横向查找
     List<java.util.Map.Entry<String, Integer>> entries = new ArrayList<>(counts.entrySet());
     java.util.Collections.sort(entries, (a, b) -> {
@@ -4946,11 +4946,11 @@ private void bindFilter(int id, String value) {
             int fg = selected ? ActionButtonStyle.foreground(this, ActionButtonStyle.FILTER) : getColorCompat(R.color.yh_text);
             // 收藏项带心形图标；文字色随选中态变化，图标 tint 必须同步重建
             if (id == R.id.filterFavorite) {
-                com.yuki.yukihub.util.IconedText.set(tv, R.drawable.ic_st_heart, " 收藏", 8f, fg);
+                com.yuki.yukihub.util.IconedText.set(tv, R.drawable.ic_st_heart, "Collect", 8f, fg);
             }
             // 隐藏项带眼睛图标；数量大于 0 时后缀计数，让用户在别的分类也能看到「有东西被藏起来了」
             if (id == R.id.filterHidden) {
-                String label = hiddenGames.isEmpty() ? " 隐藏" : " 隐藏 " + hiddenGames.size();
+                String label = hiddenGames.isEmpty() ? "Hide" : "Hide" + hiddenGames.size();
                 com.yuki.yukihub.util.IconedText.set(tv, R.drawable.ic_st_hidden, label, 8f, fg);
             }
             tv.setTextColor(fg);
@@ -5093,9 +5093,9 @@ scanMissingCoversIfNeeded();
         tvEmpty.setVisibility(shown.isEmpty() ? View.VISIBLE : View.GONE);
         if (shown.isEmpty() && hiddenView) {
             // 隐藏分类为空时给出可执行的说明，避免用户以为功能坏了。
-            tvEmpty.setText("没有隐藏的游戏\n在「选项」菜单里可以把游戏隐藏起来");
+            tvEmpty.setText("No hidden games\nYou can hide the game in the \"Options\" menu");
         } else if (shown.isEmpty()) {
-            tvEmpty.setText("还没有游戏\n点击「添加」手动录入，或点击「扫描」导入目录");
+            tvEmpty.setText("No games yet\nClick \"Add\" to enter manually, or click \"Scan\" to import the directory");
         }
         tvStatsGames.setText(String.valueOf(allGames.size()));
         tvStatsTime.setText(TimeFormatUtil.playTime(total));
@@ -5186,7 +5186,7 @@ private void loadRemoteImage(String url, ImageView target, String prefix) {
     if (isDetailCover && sideDetailCoverLoading != null) {
         sideDetailCoverLoading.setVisibility(View.VISIBLE);
         if (sideDetailPlaceholder != null) {
-            sideDetailPlaceholder.setText("封面加载中…");
+            sideDetailPlaceholder.setText("Cover loading...");
             sideDetailPlaceholder.setVisibility(View.VISIBLE);
         }
     }
@@ -5259,7 +5259,7 @@ private void showRemoteImageFailed(ImageView target, String requestTag, boolean 
             if (sideDetailCoverLoading != null) sideDetailCoverLoading.setVisibility(View.GONE);
             target.setVisibility(View.GONE);
             if (sideDetailPlaceholder != null) {
-                sideDetailPlaceholder.setText("封面加载失败\n可稍后重试或手动设置");
+                sideDetailPlaceholder.setText("Cover loading failed\nYou can try again later or set it manually");
                 sideDetailPlaceholder.setVisibility(View.VISIBLE);
             }
         }
@@ -5428,7 +5428,7 @@ private void updateTranslateButtonState() {
     boolean hasDescription = hasMeta && currentSideMetadata.description != null && !currentSideMetadata.description.trim().isEmpty();
     sideTranslateToggle.setVisibility(hasDescription ? View.VISIBLE : View.GONE);
     if (!hasDescription) return;
-    sideTranslateToggle.setText(sideShowingTranslatedDescription ? "原文" : "译文");
+    sideTranslateToggle.setText(sideShowingTranslatedDescription ? "Original" : "translation");
     sideTranslateToggle.setEnabled(true);
     sideTranslateToggle.setAlpha(1f);
 }
@@ -5439,7 +5439,7 @@ private void toggleOrTranslateDescription() {
     if (sideShowingTranslatedDescription) {
         sideShowingTranslatedDescription = false;
         setTranslatedStateFor(selectedGame.id, false);
-        setSideDescription(emptyText(meta.description, "暂无" + metadataSourceLabel() + "简介。"));
+        setSideDescription(emptyText(meta.description, "None yet" + metadataSourceLabel() + "Introduction."));
         updateTranslateButtonState();
         return;
     }
@@ -5460,7 +5460,7 @@ private void toggleOrTranslateDescription() {
             runOnUiThread(() -> {
                 if (selectedGame == null || selectedGame.id != gameId || currentSideMetadata != meta) return;
                 if (translated == null || translated.trim().isEmpty()) {
-                    Toast.makeText(MainActivity.this, "简介翻译失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Introduction translation failed", Toast.LENGTH_SHORT).show();
                     updateTranslateButtonState();
                     return;
                 }
@@ -5475,7 +5475,7 @@ private void toggleOrTranslateDescription() {
             Log.w("YukiHub", "translate description failed", t);
             runOnUiThread(() -> {
                 if (selectedGame != null && selectedGame.id == gameId) {
-                    Toast.makeText(MainActivity.this, "简介翻译失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Introduction translation failed", Toast.LENGTH_SHORT).show();
                     updateTranslateButtonState();
                 }
             });
@@ -5636,7 +5636,7 @@ private String safeCacheName(String input) {
 }
 
 private void setSideDescription(String text) {
-    sideFullDescription = emptyText(text, "暂无简介。");
+    sideFullDescription = emptyText(text, "No introduction yet.");
     sideDescExpanded = false;
     renderSideDescription();
 }
@@ -5648,7 +5648,7 @@ private void renderSideDescription() {
     sideDetailHint.setMaxLines(sideDescExpanded ? Integer.MAX_VALUE : 5);
     sideDetailHint.setEllipsize(sideDescExpanded ? null : android.text.TextUtils.TruncateAt.END);
     sideDescToggle.setVisibility(longEnough ? View.VISIBLE : View.GONE);
-    sideDescToggle.setText(sideDescExpanded ? "收起" : "展开");
+    sideDescToggle.setText(sideDescExpanded ? "Close" : "Expand");
 }
 
 private void renderTagChips(String tagsText) {
@@ -5724,34 +5724,34 @@ private void updateSideDetail(Game game) {
         sideBtnLaunch.setAlpha(hasGame ? 1f : 0.45f);
         sideBtnOptions.setAlpha(hasGame ? 1f : 0.45f);
         if (!hasGame) {
-sideDetailTitle.setText("请选择游戏");
+sideDetailTitle.setText("Please select a game");
 updateSideMetadataSourceBadge("");
 sideDetailOriginalTitle.setText("");
             setSideDescription("点击中间的游戏卡片后，这里会显示封面、启动入口和选项。后续可接 VNDB/API 简介与元数据。");
-            sideDetailDate.setText("发布日期：-");
-sideDetailDeveloper.setText("开发商：-");
-if (sideDetailPath != null) sideDetailPath.setText("路径：-");
+            sideDetailDate.setText("release date:-");
+sideDetailDeveloper.setText("Developer:-");
+if (sideDetailPath != null) sideDetailPath.setText("path:-");
             sideDetailRating.setText("评分：-/10");
-            if (sideDetailLength != null) sideDetailLength.setText("游玩时长：-");
+            if (sideDetailLength != null) sideDetailLength.setText("Play time:-");
             renderTagChips("-");
             sideDetailCoverUri = null;
             sideDetailCover.setImageDrawable(null);
             sideDetailCover.setVisibility(View.GONE);
             sideDetailPlaceholder.setVisibility(View.VISIBLE);
-            sideDetailPlaceholder.setText("选择游戏");
+            sideDetailPlaceholder.setText("Select game");
             if (sideScreenshot1 != null) sideScreenshot1.setImageDrawable(null);
             if (sideScreenshot2 != null) sideScreenshot2.setImageDrawable(null);
             return;
         }
-        sideDetailTitle.setText(emptyText(game.title, "未命名游戏"));
+        sideDetailTitle.setText(emptyText(game.title, "Unnamed game"));
 updateSideMetadataSourceBadge("");
-sideDetailOriginalTitle.setText(metadataSourceLabel() + " 匹配中…");
-        setSideDescription(emptyText(game.description, "正在从" + metadataSourceLabel() + "获取简介…"));
-        sideDetailDate.setText("发布日期：-");
-sideDetailDeveloper.setText("开发商：-");
-if (sideDetailPath != null) sideDetailPath.setText("路径：" + displayPath(game.rootUri));
+sideDetailOriginalTitle.setText(metadataSourceLabel() + "Matching…");
+        setSideDescription(emptyText(game.description, "Removing from" + metadataSourceLabel() + "Get an introduction…"));
+        sideDetailDate.setText("release date:-");
+sideDetailDeveloper.setText("Developer:-");
+if (sideDetailPath != null) sideDetailPath.setText("Path:" + displayPath(game.rootUri));
         sideDetailRating.setText("评分：-/10");
-        if (sideDetailLength != null) sideDetailLength.setText("游玩时长：-");
+        if (sideDetailLength != null) sideDetailLength.setText("Play time:-");
         renderTagChips("-");
         if (sideScreenshot1 != null) sideScreenshot1.setImageDrawable(null);
         if (sideScreenshot2 != null) sideScreenshot2.setImageDrawable(null);
@@ -5871,25 +5871,25 @@ private void styleAlertDialogDark(AlertDialog dialog) {
 private void showSideOptions(Game game) {
         if (game == null) return;
         String sourceLabel = metadataSourceLabel();
-String rematchItem = "重新匹配" + sourceLabel;
-        String customSearchItem = "自定义搜索" + sourceLabel;
-        String syncItem = "同步" + sourceLabel + "到卡片";
-        String playTimeItem = "修改游玩时长";
-        String favoriteItem = game.favorite ? "取消收藏" : "收藏游戏";
-        String hideItem = game.hidden ? "取消隐藏" : "隐藏游戏";
-        String nsfwBlurLabel = "🔞 NSFW 封面模糊";
+String rematchItem = "Rematch" + sourceLabel;
+        String customSearchItem = "Custom search" + sourceLabel;
+        String syncItem = "Sync" + sourceLabel + "To card";
+        String playTimeItem = "Modify play time";
+        String favoriteItem = game.favorite ? "Cancel favorites" : "Collection games";
+        String hideItem = game.hidden ? "Unhide" : "Hidden game";
+        String nsfwBlurLabel = "🔞 NSFW cover blurry";
         boolean nsfwBlurGameOn = game.nsfw;
-        String nsfwBlurItem = nsfwBlurLabel + "：" + (nsfwBlurGameOn ? "开启" : "关闭");
+        String nsfwBlurItem = nsfwBlurLabel + "：" + (nsfwBlurGameOn ? "Turn on" : "Close");
         java.util.List<String> itemList = new java.util.ArrayList<>(java.util.Arrays.asList(
-                "编辑游戏", "设置游玩状态", playTimeItem, favoriteItem, hideItem, nsfwBlurItem, rematchItem, customSearchItem, syncItem));
-        if (game.engine == EngineType.KIRIKIRI || game.engine == EngineType.ONS || game.engine == EngineType.PC || game.engine == EngineType.FVP) itemList.add("引擎设置");
-        if (game.engine == EngineType.KIRIKIRI || game.engine == EngineType.ARTEMIS || game.engine == EngineType.FVP) itemList.add("虚拟鼠标");
+                "Edit game", "Set play status", playTimeItem, favoriteItem, hideItem, nsfwBlurItem, rematchItem, customSearchItem, syncItem));
+        if (game.engine == EngineType.KIRIKIRI || game.engine == EngineType.ONS || game.engine == EngineType.PC || game.engine == EngineType.FVP) itemList.add("Engine settings");
+        if (game.engine == EngineType.KIRIKIRI || game.engine == EngineType.ARTEMIS || game.engine == EngineType.FVP) itemList.add("Virtual mouse");
         // 桌面快捷方式：部分启动器（含部分定制 ROM）不支持固定快捷方式，不支持时不显示该项
         boolean shortcutSupported = com.yuki.yukihub.shortcut.GameShortcutManager.isSupported(this);
-        String shortcutItem = "📌 添加到桌面";
+        String shortcutItem = "📌 Add to desktop";
         if (shortcutSupported) itemList.add(shortcutItem);
-        itemList.add("详细信息");
-        itemList.add("删除游戏");
+        itemList.add("Details");
+        itemList.add("Delete game");
         itemList.add("多选操作（隐藏 / 删除）…");
         String[] items = itemList.toArray(new String[0]);
         LinearLayout listRoot = new LinearLayout(this);
@@ -5902,7 +5902,7 @@ String rematchItem = "重新匹配" + sourceLabel;
         for (String item : items) {
             TextView row = new TextView(this);
             row.setText(item);
-            boolean isDangerItem = "删除游戏".equals(item) || item.startsWith("多选操作");
+            boolean isDangerItem = "Delete game".equals(item) || item.startsWith("Multiple selection operation");
             row.setTextColor(getColorCompat(isDangerItem ? R.color.yh_secondary : R.color.yh_text));
             row.setTextSize(15);
             row.setGravity(android.view.Gravity.CENTER_VERTICAL);
@@ -5915,14 +5915,14 @@ String rematchItem = "重新匹配" + sourceLabel;
                 playUiSound(UI_SOUND_CONFIRM);
                 if (ref[0] != null) ref[0].dismiss();
                 String chosen = ((TextView) v).getText().toString();
-                if ("编辑游戏".equals(chosen)) showEditDialog(game);
-                else if ("设置游玩状态".equals(chosen)) showPlayStatusDialog(game, null);
+                if ("Edit game".equals(chosen)) showEditDialog(game);
+                else if ("Set play status".equals(chosen)) showPlayStatusDialog(game, null);
                 else if (playTimeItem.equals(chosen)) showEditPlayTimeDialog(game);
                 else if (favoriteItem.equals(chosen)) {
                     game.favorite = !game.favorite;
                     repository.update(game);
                     loadGames();
-                    Toast.makeText(this, game.favorite ? "已收藏" : "已取消收藏", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, game.favorite ? "Collected" : "Canceled favorites", Toast.LENGTH_SHORT).show();
                 }
                 else if (hideItem.equals(chosen)) toggleGameHidden(game);
                 else if (rematchItem.equals(chosen)) {
@@ -5935,15 +5935,15 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
                     boolean newVal = !nsfwBlurGameOn;
                     game.nsfw = newVal;
                     repository.update(game);
-                    Toast.makeText(this, "NSFW 封面模糊：" + (newVal ? "开启" : "关闭"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "NSFW cover blurry:" + (newVal ? "Turn on" : "Close"), Toast.LENGTH_SHORT).show();
                     loadGames();
                 }
-                else if ("引擎设置".equals(chosen)) { if (game.engine == EngineType.ONS) showOnsSettingsDialog(game); else if (game.engine == EngineType.PC) showPcSettingsDialog(game); else if (game.engine == EngineType.FVP) showFvpSettingsDialog(game); else showKrSettingsDialog(game); }
-                else if ("虚拟鼠标".equals(chosen)) showGameCursorDialog(game);
+                else if ("Engine settings".equals(chosen)) { if (game.engine == EngineType.ONS) showOnsSettingsDialog(game); else if (game.engine == EngineType.PC) showPcSettingsDialog(game); else if (game.engine == EngineType.FVP) showFvpSettingsDialog(game); else showKrSettingsDialog(game); }
+                else if ("Virtual mouse".equals(chosen)) showGameCursorDialog(game);
                 else if (shortcutItem.equals(chosen)) requestGameShortcut(game);
-                else if ("详细信息".equals(chosen)) showDetailDialog(game);
-                else if ("删除游戏".equals(chosen)) confirmDeleteGame(game);
-                else if (chosen != null && chosen.startsWith("多选操作")) enterMultiSelectMode(game);
+                else if ("Details".equals(chosen)) showDetailDialog(game);
+                else if ("Delete game".equals(chosen)) confirmDeleteGame(game);
+                else if (chosen != null && chosen.startsWith("Multiple selection operation")) enterMultiSelectMode(game);
             });
         }
         ScrollView optionScroll = new ScrollView(this);
@@ -5952,7 +5952,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         tintDialogRoot(optionScroll);
         optionScroll.addView(listRoot, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
         AlertDialog optionDialog = new AlertDialog.Builder(this)
-                .setTitle(emptyText(game.title, "游戏选项"))
+                .setTitle(emptyText(game.title, "Game options"))
                 .setView(optionScroll)
                 .show();
         ref[0] = optionDialog;
@@ -5975,13 +5975,13 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         boolean hide = !game.hidden;
         if (hide) {
             // 隐藏属于「要让人找不到」的操作，给一次二次确认；恢复不设门槛（用户本来就在找它）。
-            String title = emptyText(game.title, "这款游戏");
+            String title = emptyText(game.title, "This game");
             new AlertDialog.Builder(this)
-                    .setTitle("隐藏这款游戏？")
-                    .setMessage("“" + title + "”将从游戏库列表中移除。\n\n不会删除游戏文件，也不会清除封面、游玩时长和收藏；"
-                            + "之后可在筛选栏「隐藏」分类里取消隐藏。")
-                    .setPositiveButton("隐藏", (d, w) -> applyGameHidden(game, true))
-                    .setNegativeButton("取消", null)
+                    .setTitle("Hide this game?")
+                    .setMessage("“" + title + "” will be removed from the game library list.\n\nGame files will not be deleted, nor will cover, play time, and collections be cleared;"
+                            + "You can then unhide it in the \"Hide\" category of the filter bar.")
+                    .setPositiveButton("hide", (d, w) -> applyGameHidden(game, true))
+                    .setNegativeButton("Cancel", null)
                     .show();
             return;
         }
@@ -5998,7 +5998,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
             rows = 0;
         }
         if (rows != 1) {
-            Toast.makeText(this, hidden ? "隐藏失败，请重试" : "取消隐藏失败，请重试", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, hidden ? "Failed to hide, please try again" : "Failed to unhide, please try again", Toast.LENGTH_SHORT).show();
             return;
         }
         game.hidden = hidden;
@@ -6015,8 +6015,8 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
             applyFilter();
         }
         Toast.makeText(this, hidden
-                ? "已隐藏；筛选栏「隐藏」分类可取消隐藏"
-                : "已恢复 · " + emptyText(game.title, "") + "（在「全部」里可查看）",
+                ? "Hidden; the \"hidden\" category in the filter bar can be unhidden"
+                : "Restored ·" + emptyText(game.title, "") + "(Can be viewed in \"All\")",
                 Toast.LENGTH_SHORT).show();
     }
 
@@ -6039,7 +6039,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
     /** 设置页"一键重扫全部游戏资料"入口：确认弹窗。 */
     private void showBulkMetadataRefreshDialog() {
         if (metadataController.isBulkRefreshRunning()) {
-            Toast.makeText(this, "批量重扫已在运行中", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Batch rescan is already running", Toast.LENGTH_SHORT).show();
             return;
         }
         int count = 0;
@@ -6051,7 +6051,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
             }
         }
         if (count == 0) {
-            Toast.makeText(this, "没有可重扫的游戏", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "There are no games to rescan", Toast.LENGTH_SHORT).show();
             return;
         }
         LinearLayout box = new LinearLayout(this);
@@ -6059,23 +6059,23 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         box.setPadding(dp(20), dp(6), dp(20), 0);
         TextView msg = new TextView(this);
         float intervalSec = prefs.getFloat(MetadataController.KEY_BULK_REFRESH_INTERVAL_SEC, 2.5f);
-        msg.setText("将使用当前资料源「" + metadataSourceLabel() + "」重新获取 " + count + " 款游戏的资料" + (incomplete > 0 ? "（其中约 " + incomplete + " 款资料不完整）" : "") + "，已缓存内容会被覆盖刷新。\n\n第三方接口有限流，串行重扫且每款间隔约 " + intervalSec + " 秒，期间请保持网络连接。");
+        msg.setText("Will use the current data source \"" + metadataSourceLabel() + "\"Reacquire" + count + "Game information" + (incomplete > 0 ? "(Of which approx." + incomplete + "Payment information is incomplete)" : "") + ", the cached content will be overwritten and refreshed.\n\nThe third-party interface has limited current flow, serial rescan and the interval between each model is about" + intervalSec + "Seconds, please stay connected to the Internet during this time.");
         msg.setTextColor(getColorCompat(R.color.yh_text));
         msg.setTextSize(12);
         msg.setLineSpacing(dp(2), 1.0f);
         box.addView(msg);
         CheckBox onlyIncomplete = new CheckBox(this);
-        onlyIncomplete.setText("仅重扫资料不完整的游戏（跳过已有完整缓存的，更快更省）");
+        onlyIncomplete.setText("Only rescan games with incomplete data (skip games with complete cache, faster and more economical)");
         onlyIncomplete.setTextColor(getColorCompat(R.color.yh_text));
         onlyIncomplete.setTextSize(12);
         onlyIncomplete.setChecked(true);
         box.addView(onlyIncomplete);
         final int totalCount = count;
         AlertDialog confirmDialog = new AlertDialog.Builder(this)
-                .setTitle("重扫全部游戏资料")
+                .setTitle("Re-scan all game data")
                 .setView(box)
-                .setPositiveButton("开始重扫", (d, w) -> startBulkMetadataRefresh(onlyIncomplete.isChecked(), totalCount))
-                .setNegativeButton("取消", null)
+                .setPositiveButton("Start rescanning", (d, w) -> startBulkMetadataRefresh(onlyIncomplete.isChecked(), totalCount))
+                .setNegativeButton("Cancel", null)
                 .show();
         styleAlertDialogDark(confirmDialog);
     }
@@ -6090,18 +6090,18 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         pb.setProgress(0);
         box.addView(pb);
         TextView status = new TextView(this);
-        status.setText("正在准备…");
+        status.setText("Preparing…");
         status.setTextColor(getColorCompat(R.color.yh_text));
         status.setTextSize(12);
         status.setLineSpacing(dp(2), 1.0f);
         status.setPadding(0, dp(8), 0, 0);
         box.addView(status);
         AlertDialog progressDialog = new AlertDialog.Builder(this)
-                .setTitle("正在重扫游戏资料")
+                .setTitle("Re-scanning game data")
                 .setView(box)
-                .setNegativeButton("停止", (d, w) -> {
+                .setNegativeButton("Stop", (d, w) -> {
                     metadataController.cancelBulkRefresh();
-                    status.setText("正在停止…（当前游戏处理完后退出）");
+                    status.setText("Stopping...(Exiting after the current game is processed)");
                 })
                 .setCancelable(false)
                 .create();
@@ -6117,7 +6117,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
                 }
                 pb.setMax(Math.max(total, 1));
                 pb.setProgress(Math.min(done + 1, Math.max(total, 1)));
-                status.setText("正在处理 " + (done + 1) + "/" + total + "：" + gameTitle);
+                status.setText("Processing" + (done + 1) + "/" + total + "：" + gameTitle);
             }
 
             @Override
@@ -6135,12 +6135,12 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
     /** 批量重扫结果汇总。 */
     private void showBulkRefreshResult(MetadataController.BulkRefreshResult r) {
         StringBuilder sb = new StringBuilder();
-        sb.append(r.cancelled ? "已停止，已完成部分：\n" : "重扫完成：\n");
-        sb.append("· 尝试 ").append(r.attempted).append(" 款\n");
-        if (r.skipped > 0) sb.append("· 跳过（资料已完整）").append(r.skipped).append(" 款\n");
-        sb.append("· 成功 ").append(r.success).append(" 款\n");
-        sb.append("· 失败 ").append(r.failed).append(" 款\n");
-        if (r.needConfirm > 0) sb.append("· 需人工确认 ").append(r.needConfirm).append(" 款\n");
+        sb.append(r.cancelled ? "Stopped, completed part:" : "Rescan completed:");
+        sb.append("· try").append(r.attempted).append("Payment");
+        if (r.skipped > 0) sb.append("· Skip (information is complete)").append(r.skipped).append("Payment");
+        sb.append("· success").append(r.success).append("Payment");
+        sb.append("· fail").append(r.failed).append("Payment");
+        if (r.needConfirm > 0) sb.append("· Manual confirmation required").append(r.needConfirm).append("Payment");
         StringBuilder detailSb = new StringBuilder();
         int shown = 0;
         for (String d : r.details) {
@@ -6148,11 +6148,11 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
             detailSb.append(d).append("\n");
             shown++;
         }
-        if (r.details.size() > shown) detailSb.append("…共 ").append(r.details.size()).append(" 条明细");
+        if (r.details.size() > shown) detailSb.append("…common").append(r.details.size()).append("Item details");
         AlertDialog resultDialog = new AlertDialog.Builder(this)
-                .setTitle(r.cancelled ? "已停止" : "重扫完成")
+                .setTitle(r.cancelled ? "Stopped" : "Rescan completed")
                 .setMessage(sb.toString() + (detailSb.length() > 0 ? "\n" + detailSb : ""))
-                .setPositiveButton("知道了", null)
+                .setPositiveButton("Knew", null)
                 .show();
         styleAlertDialogDark(resultDialog);
         // 当前选中的游戏若刚被重扫，刷新右侧资料卡片
@@ -6168,11 +6168,11 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
     private void requestGameShortcut(Game game) {
         if (game == null) return;
         if (!com.yuki.yukihub.shortcut.GameShortcutManager.isSupported(this)) {
-            Toast.makeText(this, "当前桌面不支持添加快捷方式", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "The current desktop does not support adding shortcuts", Toast.LENGTH_LONG).show();
             return;
         }
         if (com.yuki.yukihub.shortcut.GameShortcutManager.isPinned(this, game.id)) {
-            Toast.makeText(this, "桌面已有该游戏的快捷方式", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "There is already a shortcut for this game on your desktop", Toast.LENGTH_SHORT).show();
             return;
         }
         final long gameId = game.id;
@@ -6189,7 +6189,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
                 boolean ok = com.yuki.yukihub.shortcut.GameShortcutManager.requestPinWithIcon(
                         MainActivity.this, gameId, title, icon, MainActivity.class);
                 if (!ok) {
-                    Toast.makeText(MainActivity.this, "添加失败，当前桌面可能不支持", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Adding failed, the current desktop may not support", Toast.LENGTH_LONG).show();
                 }
             });
         });
@@ -6198,14 +6198,14 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
     private void confirmDeleteGame(Game game) {
         if (game == null) return;
         new AlertDialog.Builder(this)
-                .setTitle("删除游戏")
-                .setMessage("确定删除 “" + game.title + "”？不会删除本体文件。")
-                .setPositiveButton("删除", (x,w)->{
+                .setTitle("Delete game")
+                .setMessage("Confirm to delete \"" + game.title + "\"? The ontology file will not be deleted.")
+                .setPositiveButton("Delete", (x,w)->{
                     com.yuki.yukihub.shortcut.GameShortcutManager.disableForGame(this, game.id);
                     PcLaunchPrefs.clear(this, game.id);
                     FvpLaunchPrefs.clear(this, game.id);
                     repository.delete(game.id); selectedGame = null; loadGames(); })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -6219,7 +6219,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         ensureMultiSelectBar();
         if (multiSelectBar != null) multiSelectBar.setVisibility(View.VISIBLE);
         updateMultiSelectBar(adapter.getCheckedCount());
-        Toast.makeText(this, "已进入多选模式，点选游戏后可批量隐藏或删除", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "You have entered multi-selection mode. You can hide or delete games in batches after clicking on them.", Toast.LENGTH_SHORT).show();
     }
 
     private void exitMultiSelectMode() {
@@ -6229,12 +6229,12 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
 
     private void updateMultiSelectBar(int count) {
         if (multiSelectCount != null) {
-            multiSelectCount.setText("已选 " + count + " 个");
+            multiSelectCount.setText("Selected" + count + " 个");
         }
         // 隐藏分类里按钮是「恢复」，其余分类是「隐藏」；文案与配色一起跟着分类走。
         if (multiSelectHideBtn != null) {
             boolean inHiddenView = "HIDDEN".equals(filter);
-            multiSelectHideBtn.setText(inHiddenView ? "恢复" : "隐藏");
+            multiSelectHideBtn.setText(inHiddenView ? "Recover" : "hide");
             multiSelectHideBtn.setTextColor(getColorCompat(inHiddenView ? R.color.yh_primary : R.color.yh_text));
         }
         if (multiSelectBar != null) {
@@ -6264,29 +6264,29 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         multiSelectBar.setVisibility(View.GONE);
 
         multiSelectCount = new TextView(this);
-        multiSelectCount.setText("已选 0 个");
+        multiSelectCount.setText("0 selected");
         multiSelectCount.setTextColor(getColorCompat(R.color.yh_text));
         multiSelectCount.setTextSize(13);
         multiSelectCount.setTypeface(null, android.graphics.Typeface.BOLD);
         multiSelectBar.addView(multiSelectCount, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
 
-        TextView selectAllBtn = makeMultiSelectAction("全选", getColorCompat(R.color.yh_primary));
+        TextView selectAllBtn = makeMultiSelectAction("Select all", getColorCompat(R.color.yh_primary));
         selectAllBtn.setOnClickListener(v -> {
             if (adapter != null) adapter.selectAllVisible();
         });
         multiSelectBar.addView(selectAllBtn, multiSelectBtnLp());
 
-        TextView deleteBtn = makeMultiSelectAction("删除", getColorCompat(R.color.yh_secondary));
+        TextView deleteBtn = makeMultiSelectAction("Delete", getColorCompat(R.color.yh_secondary));
         deleteBtn.setOnClickListener(v -> confirmBatchDelete());
         multiSelectBar.addView(deleteBtn, multiSelectBtnLp());
 
         // 批量隐藏 / 恢复：按钮语义跟随当前分类（在「隐藏」分类里就是恢复）。
         // 多选栏只创建一次，所以文案不在闭包里定死，由 updateMultiSelectBar 每次刷新。
-        multiSelectHideBtn = makeMultiSelectAction("隐藏", getColorCompat(R.color.yh_text));
+        multiSelectHideBtn = makeMultiSelectAction("hide", getColorCompat(R.color.yh_text));
         multiSelectHideBtn.setOnClickListener(v -> confirmBatchHide(!"HIDDEN".equals(filter)));
         multiSelectBar.addView(multiSelectHideBtn, multiSelectBtnLp());
 
-        TextView cancelBtn = makeMultiSelectAction("取消", getColorCompat(R.color.yh_text_muted));
+        TextView cancelBtn = makeMultiSelectAction("Cancel", getColorCompat(R.color.yh_text_muted));
         cancelBtn.setOnClickListener(v -> exitMultiSelectMode());
         multiSelectBar.addView(cancelBtn, multiSelectBtnLp());
 
@@ -6327,16 +6327,16 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         if (adapter == null) return;
         final java.util.Set<Long> ids = adapter.getCheckedIds();
         if (ids.isEmpty()) {
-            Toast.makeText(this, hide ? "请先勾选要隐藏的游戏" : "请先勾选要恢复的游戏", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, hide ? "Please check the games you want to hide first" : "Please check the game you want to restore first", Toast.LENGTH_SHORT).show();
             return;
         }
         int count = ids.size();
         new AlertDialog.Builder(this)
-                .setTitle(hide ? "批量隐藏" : "批量恢复")
+                .setTitle(hide ? "Hide in batches" : "Batch recovery")
                 .setMessage(hide
-                        ? "确定隐藏选中的 " + count + " 个游戏？\n不会删除游戏文件，也不会清除封面与游玩时长；可在筛选栏「隐藏」分类里恢复。"
-                        : "确定恢复选中的 " + count + " 个游戏？\n恢复后会回到「全部」分类中。")
-                .setPositiveButton(hide ? "隐藏 " + count + " 个" : "恢复 " + count + " 个", (d, w) -> {
+                        ? "Confirm to hide selected" + count + "A game?\nThe game files will not be deleted, nor will the cover and play time be cleared; they can be restored in the \"Hidden\" category of the filter bar."
+                        : "Confirm to restore the selected" + count + "A game?\nAfter recovery, it will return to the \"All\" category.")
+                .setPositiveButton(hide ? "Hide" + count + " 个" : "Recover" + count + " 个", (d, w) -> {
                     int updated;
                     try {
                         updated = repository.setHiddenBatch(ids, hide);
@@ -6345,7 +6345,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
                         updated = 0;
                     }
                     if (updated <= 0) {
-                        Toast.makeText(MainActivity.this, hide ? "隐藏失败，请重试" : "恢复失败，请重试", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, hide ? "Failed to hide, please try again" : "Restore failed, please try again", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     // 选中项里可能含被隐藏的那款，清掉选中；侧栏由 applyFilter 重新指向首项。
@@ -6358,9 +6358,9 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
                         applyFilter();
                     }
                     Toast.makeText(MainActivity.this,
-                            (hide ? "已隐藏 " : "已恢复 ") + updated + " 个游戏", Toast.LENGTH_SHORT).show();
+                            (hide ? "Hidden" : "Restored") + updated + "Games", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -6368,22 +6368,22 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         if (adapter == null) return;
         java.util.Set<Long> ids = adapter.getCheckedIds();
         if (ids.isEmpty()) {
-            Toast.makeText(this, "请先勾选要删除的游戏", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please check the game you want to delete first", Toast.LENGTH_SHORT).show();
             return;
         }
         int count = ids.size();
         new AlertDialog.Builder(this)
-                .setTitle("批量删除")
-                .setMessage("确定删除选中的 " + count + " 个游戏？\n不会删除本体文件，仅从游戏库移除。")
-                .setPositiveButton("删除 " + count + " 个", (d, w) -> {
+                .setTitle("Batch delete")
+                .setMessage("Confirm to delete selected" + count + "A game?\nThe base file will not be deleted, only removed from the game library.")
+                .setPositiveButton("Delete" + count + " 个", (d, w) -> {
                     com.yuki.yukihub.shortcut.GameShortcutManager.disableForGames(this, ids);
                     int deleted = repository.deleteBatch(ids);
                     selectedGame = null;
                     exitMultiSelectMode();
                     loadGames();
-                    Toast.makeText(MainActivity.this, "已删除 " + deleted + " 个游戏", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Deleted" + deleted + "Games", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -6391,33 +6391,33 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
     private void confirmClearAllGames() {
         int total = allGames == null ? 0 : allGames.size();
         if (total <= 0) {
-            Toast.makeText(this, "游戏库已经是空的", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The game library is already empty", Toast.LENGTH_SHORT).show();
             return;
         }
         new AlertDialog.Builder(this)
-                .setTitle("清空游戏库")
-                .setMessage("即将删除全部 " + total + " 个游戏记录。\n\n"
-                        + "· 不会删除本体文件\n"
-                        + "· 游玩时长记录会一并清除\n"
-                        + "· 此操作不可撤销\n\n"
-                        + "确定继续？")
-                .setPositiveButton("全部清空", (d, w) -> {
+                .setTitle("Clear game library")
+                .setMessage("All will be deleted soon" + total + "Game records."
+                        + "· Ontology files will not be deleted"
+                        + "· Play time records will be cleared together"
+                        + "· This operation is irreversible"
+                        + "Are you sure to continue?")
+                .setPositiveButton("Clear all", (d, w) -> {
                     // 再确认一次，防止误触
                     new AlertDialog.Builder(this)
-                            .setTitle("最后确认")
-                            .setMessage("真的要清空全部 " + total + " 个游戏吗？")
-                            .setPositiveButton("确定清空", (d2, w2) -> {
+                            .setTitle("Final confirmation")
+                            .setMessage("I really need to clear everything" + total + "A game?")
+                            .setPositiveButton("OK to clear", (d2, w2) -> {
                                 com.yuki.yukihub.shortcut.GameShortcutManager.disableAll(this);
                                 int deleted = repository.deleteAll();
                                 selectedGame = null;
                                 exitMultiSelectMode();
                                 loadGames();
-                                Toast.makeText(MainActivity.this, "已清空 " + deleted + " 个游戏", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Cleared" + deleted + "Games", Toast.LENGTH_SHORT).show();
                             })
-                            .setNegativeButton("取消", null)
+                            .setNegativeButton("Cancel", null)
                             .show();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -6442,7 +6442,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         root.setPadding(pad, dp(12), pad, dp(8));
 
         TextView scanTitle = new TextView(this);
-        scanTitle.setText("扫描目录");
+        scanTitle.setText("Scan directory");
         scanTitle.setTextColor(getColorCompat(R.color.yh_text));
         scanTitle.setTextSize(14);
         scanTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -6461,11 +6461,11 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         activeScanRootInfo = scanInfo;
         refreshScanRootListUi(scanRootList, scanInfo);
 
-        Button addScanRootButton = krButton("+ 添加扫描目录");
+        Button addScanRootButton = krButton("+ Add scan directory");
         addScanRootButton.setTextColor(primaryTextColor());
         addScanRootButton.setOnClickListener(v -> {
             if (getScanRootUris().size() >= MAX_SCAN_ROOTS) {
-                Toast.makeText(MainActivity.this, "最多绑定 " + MAX_SCAN_ROOTS + " 个扫描目录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Most bindings" + MAX_SCAN_ROOTS + "Scan directories", Toast.LENGTH_SHORT).show();
                 return;
             }
             launchScanRootPicker(-1);
@@ -6475,7 +6475,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         root.addView(addScanRootButton, addScanRootLp);
 
         TextView scanDepthTitle = new TextView(this);
-        scanDepthTitle.setText("\n启动时扫描最大深度");
+        scanDepthTitle.setText("Scan maximum depth on startup");
         scanDepthTitle.setTextColor(getColorCompat(R.color.yh_text));
         scanDepthTitle.setTextSize(14);
         scanDepthTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -6484,7 +6484,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         TextView scanDepthInfo = new TextView(this);
         int savedDepth = prefs == null ? DEFAULT_STARTUP_SCAN_DEPTH : prefs.getInt(KEY_STARTUP_SCAN_DEPTH, DEFAULT_STARTUP_SCAN_DEPTH);
         savedDepth = Math.max(1, Math.min(MAX_STARTUP_SCAN_DEPTH, savedDepth));
-        scanDepthInfo.setText("当前：" + savedDepth + " 层（最深 4 层）");
+        scanDepthInfo.setText("Current:" + savedDepth + "Layers (up to 4 layers)");
         scanDepthInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         scanDepthInfo.setTextSize(11);
         scanDepthInfo.setPadding(0, dp(4), 0, dp(6));
@@ -6511,7 +6511,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int depth = Math.max(1, Math.min(MAX_STARTUP_SCAN_DEPTH, progress + 1));
                 depthValue.setText(String.valueOf(depth));
-                scanDepthInfo.setText("当前：" + depth + " 层（最深 4 层）");
+                scanDepthInfo.setText("Current:" + depth + "Layers (up to 4 layers)");
             }
 
             @Override
@@ -6523,28 +6523,28 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         scanDepthSeek.setProgress(savedDepth - 1);
 
         TextView scanModeTitle = new TextView(this);
-        scanModeTitle.setText("\n扫描模式");
+        scanModeTitle.setText("Scan mode");
         scanModeTitle.setTextColor(getColorCompat(R.color.yh_text));
         scanModeTitle.setTextSize(14);
         scanModeTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(scanModeTitle);
 
         TextView scanModeInfo = new TextView(this);
-        scanModeInfo.setText("快速模式：批量读取目录并缓存，扫描更快；兼容模式：旧版逐项扫描，行为最保守。如快速模式扫描结果异常可切回兼容模式。");
+        scanModeInfo.setText("Fast mode: reads directories in batches and caches them, scanning faster; Compatibility mode: the old version scans item by item, with the most conservative behavior. If the fast mode scan results are abnormal, you can switch back to compatibility mode.");
         scanModeInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         scanModeInfo.setTextSize(11);
         scanModeInfo.setPadding(0, dp(4), 0, dp(6));
         root.addView(scanModeInfo);
 
         Spinner scanModeSpinner = new TapSafeSpinner(this);
-        ArrayAdapter<String> scanModeAdapter = krSpinnerAdapter(new String[]{"快速模式", "兼容模式"});
+        ArrayAdapter<String> scanModeAdapter = krSpinnerAdapter(new String[]{"Quick mode", "Compatibility mode"});
         scanModeSpinner.setAdapter(scanModeAdapter);
         String savedScanMode = prefs == null ? SCAN_MODE_FAST : prefs.getString(KEY_SCAN_MODE, SCAN_MODE_FAST);
         scanModeSpinner.setSelection(SCAN_MODE_LEGACY.equals(savedScanMode) ? 1 : 0);
         root.addView(scanModeSpinner, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(44)));
 
         TextView fontTitle = new TextView(this);
-        fontTitle.setText("\n整体字体大小");
+        fontTitle.setText("Overall font size");
         fontTitle.setTextColor(getColorCompat(R.color.yh_text));
         fontTitle.setTextSize(14);
         fontTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -6552,7 +6552,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
 
         float savedFontScale = prefs == null ? UiScaleUtil.DEFAULT_FONT_SCALE : prefs.getFloat(UiScaleUtil.KEY_UI_FONT_SCALE, UiScaleUtil.DEFAULT_FONT_SCALE);
         TextView fontInfo = new TextView(this);
-        fontInfo.setText("当前：" + UiScaleUtil.percent(savedFontScale) + "%（默认 100%）");
+        fontInfo.setText("Current:" + UiScaleUtil.percent(savedFontScale) + "% (default 100%)");
         fontInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         fontInfo.setTextSize(11);
         fontInfo.setPadding(0, dp(4), 0, dp(6));
@@ -6578,24 +6578,24 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
             @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float scale = UiScaleUtil.clamp(UiScaleUtil.MIN_FONT_SCALE + progress / 100f);
                 fontValue.setText(UiScaleUtil.percent(scale) + "%");
-                fontInfo.setText("当前：" + UiScaleUtil.percent(scale) + "%（默认 100%）");
+                fontInfo.setText("Current:" + UiScaleUtil.percent(scale) + "% (default 100%)");
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override public void onStopTrackingTouch(SeekBar seekBar) { }
         });
-        Button fontReset = krButton("恢复默认字体");
+        Button fontReset = krButton("Restore default font");
         fontReset.setTextColor(getColorCompat(R.color.yh_text));
         fontReset.setOnClickListener(v -> {
             fontSeek.setProgress(Math.round((UiScaleUtil.DEFAULT_FONT_SCALE - UiScaleUtil.MIN_FONT_SCALE) * 100f));
             fontValue.setText("100%");
-            fontInfo.setText("当前：100%（默认 100%）");
+            fontInfo.setText("Current: 100% (default 100%)");
         });
         LinearLayout.LayoutParams fontResetLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(40));
         fontResetLp.topMargin = dp(6);
         root.addView(fontReset, fontResetLp);
 
         TextView uiScaleTitle = new TextView(this);
-        uiScaleTitle.setText("\n界面整体缩放");
+        uiScaleTitle.setText("Overall interface scaling");
         uiScaleTitle.setTextColor(getColorCompat(R.color.yh_text));
         uiScaleTitle.setTextSize(14);
         uiScaleTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -6603,7 +6603,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
 
         float savedUiScale = prefs == null ? UiScaleUtil.DEFAULT_UI_SCALE : prefs.getFloat(UiScaleUtil.KEY_UI_SCALE, UiScaleUtil.DEFAULT_UI_SCALE);
         TextView uiScaleInfo = new TextView(this);
-        uiScaleInfo.setText("当前：" + UiScaleUtil.uiScalePercent(savedUiScale) + "%（默认 100%）· 平板建议 120-150%");
+        uiScaleInfo.setText("Current:" + UiScaleUtil.uiScalePercent(savedUiScale) + "% (default 100%) · Tablet recommended 120-150%");
         uiScaleInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         uiScaleInfo.setTextSize(11);
         uiScaleInfo.setPadding(0, dp(4), 0, dp(6));
@@ -6629,41 +6629,41 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
             @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float scale = UiScaleUtil.clampUiScale(UiScaleUtil.MIN_UI_SCALE + progress / 100f);
                 uiScaleValue.setText(UiScaleUtil.uiScalePercent(scale) + "%");
-                uiScaleInfo.setText("当前：" + UiScaleUtil.uiScalePercent(scale) + "%（默认 100%）· 平板建议 120-150%");
+                uiScaleInfo.setText("Current:" + UiScaleUtil.uiScalePercent(scale) + "% (default 100%) · Tablet recommended 120-150%");
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override public void onStopTrackingTouch(SeekBar seekBar) { }
         });
-        Button uiScaleReset = krButton("恢复默认缩放");
+        Button uiScaleReset = krButton("Restore default zoom");
         uiScaleReset.setTextColor(getColorCompat(R.color.yh_text));
         uiScaleReset.setOnClickListener(v -> {
             uiScaleSeek.setProgress(Math.round((UiScaleUtil.DEFAULT_UI_SCALE - UiScaleUtil.MIN_UI_SCALE) * 100f));
             uiScaleValue.setText("100%");
-            uiScaleInfo.setText("当前：100%（默认 100%）· 平板建议 120-150%");
+            uiScaleInfo.setText("Current: 100% (default 100%) · Tablet recommended 120-150%");
         });
         LinearLayout.LayoutParams uiScaleResetLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(40));
         uiScaleResetLp.topMargin = dp(6);
         root.addView(uiScaleReset, uiScaleResetLp);
 
-        CheckBox autoScanCheck = krCheckBox("进入应用时自动扫描上次目录", prefs == null || prefs.getBoolean(KEY_AUTO_SCAN_ON_STARTUP, true));
+        CheckBox autoScanCheck = krCheckBox("Automatically scan the last directory when entering the application", prefs == null || prefs.getBoolean(KEY_AUTO_SCAN_ON_STARTUP, true));
         root.addView(autoScanCheck);
 
         TextView sortTitle = new TextView(this);
-        sortTitle.setText("\n游戏库排序");
+        sortTitle.setText("Game library sorting");
         sortTitle.setTextColor(getColorCompat(R.color.yh_text));
         sortTitle.setTextSize(14);
         sortTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(sortTitle);
 
         TextView sortInfo = new TextView(this);
-        sortInfo.setText("默认按最近游玩排序，收藏会始终置顶。");
+        sortInfo.setText("Sort by recent play by default, and favorites will always be on top.");
         sortInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         sortInfo.setTextSize(11);
         sortInfo.setPadding(0, dp(4), 0, dp(6));
         root.addView(sortInfo);
 
         Spinner sortSpinner = new TapSafeSpinner(this);
-        ArrayAdapter<String> sortAdapter = krSpinnerAdapter(new String[]{"最近游玩", "最近添加", "名称排序"});
+        ArrayAdapter<String> sortAdapter = krSpinnerAdapter(new String[]{"Recently visited", "Recently added", "Name sort"});
         sortSpinner.setAdapter(sortAdapter);
         String savedSortMode = prefs == null ? SORT_MODE_RECENT : prefs.getString(KEY_SORT_MODE, SORT_MODE_RECENT);
         if (SORT_MODE_NEWEST.equals(savedSortMode)) sortSpinner.setSelection(1);
@@ -6672,14 +6672,14 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         root.addView(sortSpinner, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(44)));
 
         TextView personalizationTitle = new TextView(this);
-        personalizationTitle.setText("\n个性化功能");
+        personalizationTitle.setText("Personalization features");
         personalizationTitle.setTextColor(getColorCompat(R.color.yh_text));
         personalizationTitle.setTextSize(14);
         personalizationTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(personalizationTitle);
 
         TextView columnsTitle = new TextView(this);
-        columnsTitle.setText("每行游戏数目");
+        columnsTitle.setText("Number of games per row");
         columnsTitle.setTextColor(getColorCompat(R.color.yh_text_muted));
         columnsTitle.setTextSize(11);
         columnsTitle.setPadding(0, dp(4), 0, dp(6));
@@ -6688,7 +6688,7 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
         int savedColumns = prefs == null ? DEFAULT_GAME_COLUMNS : prefs.getInt(KEY_GAME_COLUMNS, DEFAULT_GAME_COLUMNS);
         savedColumns = Math.max(2, Math.min(10, savedColumns));
         TextView columnsInfo = new TextView(this);
-        columnsInfo.setText("当前：" + savedColumns + " 个（默认 5 个）");
+        columnsInfo.setText("Current:" + savedColumns + "(default 5)");
         columnsInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         columnsInfo.setTextSize(11);
         columnsInfo.setPadding(0, dp(4), 0, dp(6));
@@ -6714,50 +6714,50 @@ else if (syncItem.equals(chosen)) syncCurrentMetadataToGameCard(game);
             @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int cols = Math.max(2, Math.min(10, progress + 2));
                 columnsValue.setText(String.valueOf(cols));
-                columnsInfo.setText("当前：" + cols + " 个（默认 5 个）");
+                columnsInfo.setText("Current:" + cols + "(default 5)");
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
         TextView engineLabelTitle = new TextView(this);
-        engineLabelTitle.setText("游戏引擎标签位置");
+        engineLabelTitle.setText("Game engine tag location");
         engineLabelTitle.setTextColor(getColorCompat(R.color.yh_text_muted));
         engineLabelTitle.setTextSize(11);
         engineLabelTitle.setPadding(0, dp(4), 0, dp(6));
         root.addView(engineLabelTitle);
 
         Spinner engineLabelSpinner = new TapSafeSpinner(this);
-        ArrayAdapter<String> engineLabelAdapter = krSpinnerAdapter(new String[]{"游戏标题下方", "封面左下角"});
+        ArrayAdapter<String> engineLabelAdapter = krSpinnerAdapter(new String[]{"Below the game title", "Cover lower left corner"});
         engineLabelSpinner.setAdapter(engineLabelAdapter);
         String engineLabelPos = prefs == null ? "title" : prefs.getString(KEY_ENGINE_LABEL_POSITION, "title");
         engineLabelSpinner.setSelection("cover".equals(engineLabelPos) ? 1 : 0);
         root.addView(engineLabelSpinner, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(44)));
 
-        CheckBox uiClickSoundCheck = krCheckBox("界面点击音效", prefs == null || prefs.getBoolean(KEY_UI_CLICK_SOUND, true));
+        CheckBox uiClickSoundCheck = krCheckBox("Interface click sound effect", prefs == null || prefs.getBoolean(KEY_UI_CLICK_SOUND, true));
         root.addView(uiClickSoundCheck);
 
-        CheckBox nsfwBlurCheck = krCheckBox("🔞 NSFW 封面模糊", prefs == null || prefs.getBoolean(KEY_NSFW_BLUR, true));
+        CheckBox nsfwBlurCheck = krCheckBox("🔞 NSFW cover blurry", prefs == null || prefs.getBoolean(KEY_NSFW_BLUR, true));
         root.addView(nsfwBlurCheck);
 
         TextView accountTitle = new TextView(this);
-accountTitle.setText("\n账户与同步");
+accountTitle.setText("Accounts and sync");
 accountTitle.setTextColor(getColorCompat(R.color.yh_text));
 accountTitle.setTextSize(14);
 accountTitle.setTypeface(null, android.graphics.Typeface.BOLD);
 root.addView(accountTitle);
 TextView accountInfo = new TextView(this);
 accountInfo.setText(isLoggedIn()
-        ? ("当前：" + displayProfileName() + " · " + accountStatusLabelForDialog())
-        : "当前：本地账户，未登录云账户");
+        ? ("Current:" + displayProfileName() + " · " + accountStatusLabelForDialog())
+        : "Current: Local account, not logged in to the cloud account");
 accountInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
 accountInfo.setTextSize(11);
 accountInfo.setPadding(0, dp(4), 0, dp(6));
 root.addView(accountInfo);
 LinearLayout accountActions = new LinearLayout(this);
         accountActions.setOrientation(LinearLayout.HORIZONTAL);
-        Button accountButton = krButton(isLoggedIn() ? "账号设置" : "登录/注册");
-        Button webdavButton = krButton("同步中心");
+        Button accountButton = krButton(isLoggedIn() ? "Account settings" : "Login/Register");
+        Button webdavButton = krButton("Sync center");
         accountButton.setTextColor(primaryTextColor());
         webdavButton.setTextColor(primaryTextColor());
         accountButton.setOnClickListener(v -> showAuthPlaceholderDialog());
@@ -6770,89 +6770,89 @@ LinearLayout accountActions = new LinearLayout(this);
 
         // ===== 从其他平台导入 =====
         TextView importTitle = new TextView(this);
-        importTitle.setText("\n数据迁移");
+        importTitle.setText("Data migration");
         importTitle.setTextColor(getColorCompat(R.color.yh_text));
         importTitle.setTextSize(14);
         importTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(importTitle);
 
         TextView importInfo = new TextView(this);
-        importInfo.setText("从 Playnite、PotatoVN、Vnite、LunaBox 导入游戏列表、封面和游玩记录。");
+        importInfo.setText("Import game lists, covers and play history from Playnite, PotatoVN, Vnite, LunaBox.");
         importInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         importInfo.setTextSize(11);
         importInfo.setPadding(0, dp(4), 0, dp(6));
         root.addView(importInfo);
 
-        Button externalImportBtn = krButton("从其他平台导入");
+        Button externalImportBtn = krButton("Import from other platforms");
         externalImportBtn.setTextColor(primaryTextColor());
         externalImportBtn.setOnClickListener(v -> showExternalImportDialog());
         root.addView(externalImportBtn, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(40)));
 
         // ===== 危险操作 =====
         TextView dangerTitle = new TextView(this);
-        dangerTitle.setText("\n危险操作");
+        dangerTitle.setText("Dangerous operation");
         dangerTitle.setTextColor(getColorCompat(R.color.yh_secondary));
         dangerTitle.setTextSize(14);
         dangerTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(dangerTitle);
 
         TextView dangerInfo = new TextView(this);
-        dangerInfo.setText("清空游戏库只会删除游戏记录和游玩时长，不会删除本体文件。操作不可撤销。");
+        dangerInfo.setText("Clearing the game library will only delete game records and play time, but not the main body files. Operations cannot be undone.");
         dangerInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         dangerInfo.setTextSize(11);
         dangerInfo.setPadding(0, dp(4), 0, dp(6));
         root.addView(dangerInfo);
 
-        Button clearAllBtn = krButton("清空游戏库");
+        Button clearAllBtn = krButton("Clear game library");
         clearAllBtn.setTextColor(getColorCompat(R.color.yh_secondary));
         clearAllBtn.setOnClickListener(v -> confirmClearAllGames());
         root.addView(clearAllBtn, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(40)));
 
         TextView disclaimerTitle = new TextView(this);
-        disclaimerTitle.setText("\n使用说明与免责声明");
+        disclaimerTitle.setText("Instructions for use and disclaimer");
         disclaimerTitle.setTextColor(getColorCompat(R.color.yh_text));
         disclaimerTitle.setTextSize(14);
         disclaimerTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(disclaimerTitle);
         TextView disclaimerInfo = new TextView(this);
-        disclaimerInfo.setText("本应用为开源项目，旨在帮助用户管理与启动自己拥有权限的游戏/应用资源。" +
-                "使用者需自行确认所添加内容、账号、第三方登录（NextMoe·未萌 / Hikarinagi）、同步服务及第三方组件的合法性与可用性。\n\n" +
-                "程序不提供任何游戏资源、破解资源或绕过授权的能力；Shizuku、GameHub、WebDAV、VNDB、Bangumi、月幕 Gal、Hikarinagi、KIRIKIRI2、Tyranno、Winlator 等第三方服务/应用均由其各自规则与可用性决定。\n\n" +
-                "若你不同意上述内容，请不要继续使用相关功能。" );
+        disclaimerInfo.setText("This application is an open source project designed to help users manage and launch game/application resources that they have permissions for." +
+                "Users need to confirm the legality and availability of added content, accounts, third-party logins (NextMoe·Wei Moe / Hikarinagi), synchronization services and third-party components." +
+                "The program does not provide any game resources, cracked resources or the ability to bypass authorization; third-party services/applications such as Shizuku, GameHub, WebDAV, VNDB, Bangumi, Moon Screen Gal, Hikarinagi, KIRIKIRI2, Tyranno, Winlator, etc. are determined by their respective rules and availability." +
+                "If you do not agree with the above content, please do not continue to use related functions." );
         disclaimerInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         disclaimerInfo.setTextSize(11);
         disclaimerInfo.setLineSpacing(dp(2), 1.0f);
         disclaimerInfo.setPadding(0, dp(4), 0, dp(6));
         root.addView(disclaimerInfo);
-        Button disclaimerButton = krButton("查看完整免责声明");
+        Button disclaimerButton = krButton("View full disclaimer");
         disclaimerButton.setTextColor(primaryTextColor());
         disclaimerButton.setOnClickListener(v -> showDisclaimerDialog());
         root.addView(disclaimerButton, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(40)));
 
         TextView aboutTitle = new TextView(this);
-        aboutTitle.setText("\n关于我们");
+        aboutTitle.setText("About Us");
         aboutTitle.setTextColor(getColorCompat(R.color.yh_text));
         aboutTitle.setTextSize(14);
         aboutTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(aboutTitle);
 
         TextView aboutInfo = new TextView(this);
-        aboutInfo.setText("这里可以找到项目主页、官网和交流群，方便查看更新、反馈问题和获取帮助。\n");
+        aboutInfo.setText("Here you can find the project homepage, official website and communication group, where you can easily check updates, report problems and get help.");
         aboutInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         aboutInfo.setTextSize(11);
         aboutInfo.setLineSpacing(dp(2), 1.0f);
         aboutInfo.setPadding(0, dp(4), 0, dp(6));
         root.addView(aboutInfo);
 
-        Button updateButton = krButton("检查更新");
+        Button updateButton = krButton("Check for updates");
         updateButton.setTextColor(primaryTextColor());
         updateButton.setOnClickListener(v -> checkUpdateManually());
-        CheckBox updateOnStartupCheck = krCheckBox("启动时自动检查更新", prefs == null || prefs.getBoolean(KEY_CHECK_UPDATE_ON_STARTUP, true));
+        CheckBox updateOnStartupCheck = krCheckBox("Automatically check for updates on startup", prefs == null || prefs.getBoolean(KEY_CHECK_UPDATE_ON_STARTUP, true));
         root.addView(updateButton, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(40)));
         root.addView(updateOnStartupCheck);
 
         TextView updateSourceTitle = new TextView(this);
-        updateSourceTitle.setText("更新源（单选，切换立即生效）");
+        updateSourceTitle.setText("Update source (single choice, switch takes effect immediately)");
         updateSourceTitle.setTextColor(getColorCompat(R.color.yh_text));
         updateSourceTitle.setTextSize(12);
         updateSourceTitle.setPadding(0, dp(8), 0, dp(4));
@@ -6861,7 +6861,7 @@ LinearLayout accountActions = new LinearLayout(this);
         updateSourceGroup.setOrientation(LinearLayout.HORIZONTAL);
         android.widget.RadioButton gitcodeSource = new android.widget.RadioButton(this);
         gitcodeSource.setId(View.generateViewId());
-        gitcodeSource.setText("GitCode（默认）");
+        gitcodeSource.setText("GitCode (default)");
         gitcodeSource.setTextColor(getColorCompat(R.color.yh_text));
         gitcodeSource.setTextSize(12);
         android.widget.RadioButton githubSource = new android.widget.RadioButton(this);
@@ -6890,10 +6890,10 @@ LinearLayout accountActions = new LinearLayout(this);
         });
         root.addView(updateSourceGroup, new LinearLayout.LayoutParams(-1, -2));
 
-        LinearLayout githubButton = linkCardButton("GitHub 仓库", R.drawable.ic_github);
-        LinearLayout gitcodeButton = linkCardButton("GitCode 仓库", R.drawable.ic_gitcode);
-        LinearLayout websiteButton = linkCardButton("官方网站", android.R.drawable.ic_menu_view);
-        LinearLayout groupButton = linkCardButton("QQ 交流群", android.R.drawable.ic_dialog_email);
+        LinearLayout githubButton = linkCardButton("GitHub repository", R.drawable.ic_github);
+        LinearLayout gitcodeButton = linkCardButton("GitCode repository", R.drawable.ic_gitcode);
+        LinearLayout websiteButton = linkCardButton("Official website", android.R.drawable.ic_menu_view);
+        LinearLayout groupButton = linkCardButton("QQ communication group", android.R.drawable.ic_dialog_email);
         githubButton.setOnClickListener(v -> openExternalUrl("https://github.com/xm486/YukiHub"));
         gitcodeButton.setOnClickListener(v -> openExternalUrl("https://gitcode.com/xm486/YukiHub"));
         websiteButton.setOnClickListener(v -> openExternalUrl("https://yukihub.kesug.com/"));
@@ -6910,7 +6910,7 @@ LinearLayout accountActions = new LinearLayout(this);
         root.addView(groupButton, groupLp);
 
         TextView sourceTitle = new TextView(this);
-        sourceTitle.setText("\n右侧资料源");
+        sourceTitle.setText("Data source on the right");
         sourceTitle.setTextColor(getColorCompat(R.color.yh_text));
         sourceTitle.setTextSize(14);
         sourceTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -6920,7 +6920,7 @@ LinearLayout accountActions = new LinearLayout(this);
         // 下拉项：NextMoe（默认）/ VNDB / Bangumi / 月幕Gal / Hikarinagi
         // （原「Bangumi 镜像」项已移除：镜像站长期不稳定，且已有 NextMoe 源替代）
         // NextMoe 作默认源：目录只读面匿名可调（不必登录），且是六源对齐数据。
-        ArrayAdapter<String> sourceAdapter = krSpinnerAdapter(new String[]{"NextMoe（推荐 · 默认）", "VNDB", "Bangumi（需要 Token）", "月幕 Gal（公开 API）", "Hikarinagi（公开 API）"});
+        ArrayAdapter<String> sourceAdapter = krSpinnerAdapter(new String[]{"NextMoe (recommended · default)", "VNDB", "Bangumi (requires Token)", "Moon Curtain Gal (Public API)", "Hikarinagi (public API)"});
         sourceSpinner.setAdapter(sourceAdapter);
         String currentSource = metadataSource();
         if (MetadataController.SOURCE_VNDB.equals(currentSource)) sourceSpinner.setSelection(1);
@@ -6934,51 +6934,51 @@ LinearLayout accountActions = new LinearLayout(this);
         // 未登录也能正常用 NextMoe 源（匿名档，按 IP 计配额），登录只是为了提升刮削配额。
         TextView nextmoeStatus = new TextView(this);
         boolean nextmoeConnected = com.yuki.yukihub.nextmoe.NextMoeAuthStore.isConnected();
-        nextmoeStatus.setText("NextMoe 账号：" + (nextmoeConnected
-                ? "已连接" + (com.yuki.yukihub.nextmoe.NextMoeAuthStore.getAccountLabel().isEmpty() ? "" : "（" + com.yuki.yukihub.nextmoe.NextMoeAuthStore.getAccountLabel() + "）") + " · 刮削配额已提升"
-                : "未登录（可选）· 登录后可提升刮削配额"));
+        nextmoeStatus.setText("NextMoe account:" + (nextmoeConnected
+                ? "Connected" + (com.yuki.yukihub.nextmoe.NextMoeAuthStore.getAccountLabel().isEmpty() ? "" : "（" + com.yuki.yukihub.nextmoe.NextMoeAuthStore.getAccountLabel() + "）") + "· Scraping quota has been increased"
+                : "Not logged in (optional) · Log in to increase scraping quota"));
         nextmoeStatus.setTextColor(getColorCompat(R.color.yh_text_muted));
         nextmoeStatus.setTextSize(11);
         nextmoeStatus.setPadding(0, dp(8), 0, dp(2));
         root.addView(nextmoeStatus);
 
-        Button nextmoeButton = krButton(nextmoeConnected ? "断开 NextMoe 账号" : "登录 NextMoe（可选 · 提升配额）");
+        Button nextmoeButton = krButton(nextmoeConnected ? "Disconnect NextMoe account" : "Log in to NextMoe (optional · increase quota)");
         nextmoeButton.setTextColor(primaryTextColor());
         nextmoeButton.setOnClickListener(v -> {
             if (com.yuki.yukihub.nextmoe.NextMoeAuthStore.isConnected()) {
                 com.yuki.yukihub.nextmoe.NextMoeAuthStore.clear();
-                nextmoeStatus.setText("NextMoe 账号：未登录（可选）· 登录后可提升刮削配额");
-                nextmoeButton.setText("登录 NextMoe（可选 · 提升配额）");
-                Toast.makeText(this, "已断开 NextMoe 账号", Toast.LENGTH_SHORT).show();
+                nextmoeStatus.setText("NextMoe account: Not logged in (optional) · Log in to increase scraping quota");
+                nextmoeButton.setText("Log in to NextMoe (optional · increase quota)");
+                Toast.makeText(this, "NextMoe account has been disconnected", Toast.LENGTH_SHORT).show();
                 return;
             }
             nextmoeButton.setEnabled(false);
-            nextmoeButton.setText("等待授权…");
+            nextmoeButton.setText("Waiting for authorization…");
             new Thread(() -> {
                 String err = null;
                 try {
                     err = com.yuki.yukihub.nextmoe.NextMoeConnectFlow.connectAndWait();
                 } catch (Throwable t) {
-                    err = t.getMessage() == null ? "授权流程异常" : t.getMessage();
+                    err = t.getMessage() == null ? "Abnormal authorization process" : t.getMessage();
                 }
                 final String error = err;
                 runOnUiThread(() -> {
                     nextmoeButton.setEnabled(true);
                     boolean ok = error == null && com.yuki.yukihub.nextmoe.NextMoeAuthStore.isConnected();
-                    nextmoeButton.setText(ok ? "断开 NextMoe 账号" : "登录 NextMoe（可选 · 提升配额）");
+                    nextmoeButton.setText(ok ? "Disconnect NextMoe account" : "Log in to NextMoe (optional · increase quota)");
                     nextmoeStatus.setText(ok
-                            ? "NextMoe 账号：已连接" + (com.yuki.yukihub.nextmoe.NextMoeAuthStore.getAccountLabel().isEmpty() ? "" : "（" + com.yuki.yukihub.nextmoe.NextMoeAuthStore.getAccountLabel() + "）") + " · 刮削配额已提升"
-                            : "NextMoe 账号：未登录（可选）· 匿名配额可用" + (error == null ? "" : "（" + error + "）"));
-                    if (ok) Toast.makeText(this, "NextMoe 登录成功，刮削配额已提升", Toast.LENGTH_SHORT).show();
+                            ? "NextMoe account: Connected" + (com.yuki.yukihub.nextmoe.NextMoeAuthStore.getAccountLabel().isEmpty() ? "" : "（" + com.yuki.yukihub.nextmoe.NextMoeAuthStore.getAccountLabel() + "）") + "· Scraping quota has been increased"
+                            : "NextMoe Account: Not logged in (optional) · Anonymous quota available" + (error == null ? "" : "（" + error + "）"));
+                    if (ok) Toast.makeText(this, "NextMoe logged in successfully, scraping quota has been increased", Toast.LENGTH_SHORT).show();
                 });
             }, "yukihub-nextmoe-auth").start();
         });
         root.addView(nextmoeButton, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(44)));
 
         TextView nextmoeHint = new TextView(this);
-        nextmoeHint.setText("登录为可选项：不登录也能正常使用 NextMoe 源（匿名配额，按你的网络出口 IP 计）。\n"
-                + "登录后可提升刮削配额（按账号计，不受同 IP 他人挤占），并用于后续账号相关功能。\n"
-                + "授权会打开系统浏览器跳转未萌，完成后自动回到本页；令牌加密存储在设备内，断开即全部清除。");
+        nextmoeHint.setText("Login is optional: You can use NextMoe feed normally without logging in (anonymous quota, calculated according to your network egress IP)."
+                + "After logging in, the scraping quota can be increased (according to the account, not occupied by others with the same IP), and used for subsequent account-related functions."
+                + "Authorization will open the system browser and jump to the end, and automatically return to this page after completion; the token is encrypted and stored in the device, and will be cleared when disconnected.");
         nextmoeHint.setTextColor(getColorCompat(R.color.yh_text_muted));
         nextmoeHint.setTextSize(10);
         nextmoeHint.setPadding(0, dp(4), 0, dp(4));
@@ -6994,7 +6994,7 @@ LinearLayout accountActions = new LinearLayout(this);
         EditText tokenInput = new EditText(this);
         tokenInput.setSingleLine(true);
         tokenInput.setText(bangumiToken());
-        tokenInput.setHint("选择 Bangumi 时必填");
+        tokenInput.setHint("Required when selecting Bangumi");
         tokenInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         tokenInput.setTextColor(getColorCompat(R.color.yh_text));
         tokenInput.setHintTextColor(getColorCompat(R.color.yh_text_muted));
@@ -7003,7 +7003,7 @@ LinearLayout accountActions = new LinearLayout(this);
         root.addView(tokenInput, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(44)));
 
         // 一键重扫全部游戏资料（使用当前选择的资料源，串行限速防第三方限流）
-        Button bulkRefreshButton = krButton("↻ 一键重扫全部游戏资料");
+        Button bulkRefreshButton = krButton("↻ Re-scan all game data with one click");
         LinearLayout.LayoutParams bulkRefreshLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(44));
         bulkRefreshLp.topMargin = dp(8);
         root.addView(bulkRefreshButton, bulkRefreshLp);
@@ -7014,7 +7014,7 @@ LinearLayout accountActions = new LinearLayout(this);
         intervalRow.setGravity(android.view.Gravity.CENTER_VERTICAL);
         intervalRow.setPadding(dp(4), dp(6), dp(4), 0);
         TextView intervalLabel = new TextView(this);
-        intervalLabel.setText("重扫间隔");
+        intervalLabel.setText("Rescan interval");
         intervalLabel.setTextColor(getColorCompat(R.color.yh_text));
         intervalLabel.setTextSize(13);
         intervalRow.addView(intervalLabel, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
@@ -7030,7 +7030,7 @@ LinearLayout accountActions = new LinearLayout(this);
         LinearLayout.LayoutParams intervalInputLp = new LinearLayout.LayoutParams(dp(72), dp(36));
         intervalRow.addView(intervalInput, intervalInputLp);
         TextView intervalUnit = new TextView(this);
-        intervalUnit.setText("秒/款（0.5~15）");
+        intervalUnit.setText("Second/style (0.5~15)");
         intervalUnit.setTextColor(getColorCompat(R.color.yh_text_muted));
         intervalUnit.setTextSize(12);
         intervalUnit.setPadding(dp(6), 0, 0, 0);
@@ -7043,26 +7043,26 @@ LinearLayout accountActions = new LinearLayout(this);
         });
 
         TextView warn = new TextView(this);
-        warn.setText("提醒：Bangumi API Token 建议使用注册超过三个月的账号申请。月幕 Gal 和 Hikarinagi 使用公开 API，无需 Token。切换资料源后，已有其它源缓存会继续显示；对当前游戏可点“重新匹配”刷新，或点上方“一键重扫全部游戏资料”批量刷新当前源资料。");
+        warn.setText("Reminder: Bangumi API Token is recommended to be applied with an account registered for more than three months. Tsukimu Gal and Hikarinagi use public APIs and do not require a token. After switching data sources, caches of other existing sources will continue to be displayed; for the current game, you can click \"Rematch\" to refresh, or click \"One-click to rescan all game data\" above to refresh the current source data in batches.");
         warn.setTextColor(getColorCompat(R.color.yh_warning));
         warn.setTextSize(11);
         warn.setPadding(0, dp(8), 0, 0);
         root.addView(warn);
 
         TextView tokenLink = new TextView(this);
-        tokenLink.setText("没有token?");
+        tokenLink.setText("No token?");
         tokenLink.setTextColor(primaryTextColor());
         tokenLink.setTextSize(12);
         tokenLink.setTypeface(null, android.graphics.Typeface.BOLD);
         tokenLink.setPadding(0, dp(8), 0, dp(4));
         tokenLink.setOnClickListener(v -> {
             try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://next.bgm.tv/demo/access-token/create"))); }
-            catch (Throwable t) { Toast.makeText(MainActivity.this, "无法打开链接", Toast.LENGTH_SHORT).show(); }
+            catch (Throwable t) { Toast.makeText(MainActivity.this, "Unable to open link", Toast.LENGTH_SHORT).show(); }
         });
         root.addView(tokenLink);
 
         TextView bgTitle = new TextView(this);
-        bgTitle.setText("\n界面背景");
+        bgTitle.setText("Interface background");
         bgTitle.setTextColor(getColorCompat(R.color.yh_text));
         bgTitle.setTextSize(14);
         bgTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -7071,7 +7071,7 @@ LinearLayout accountActions = new LinearLayout(this);
         TextView bgInfo = new TextView(this);
         String customBg = prefs.getString(KEY_CUSTOM_BACKGROUND, "");
         String customBgType = prefs.getString(KEY_CUSTOM_BACKGROUND_TYPE, "image");
-        bgInfo.setText(customBg == null || customBg.isEmpty() ? "当前：默认动态背景" : ("video".equals(customBgType) ? "当前：自定义视频背景" : "当前：自定义图片背景"));
+        bgInfo.setText(customBg == null || customBg.isEmpty() ? "Current: Default dynamic background" : ("video".equals(customBgType) ? "Current: Custom video background" : "Current: Custom image background"));
         bgInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         bgInfo.setTextSize(11);
         bgInfo.setPadding(0, dp(4), 0, dp(6));
@@ -7079,9 +7079,9 @@ LinearLayout accountActions = new LinearLayout(this);
 
         LinearLayout bgActions = new LinearLayout(this);
         bgActions.setOrientation(LinearLayout.HORIZONTAL);
-        Button chooseBgButton = krButton("图片背景");
-        Button chooseVideoBgButton = krButton("视频背景");
-        Button resetBgButton = krButton("恢复默认");
+        Button chooseBgButton = krButton("Picture background");
+        Button chooseVideoBgButton = krButton("Video background");
+        Button resetBgButton = krButton("Restore default");
         chooseBgButton.setTextColor(primaryTextColor());
         chooseVideoBgButton.setTextColor(primaryTextColor());
         resetBgButton.setTextColor(getColorCompat(R.color.yh_text));
@@ -7094,15 +7094,15 @@ LinearLayout accountActions = new LinearLayout(this);
         bgActions.addView(resetBgButton, resetBgLp);
         root.addView(bgActions);
 
-        CheckBox bgDimEnabled = krCheckBox("背景遮罩（提高文字可读性）", prefs.getBoolean(KEY_BACKGROUND_DIM_ENABLED, true));
-        CheckBox bgVideoSound = krCheckBox("视频背景声音", prefs.getBoolean(KEY_BACKGROUND_VIDEO_SOUND, false));
-        CheckBox bgThemeEnabled = krCheckBox("背景UI取色（从背景提取色调）", prefs.getBoolean(KEY_BG_THEME_ENABLED, false));
+        CheckBox bgDimEnabled = krCheckBox("Background masking (improves text readability)", prefs.getBoolean(KEY_BACKGROUND_DIM_ENABLED, true));
+        CheckBox bgVideoSound = krCheckBox("Video background sound", prefs.getBoolean(KEY_BACKGROUND_VIDEO_SOUND, false));
+        CheckBox bgThemeEnabled = krCheckBox("Background UI color picking (extracting hue from background)", prefs.getBoolean(KEY_BG_THEME_ENABLED, false));
         root.addView(bgDimEnabled);
         root.addView(bgVideoSound);
         root.addView(bgThemeEnabled);
 
         // 自定义颜色选项
-        CheckBox customColorEnabled = krCheckBox("自定义主题颜色", prefs.getBoolean(DynamicTheme.KEY_CUSTOM_COLOR_ENABLED, false));
+        CheckBox customColorEnabled = krCheckBox("Custom theme colors", prefs.getBoolean(DynamicTheme.KEY_CUSTOM_COLOR_ENABLED, false));
         root.addView(customColorEnabled);
         
         // 颜色选择按钮和预览
@@ -7120,7 +7120,7 @@ LinearLayout accountActions = new LinearLayout(this);
         colorPickerRow.addView(colorPreview);
         
         // 选择颜色按钮
-        Button chooseColorBtn = krButton("选择主题颜色");
+        Button chooseColorBtn = krButton("Choose theme color");
         chooseColorBtn.setOnClickListener(v -> {
             customColorEnabled.setChecked(true);
             showColorPickerDialog(colorPreview, customColorEnabled);
@@ -7128,7 +7128,7 @@ LinearLayout accountActions = new LinearLayout(this);
         colorPickerRow.addView(chooseColorBtn, new LinearLayout.LayoutParams(0, dp(40), 1));
         
         // 恢复默认值按钮
-        Button resetColorBtn = krButton("恢复默认");
+        Button resetColorBtn = krButton("Restore default");
         resetColorBtn.setOnClickListener(v -> {
             DynamicTheme dt = DynamicTheme.getInstance();
             dt.setCustomColorEnabled(false);
@@ -7139,7 +7139,7 @@ LinearLayout accountActions = new LinearLayout(this);
             customColorEnabled.setChecked(false);
             colorPreview.setBackgroundColor(0xFF8AB4FF);
             applyDynamicTheme(null);
-            Toast.makeText(MainActivity.this, "已恢复默认主题颜色", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Default theme colors restored", Toast.LENGTH_SHORT).show();
         });
         LinearLayout.LayoutParams resetLp = new LinearLayout.LayoutParams(dp(80), dp(40));
         resetLp.setMarginStart(dp(8));
@@ -7148,31 +7148,31 @@ LinearLayout accountActions = new LinearLayout(this);
         root.addView(colorPickerRow);
 
         // 文件选择器选项
-        CheckBox useBuiltinFileChooser = krCheckBox("使用内置文件选择器（避免权限问题）", prefs.getBoolean(KEY_USE_BUILTIN_FILE_CHOOSER, true));
+        CheckBox useBuiltinFileChooser = krCheckBox("Use the built-in file picker (avoid permission issues)", prefs.getBoolean(KEY_USE_BUILTIN_FILE_CHOOSER, true));
         root.addView(useBuiltinFileChooser);
 
         TextView krTitle = new TextView(this);
-        krTitle.setText("\nKRKR 引擎");
+        krTitle.setText("KRKR engine");
         krTitle.setTextColor(getColorCompat(R.color.yh_text));
         krTitle.setTextSize(14);
         krTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(krTitle);
 
         TextView krInfo = new TextView(this);
-        krInfo.setText("华为等部分机型如因存储权限导致引擎崩溃或闪退，可开启对应引擎的独立存档目录。");
+        krInfo.setText("If the engine crashes or crashes due to storage permissions on some Huawei and other models, you can open an independent archive directory for the corresponding engine.");
         krInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         krInfo.setTextSize(11);
         krInfo.setPadding(0, dp(4), 0, dp(6));
         root.addView(krInfo);
 
-        root.addView(krLabel("KR 引擎版本"));
-        Spinner krEngineVersion = krSpinner(new String[]{"自动", "1.3.9", "1.3.4"}, krEngineVersionToLabel(prefs.getString(KEY_KR_ENGINE_VERSION, "auto")));
+        root.addView(krLabel("KR engine version"));
+        Spinner krEngineVersion = krSpinner(new String[]{"Auto", "1.3.9", "1.3.4"}, krEngineVersionToLabel(prefs.getString(KEY_KR_ENGINE_VERSION, "auto")));
         root.addView(krEngineVersion);
 
-        CheckBox krCompatMode = krCheckBox("KR 启动参数兼容模式", prefs.getBoolean(KEY_KR_COMPAT_MODE, false));
-        CheckBox krScopedSaveDir = krCheckBox("KR 独立存档目录（权限异常闪退时开启）", prefs.getBoolean(KEY_KR_SCOPED_SAVE_DIR, false));
-        CheckBox artemisScopedSaveDir = krCheckBox("Artemis 独立存档目录（权限异常闪退时开启）", prefs.getBoolean(KEY_ARTEMIS_SCOPED_SAVE_DIR, false));
-        CheckBox krDrawCutout = krCheckBox("KRKR 允许绘制刘海/挖孔区域", prefs.getBoolean(KEY_KR_DRAW_CUTOUT, true));
+        CheckBox krCompatMode = krCheckBox("KR startup parameter compatibility mode", prefs.getBoolean(KEY_KR_COMPAT_MODE, false));
+        CheckBox krScopedSaveDir = krCheckBox("KR independent archive directory (opened when permissions fail abnormally)", prefs.getBoolean(KEY_KR_SCOPED_SAVE_DIR, false));
+        CheckBox artemisScopedSaveDir = krCheckBox("Artemis independent archive directory (opened when permissions fail abnormally)", prefs.getBoolean(KEY_ARTEMIS_SCOPED_SAVE_DIR, false));
+        CheckBox krDrawCutout = krCheckBox("KRKR allows drawing bangs/cutout areas", prefs.getBoolean(KEY_KR_DRAW_CUTOUT, true));
         CheckBox artemisDrawCutout = krCheckBox("Artemis 允许绘制刘海/挖孔区域", prefs.getBoolean(KEY_ARTEMIS_DRAW_CUTOUT, true));
         root.addView(krCompatMode);
         root.addView(krScopedSaveDir);
@@ -7181,15 +7181,15 @@ LinearLayout accountActions = new LinearLayout(this);
         root.addView(artemisDrawCutout);
 
         // ===== KRKR 内部存储启动（实验性）=====
-        CheckBox krInternalRun = krCheckBox("KRKR 内部存储启动（实验性）", prefs.getBoolean(KEY_KR_INTERNAL_RUN, false));
+        CheckBox krInternalRun = krCheckBox("KRKR internal storage startup (experimental)", prefs.getBoolean(KEY_KR_INTERNAL_RUN, false));
         root.addView(krInternalRun);
 
         TextView krInternalInfo = new TextView(this);
-        krInternalInfo.setText("开启后，启动 KR 游戏时会把整个游戏目录复制到应用内部存储再运行，"
-                + "缓解部分新版引擎游戏对话/快进卡顿的问题。\n"
-                + "· 存档保存在内部副本里，用「管理」可随时查看或清理\n"
-                + "· 首次启动需要复制，游戏较大时请耐心等待\n"
-                + "· 需占用额外的内部存储空间");
+        krInternalInfo.setText("After turning it on, when starting the KR game, the entire game directory will be copied to the internal storage of the application and then run."
+                + "Alleviate the problem of dialogue/fast forward lagging in some new engine games."
+                + "· The archive is saved in an internal copy and can be viewed or cleaned at any time using \"Management\""
+                + "· Copying is required when starting up for the first time. Please be patient when the game is large."
+                + "· Requires additional internal storage space");
         krInternalInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         krInternalInfo.setTextSize(11);
         krInternalInfo.setPadding(0, dp(4), 0, dp(6));
@@ -7200,7 +7200,7 @@ LinearLayout accountActions = new LinearLayout(this);
         krInternalUsage.setTextSize(11);
         root.addView(krInternalUsage);
 
-        Button krInternalManage = krButton("管理内部存储");
+        Button krInternalManage = krButton("Manage internal storage");
         krInternalManage.setTextColor(primaryTextColor());
         krInternalManage.setOnClickListener(v -> showKrInternalStoreDialog(krInternalUsage));
         LinearLayout.LayoutParams krInternalLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42));
@@ -7209,13 +7209,13 @@ LinearLayout accountActions = new LinearLayout(this);
 
         refreshKrInternalUsage(krInternalUsage);
 
-        Button nativeKrkrButton = krButton("进入原生KRKR");
+        Button nativeKrkrButton = krButton("Enter native KRKR");
         nativeKrkrButton.setTextColor(primaryTextColor());
         nativeKrkrButton.setOnClickListener(v -> {
             try {
                 startActivity(EmulatorLauncher.buildInternalKrkrIntent(this, "", "", true));
             } catch (Throwable t) {
-                Toast.makeText(MainActivity.this, "无法进入原生KRKR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Unable to enter native KRKR", Toast.LENGTH_SHORT).show();
             }
         });
         LinearLayout.LayoutParams nativeKrkrLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42));
@@ -7224,32 +7224,32 @@ LinearLayout accountActions = new LinearLayout(this);
 
         // === 开发者选项 ===
         TextView devTitle = new TextView(this);
-        devTitle.setText("\n开发者选项");
+        devTitle.setText("Developer options");
         devTitle.setTextColor(getColorCompat(R.color.yh_text));
         devTitle.setTextSize(14);
         devTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(devTitle);
 
         TextView devInfo = new TextView(this);
-        devInfo.setText("开启后自动捕获系统日志（logcat），包含引擎运行、WebView、异常等所有输出。\n日志路径：Android/data/com.yuki.yukihub/files/logs/");
+        devInfo.setText("After being turned on, the system log (logcat) is automatically captured, including all output such as engine running, WebView, exceptions, etc.\nLog path: Android/data/com.yuki.yukihub/files/logs/");
         devInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         devInfo.setTextSize(11);
         devInfo.setPadding(0, dp(4), 0, dp(6));
         root.addView(devInfo);
 
-        CheckBox logEnabledCheck = krCheckBox("开启日志收集", DevLogger.isEnabled());
+        CheckBox logEnabledCheck = krCheckBox("Enable log collection", DevLogger.isEnabled());
         root.addView(logEnabledCheck);
 
         LinearLayout logActions = new LinearLayout(this);
         logActions.setOrientation(LinearLayout.HORIZONTAL);
         logActions.setPadding(0, dp(8), 0, 0);
 
-        Button exportLogBtn = krButton("导出日志");
+        Button exportLogBtn = krButton("Export log");
         exportLogBtn.setTextColor(primaryTextColor());
         exportLogBtn.setOnClickListener(v -> {
             File logFile = DevLogger.getLogFile();
             if (logFile == null || !logFile.exists()) {
-                Toast.makeText(MainActivity.this, "暂无日志文件", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "No log file yet", Toast.LENGTH_SHORT).show();
                 return;
             }
             try {
@@ -7258,20 +7258,20 @@ LinearLayout accountActions = new LinearLayout(this);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", logFile));
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, "YukiHub Logcat");
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(shareIntent, "导出日志"));
+                startActivity(Intent.createChooser(shareIntent, "Export log"));
             } catch (Throwable t) {
-                Toast.makeText(this, "导出失败：" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Export failed:" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         logActions.addView(exportLogBtn, new LinearLayout.LayoutParams(0, dp(40), 1));
 
-        Button clearLogBtn = krButton("清空日志");
+        Button clearLogBtn = krButton("Clear log");
         clearLogBtn.setTextColor(getColorCompat(R.color.yh_text));
         clearLogBtn.setOnClickListener(v -> {
             if (DevLogger.clearLog()) {
-                Toast.makeText(MainActivity.this, "日志已清空", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "The log has been cleared", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(MainActivity.this, "清空失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Clearing failed", Toast.LENGTH_SHORT).show();
             }
         });
         LinearLayout.LayoutParams clearLogLp = new LinearLayout.LayoutParams(0, dp(40), 1);
@@ -7282,7 +7282,7 @@ LinearLayout accountActions = new LinearLayout(this);
         TextView logPathInfo = new TextView(this);
         String logPath = DevLogger.getLogPath();
         String logSize = DevLogger.formatSize(DevLogger.getLogSize());
-        logPathInfo.setText("当前日志大小：" + logSize + "\n路径：" + (logPath != null ? logPath : "未初始化"));
+        logPathInfo.setText("Current log size:" + logSize + "Path:" + (logPath != null ? logPath : "Not initialized"));
         logPathInfo.setTextColor(getColorCompat(R.color.yh_text_muted));
         logPathInfo.setTextSize(10);
         logPathInfo.setPadding(0, dp(6), 0, dp(4));
@@ -7295,11 +7295,11 @@ LinearLayout accountActions = new LinearLayout(this);
         scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("设置")
+                .setTitle("Settings")
                 .setView(scroll)
-                .setPositiveButton("保存", null)
-                .setNeutralButton("添加目录", null)
-                .setNegativeButton("关闭", null)
+                .setPositiveButton("Save", null)
+                .setNeutralButton("Add directory", null)
+                .setNegativeButton("Close", null)
                 .show();
         styleAlertDialogDark(dialog);
         if (dialog.getWindow() != null) {
@@ -7315,7 +7315,7 @@ LinearLayout accountActions = new LinearLayout(this);
             String selectedMetadataSource = nextmoe ? MetadataController.SOURCE_NEXTMOE : (hikarinagi ? MetadataController.SOURCE_HIKARINAGI : (ymgal ? MetadataController.SOURCE_YMGAL : (bangumi ? MetadataController.SOURCE_BANGUMI : MetadataController.SOURCE_VNDB)));
             String token = tokenInput.getText() == null ? "" : tokenInput.getText().toString().trim();
             if (bangumi && token.isEmpty()) {
-                Toast.makeText(MainActivity.this, "选择 Bangumi 时需要填写 Token", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Token is required when selecting Bangumi", Toast.LENGTH_SHORT).show();
                 return;
             }
             int depth = Math.max(1, Math.min(MAX_STARTUP_SCAN_DEPTH, scanDepthSeek.getProgress() + 1));
@@ -7358,7 +7358,7 @@ LinearLayout accountActions = new LinearLayout(this);
                 dt.setCustomColorEnabled(customColorEnabled.isChecked());
                 dt.saveCustomColorSettings(this);
             applyCustomBackground();
-            Toast.makeText(MainActivity.this, "已保存资料源：" + (nextmoe ? "NextMoe" : (hikarinagi ? "Hikarinagi" : (ymgal ? "月幕Gal" : (bangumi ? "Bangumi" : "VNDB")))) + "，扫描深度：" + depth + " 层，字体：" + UiScaleUtil.percent(fontScale) + "%", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Saved source:" + (nextmoe ? "NextMoe" : (hikarinagi ? "Hikarinagi" : (ymgal ? "Moon Curtain Gal" : (bangumi ? "Bangumi" : "VNDB")))) + ", scanning depth:" + depth + "Layer, font:" + UiScaleUtil.percent(fontScale) + "%", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
 recreate();
         });
@@ -7376,12 +7376,12 @@ recreate();
             DynamicTheme.getInstance().clearCache(prefs);
             deleteInternalFileUri(oldBg);
             applyCustomBackground();
-            bgInfo.setText("当前：默认动态背景");
-            Toast.makeText(MainActivity.this, "已恢复默认背景", Toast.LENGTH_SHORT).show();
+            bgInfo.setText("Current: Default dynamic background");
+            Toast.makeText(MainActivity.this, "Default background restored", Toast.LENGTH_SHORT).show();
         });
         dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
             if (getScanRootUris().size() >= MAX_SCAN_ROOTS) {
-                Toast.makeText(MainActivity.this, "最多绑定 " + MAX_SCAN_ROOTS + " 个扫描目录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Most bindings" + MAX_SCAN_ROOTS + "Scan directories", Toast.LENGTH_SHORT).show();
                 return;
             }
             launchScanRootPicker(-1);
@@ -7433,7 +7433,7 @@ recreate();
             // 应用新的主题颜色（直接应用，不调用 applyCustomBackground 避免重新加载设置）
             applyDynamicTheme(dt.getColors());
             
-            Toast.makeText(MainActivity.this, "已应用自定义主题颜色", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Custom theme colors applied", Toast.LENGTH_SHORT).show();
         });
         colorPickerDialog.setOnDismissListener(d -> {
             if (!applied[0]) {
@@ -7653,18 +7653,18 @@ SharedPreferences.Editor e = prefs.edit().putString(KEY_SCAN_ROOT_URIS, joined.t
     private void showNoMediaAskDialog(final String rootUri) {
         if (isFinishing() || isDestroyed()) return;
         String shown = displayPath(rootUri);
-        String msg = "扫描目录：\n" + shown + "\n\n"
-                + "游戏解压后会产生大量 CG、立绘图片，系统相册会把它们全部收录，导致相册被刷满。\n\n"
-                + "可以在该目录创建一个 .nomedia 空文件，让系统相册忽略这个目录下的所有图片。"
-                + "这不会影响游戏运行，也不会影响 YukiHub 读取封面。\n\n"
-                + "⚠️ 已经进入相册的图片不会立刻消失，需要等系统重新扫描（可能需要重启设备）。";
+        String msg = "Scan directory:" + shown + "\n\n"
+                + "After the game is decompressed, a large number of CG and three-dimensional pictures will be generated, and the system photo album will include them all, causing the photo album to be full."
+                + "You can create an empty .nomedia file in this directory to let the system album ignore all pictures in this directory."
+                + "This does not affect game play, nor does it affect YukiHub reading covers."
+                + "⚠️ The pictures that have been entered into the album will not disappear immediately and need to be rescanned by the system (the device may need to be restarted).";
         try {
             new AlertDialog.Builder(this)
-                    .setTitle("防止游戏图片塞满相册")
+                    .setTitle("Prevent game pictures from filling your photo album")
                     .setMessage(msg)
-                    .setPositiveButton("创建", (d, w) -> performNoMediaCreate(rootUri, true))
-                    .setNegativeButton("不用了", (d, w) -> markNoMediaAsked(rootUri))
-                    .setNeutralButton("以后再说", null) // 不记状态，下次还会问
+                    .setPositiveButton("Create", (d, w) -> performNoMediaCreate(rootUri, true))
+                    .setNegativeButton("No", (d, w) -> markNoMediaAsked(rootUri))
+                    .setNeutralButton("Talk about it later", null) // 不记状态，下次还会问
                     .show();
         } catch (Throwable t) {
             Log.w("YukiHub", "show nomedia dialog failed", t);
@@ -7693,8 +7693,8 @@ SharedPreferences.Editor e = prefs.edit().putString(KEY_SCAN_ROOT_URIS, joined.t
                 if (r.success) {
                     markNoMediaAsked(rootUri);
                     Toast.makeText(this,
-                            r.alreadyExists ? "该目录已有 .nomedia，无需重复创建"
-                                    : "已创建 .nomedia，相册将忽略该目录下的图片",
+                            r.alreadyExists ? "This directory already has .nomedia, no need to create it again"
+                                    : ".nomedia has been created, the album will ignore pictures in this directory",
                             Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(this, r.error, Toast.LENGTH_LONG).show();
@@ -7708,13 +7708,13 @@ SharedPreferences.Editor e = prefs.edit().putString(KEY_SCAN_ROOT_URIS, joined.t
     private void showNoMediaBlockedDialog(final String rootUri, NoMediaHelper.Safety safety) {
         if (isFinishing() || isDestroyed()) return;
         String msg = safety.message() + "\n\n"
-                + "可以改为只在扫描到的游戏目录里单独创建，效果相同且安全。";
+                + "You can instead create it separately in the scanned game directory, which has the same effect and is safe.";
         try {
             new AlertDialog.Builder(this)
-                    .setTitle("⚠️ 已阻止：该位置不能创建")
+                    .setTitle("⚠️ Blocked: The location cannot be created")
                     .setMessage(msg)
-                    .setPositiveButton("只在游戏目录创建", (d, w) -> createNoMediaForScannedGames(rootUri))
-                    .setNegativeButton("取消", null)
+                    .setPositiveButton("Only created in the game directory", (d, w) -> createNoMediaForScannedGames(rootUri))
+                    .setNegativeButton("Cancel", null)
                     .show();
         } catch (Throwable t) {
             Log.w("YukiHub", "show nomedia blocked dialog failed", t);
@@ -7726,7 +7726,7 @@ SharedPreferences.Editor e = prefs.edit().putString(KEY_SCAN_ROOT_URIS, joined.t
      * 安全判定不放水，同一套规则。
      */
     private void createNoMediaForScannedGames(final String rootUri) {
-        Toast.makeText(this, "正在扫描游戏目录，请稍候...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Scanning game directory, please wait...", Toast.LENGTH_SHORT).show();
         AppExecutors.runOnSingle(() -> {
             List<ScanResult> results = new ArrayList<>();
             try {
@@ -7777,9 +7777,9 @@ SharedPreferences.Editor e = prefs.edit().putString(KEY_SCAN_ROOT_URIS, joined.t
                 // 否则用户以后再也不会被提示（多为权限或目录变动导致的临时失败）。
                 if (total > 0) markNoMediaAsked(rootUri);
                 String msg = total == 0
-                        ? "没有扫描到游戏目录，未做任何改动"
-                        : "新建 " + fCreated + " 个，已存在 " + fAlready + " 个"
-                                + (fSkipped > 0 ? "，跳过 " + fSkipped + " 个" : "");
+                        ? "The game directory was not scanned and no changes were made."
+                        : "New" + fCreated + ", already exists" + fAlready + " 个"
+                                + (fSkipped > 0 ? ",jump over" + fSkipped + " 个" : "");
                 Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
                 refreshActiveScanRootListUi();
             });
@@ -7797,23 +7797,23 @@ SharedPreferences.Editor e = prefs.edit().putString(KEY_SCAN_ROOT_URIS, joined.t
                 try {
                     if (exists) {
                         new AlertDialog.Builder(this)
-                                .setTitle("相册防污染：已开启")
-                                .setMessage("目录：\n" + shown + "\n\n"
-                                        + "该目录已有 .nomedia，系统相册会忽略这里的图片。\n\n"
-                                        + "移除后相册会重新收录该目录下的图片。")
-                                .setPositiveButton("移除", (d, w) -> performNoMediaRemove(rootUri))
-                                .setNegativeButton("关闭", null)
+                                .setTitle("Album anti-pollution: enabled")
+                                .setMessage("Table of contents:" + shown + "\n\n"
+                                        + "This directory already has .nomedia, and the system album will ignore the pictures here."
+                                        + "After removal, the album will re-include the pictures in this directory.")
+                                .setPositiveButton("Remove", (d, w) -> performNoMediaRemove(rootUri))
+                                .setNegativeButton("Close", null)
                                 .show();
                     } else {
                         new AlertDialog.Builder(this)
-                                .setTitle("相册防污染：未开启")
-                                .setMessage("目录：\n" + shown + "\n\n"
-                                        + "创建 .nomedia 后，系统相册会忽略该目录下的所有图片，"
-                                        + "避免游戏 CG 塞满相册。不影响游戏运行和封面读取。\n\n"
-                                        + "⚠️ 请勿在存储卡根目录创建，否则相册会读不到任何图片。"
-                                        + "YukiHub 会自动阻止这类危险位置。")
-                                .setPositiveButton("创建", (d, w) -> performNoMediaCreate(rootUri, true))
-                                .setNegativeButton("取消", null)
+                                .setTitle("Album anti-pollution: not turned on")
+                                .setMessage("Table of contents:" + shown + "\n\n"
+                                        + "After creating .nomedia, the system album will ignore all pictures in this directory."
+                                        + "Avoid cluttering your photo album with game CGs. Does not affect game running and cover reading."
+                                        + "⚠️ Please do not create it in the root directory of the memory card, otherwise the album will not be able to read any pictures."
+                                        + "YukiHub automatically blocks such dangerous locations.")
+                                .setPositiveButton("Create", (d, w) -> performNoMediaCreate(rootUri, true))
+                                .setNegativeButton("Cancel", null)
                                 .show();
                     }
                 } catch (Throwable t) {
@@ -7829,7 +7829,7 @@ SharedPreferences.Editor e = prefs.edit().putString(KEY_SCAN_ROOT_URIS, joined.t
             runOnUiThread(() -> {
                 if (isFinishing() || isDestroyed()) return;
                 Toast.makeText(this,
-                        r.success ? "已移除 .nomedia，相册将重新收录该目录图片" : r.error,
+                        r.success ? ".nomedia has been removed and the album will re-include images from this directory" : r.error,
                         Toast.LENGTH_LONG).show();
                 // 不清「已问过」记录：用户是主动移除的，
                 // 清掉会导致下次扫描又弹窗询问，属于骚扰。
@@ -7847,7 +7847,7 @@ roots.remove(value);
 if (replaceIndex >= 0 && replaceIndex < roots.size()) roots.set(replaceIndex, value);
 else if (roots.size() < MAX_SCAN_ROOTS) roots.add(value);
 else {
-Toast.makeText(MainActivity.this, "最多绑定 " + MAX_SCAN_ROOTS + " 个扫描目录", Toast.LENGTH_SHORT).show();
+Toast.makeText(MainActivity.this, "Most bindings" + MAX_SCAN_ROOTS + "Scan directories", Toast.LENGTH_SHORT).show();
 return false;
 }
 saveScanRootUris(roots);
@@ -7865,7 +7865,7 @@ pruneNoMediaAsked();
 
 private String scanRootsSummary() {
 List<String> roots = getScanRootUris();
-if (roots.isEmpty()) return "未绑定";
+if (roots.isEmpty()) return "Not bound";
 StringBuilder sb = new StringBuilder();
 for (int i = 0; i < roots.size(); i++) {
 if (i > 0) sb.append('\n');
@@ -7875,7 +7875,7 @@ return sb.toString();
 }
 
 private String compactUriLabel(String uri) {
-if (uri == null || uri.trim().isEmpty()) return "未绑定";
+if (uri == null || uri.trim().isEmpty()) return "Not bound";
 String s = uri.trim();
 try {
 Uri u = Uri.parse(s);
@@ -7897,7 +7897,7 @@ private boolean useBuiltinFileChooser() {
         if (useBuiltinFileChooser()) {
             new com.yuki.yukihub.ui.filechooser.FileChooserDialog(this)
                 .setMode(com.yuki.yukihub.ui.filechooser.FileChooserDialog.Mode.DIRECTORY)
-                .setTitle("选择扫描目录")
+                .setTitle("Select scan directory")
                 .setOnFileSelectedListener(new com.yuki.yukihub.ui.filechooser.FileChooserDialog.OnFileSelectedListener() {
                     @Override public void onFileSelected(Uri uri, String path, String fileName) {}
                     @Override public void onDirectorySelected(Uri uri, String path) {
@@ -7906,7 +7906,7 @@ boolean changed = addOrReplaceScanRoot(selectedDir, pendingScanRootReplaceIndex)
 pendingScanRootReplaceIndex = -2;
                         if (changed) {
                             refreshActiveScanRootListUi();
-                            Toast.makeText(MainActivity.this, "扫描目录已更新", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Scan catalog updated", Toast.LENGTH_SHORT).show();
                             maybePromptNoMedia(selectedDir);
                         }
                     }
@@ -7945,7 +7945,7 @@ private LinearLayout scanRootCard(String uri, int index, Runnable refresh) {
         card.addView(text, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
         // 相册防污染（.nomedia）状态入口：异步探测后回填，避免主线程 IO
         TextView noMedia = new TextView(this);
-        noMedia.setText("相册…");
+        noMedia.setText("Photo album…");
         noMedia.setTextColor(getColorCompat(R.color.yh_text_muted));
         noMedia.setTextSize(12);
         noMedia.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -7963,12 +7963,12 @@ private LinearLayout scanRootCard(String uri, int index, Runnable refresh) {
             runOnUiThread(() -> {
                 // 卡片可能已被刷新替换掉，旧 View 脱离视图树后不必再更新
                 if (isFinishing() || isDestroyed() || noMedia.getParent() == null) return;
-                noMedia.setText(fHas ? "相册✓" : "相册✕");
+                noMedia.setText(fHas ? "Album✓" : "Album✕");
                 noMedia.setTextColor(fHas ? primaryTextColor() : getColorCompat(R.color.yh_text_muted));
             });
         });
         TextView change = new TextView(this);
-        change.setText("更换");
+        change.setText("Replace");
         change.setTextColor(primaryTextColor());
         change.setTextSize(12);
         change.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -7976,7 +7976,7 @@ private LinearLayout scanRootCard(String uri, int index, Runnable refresh) {
         change.setOnClickListener(v -> launchScanRootPicker(index));
         card.addView(change);
         TextView remove = new TextView(this);
-        remove.setText("移除");
+        remove.setText("Remove");
         remove.setTextColor(getColorCompat(R.color.yh_warning));
         remove.setTextSize(12);
         remove.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -8002,10 +8002,10 @@ private void refreshScanRootListUi(LinearLayout container, TextView info) {
         for (int i = 0; i < roots.size(); i++) {
             if (i < states.size() && states.get(i)) enabledCount++;
         }
-        if (info != null) info.setText("已绑定 " + roots.size() + "/" + MAX_SCAN_ROOTS + " 个目录，已启用 " + enabledCount + " 个。" + (roots.isEmpty() ? "\n请先添加扫描目录。" : ""));
+        if (info != null) info.setText("Bound" + roots.size() + "/" + MAX_SCAN_ROOTS + "Directories, enabled" + enabledCount + "Indivual." + (roots.isEmpty() ? "Please add the scan directory first." : ""));
 if (roots.isEmpty()) {
 TextView empty = new TextView(this);
-empty.setText("暂无扫描目录");
+empty.setText("No scan directory yet");
 empty.setTextColor(getColorCompat(R.color.yh_text_muted));
 empty.setTextSize(12);
 empty.setGravity(android.view.Gravity.CENTER);
@@ -8034,7 +8034,7 @@ private void checkUpdateOnStartupIfEnabled() {
     }
 
     private void checkUpdateManually() {
-        Toast.makeText(MainActivity.this, "正在通过 " + (UPDATE_SOURCE_GITHUB.equals(updateSource()) ? "GitHub" : "GitCode") + " 检查更新...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Passing" + (UPDATE_SOURCE_GITHUB.equals(updateSource()) ? "GitHub" : "GitCode") + "Check for updates...", Toast.LENGTH_SHORT).show();
         checkUpdate(true);
     }
 
@@ -8050,13 +8050,13 @@ private void checkUpdateOnStartupIfEnabled() {
                     if (newer) {
                         showUpdateDialog(info, current);
                     } else if (manual) {
-                        Toast.makeText(this, "已是最新版本：" + emptyText(current, "未知"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Already the latest version:" + emptyText(current, "Unknown"), Toast.LENGTH_SHORT).show();
                     }
                 });
             } catch (Throwable t) {
                 Log.w("YukiHub", "check update failed", t);
                 if (manual) {
-                    runOnUiThread(() -> Toast.makeText(this, "检查更新失败：" + emptyText(t.getMessage(), "请稍后重试"), Toast.LENGTH_LONG).show());
+                    runOnUiThread(() -> Toast.makeText(this, "Checking for updates failed:" + emptyText(t.getMessage(), "Please try again later"), Toast.LENGTH_LONG).show());
                 }
             }
         });
@@ -8073,7 +8073,7 @@ private void checkUpdateOnStartupIfEnabled() {
                 : new UpdateSource("GitCode", UPDATE_GITCODE_API_URL, UPDATE_GITCODE_REPO_URL, "application/json");
         // 尊重单选来源；失败时提示用户换源，不静默回退到另一站点。
         try { return fetchLatestReleaseFrom(source); }
-        catch (Exception e) { throw new RuntimeException(source.name + " 更新源不可用，可在设置中切换更新源", e); }
+        catch (Exception e) { throw new RuntimeException(source.name + "The update source is unavailable. You can switch the update source in settings.", e); }
     }
 
     private UpdateInfo fetchLatestReleaseFrom(UpdateSource source) throws Exception {
@@ -8093,7 +8093,7 @@ private void checkUpdateOnStartupIfEnabled() {
             if (code < 200 || code >= 300) throw new RuntimeException(source.name + " HTTP " + code + ": " + trimForDialog(text, 160));
             JSONObject o = new JSONObject(text == null ? "{}" : text);
             UpdateInfo info = parseReleaseInfo(o, source);
-            if (info.version == null || info.version.isEmpty()) throw new RuntimeException(source.name + " 未返回有效版本号");
+            if (info.version == null || info.version.isEmpty()) throw new RuntimeException(source.name + "No valid version number returned");
             return info;
         } finally { c.disconnect(); }
     }
@@ -8182,20 +8182,20 @@ private void checkUpdateOnStartupIfEnabled() {
         if (info == null || isFinishing()) return;
         String latestLabel = emptyText(info.tagName, info.version);
         StringBuilder msg = new StringBuilder();
-        msg.append("当前版本：").append(emptyText(currentVersion, "未知")).append("\n");
-        msg.append("最新版本：").append(emptyText(latestLabel, "未知")).append("\n\n");
+        msg.append("Current version:").append(emptyText(currentVersion, "Unknown")).append("\n");
+        msg.append("Latest version:").append(emptyText(latestLabel, "Unknown")).append("\n\n");
         String body = trimForDialog(info.body, 1600);
         if (body != null && !body.trim().isEmpty()) {
-            msg.append("更新内容：\n").append(body.trim());
+            msg.append("Updates:").append(body.trim());
         } else {
-            msg.append("发现新的 ").append(emptyText(info.sourceName, "发布源")).append(" Release，可前往发布页查看详情。");
+            msg.append("Discover new").append(emptyText(info.sourceName, "Publish source")).append("Release, you can go to the release page to view details.");
         }
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("发现新版本 " + emptyText(latestLabel, ""))
+                .setTitle("New version found" + emptyText(latestLabel, ""))
                 .setMessage(msg.toString())
-                .setPositiveButton("前往下载", (d, w) -> openExternalUrl(emptyText(info.apkUrl, info.releaseUrl)))
-                .setNeutralButton("发布页", (d, w) -> openExternalUrl(emptyText(info.releaseUrl, emptyText(info.repoUrl, UPDATE_GITCODE_REPO_URL) + "/releases")))
-                .setNegativeButton("稍后", null)
+                .setPositiveButton("Go to download", (d, w) -> openExternalUrl(emptyText(info.apkUrl, info.releaseUrl)))
+                .setNeutralButton("Release page", (d, w) -> openExternalUrl(emptyText(info.releaseUrl, emptyText(info.repoUrl, UPDATE_GITCODE_REPO_URL) + "/releases")))
+                .setNegativeButton("Later", null)
                 .show();
         styleAlertDialogDark(dialog);
     }
@@ -8238,21 +8238,21 @@ private void checkUpdateOnStartupIfEnabled() {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         } catch (Throwable t) {
-            Toast.makeText(MainActivity.this, "无法打开链接", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Unable to open link", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void showDisclaimerDialog() {
-        String text = "免责声明\n\n" +
-                "1. 本应用为开源项目，仅用于管理、整理和启动用户本人有权使用的游戏与应用，不提供任何游戏本体、破解资源、绕过授权或规避版权/平台规则的能力。\n\n" +
-                "2. 用户应自行确保所添加资源、账号、同步内容、社区内容以及第三方服务的合法性、完整性与可用性；因使用这些内容产生的责任由用户自行承担。\n\n" +
-                "3. 第三方登录（NextMoe·未萌、Hikarinagi 等账号体系）仅用于身份关联与云同步，账号数据、头像与资料由其对应平台的规则决定；请妥善保管你的账号与授权，避免在不可信设备上登录。\n\n" +
-                "4. 云同步（WebDAV / 服务器）、好友聊天、在线状态与社区功能依赖外部服务与网络环境，可能因服务变更、网络状况或账号状态而不可用或产生数据差异。\n\n" +
-                "5. 游戏启动依赖 KIRIKIRI2、Tyranno、Artemis、ONScripter、Winlator、盖世等第三方引擎与应用；启动文件的自动选择、快速/兼容扫描模式等仅提供尽力而为的适配，不保证所有资源均可正确启动。\n\n" +
-                "6. 游戏资料刮削（VNDB、Bangumi、月幕 Gal、Hikarinagi 等）获取的封面、简介与标签来自第三方元数据服务，可能不准确或不完整，仅供整理与参考。\n\n" +
-                "7. 系统存储权限、Shizuku、GameHub 等能力依赖系统环境与第三方应用，可能因设备、系统版本、权限状态或服务变更而不可用。\n\n" +
-                "8. 因第三方服务、系统限制、用户误操作或资源本身问题造成的数据丢失、同步异常、启动失败、兼容性问题或其他损失，开发者不承担额外责任。\n\n" +
-                "9. 如果你不同意以上说明，请停止使用相关功能。";
+        String text = "Disclaimer" +
+                "1. This application is an open source project. It is only used to manage, organize and launch games and applications that the user has the right to use. It does not provide any game ontology, crack resources, bypass authorization or the ability to circumvent copyright/platform rules." +
+                "2. Users should ensure the legality, integrity and availability of added resources, accounts, synchronized content, community content and third-party services; the user shall bear all responsibilities arising from the use of these contents." +
+                "3. Third-party login (NextMoe, Hikarinagi and other account systems) is only used for identity association and cloud synchronization. Account data, avatars and information are determined by the rules of the corresponding platform; please keep your account and authorization properly and avoid logging in on untrusted devices." +
+                "4. Cloud synchronization (WebDAV/server), friend chat, online status and community functions rely on external services and network environment, and may be unavailable or have data differences due to service changes, network conditions or account status." +
+                "5. The game startup relies on third-party engines and applications such as KIRIKIRI2, Tyranno, Artemis, ONScripter, Winlator, and Gasgoo. The automatic selection of startup files, fast/compatible scan mode, etc. only provide best-effort adaptation and do not guarantee that all resources can be started correctly." +
+                "6. The covers, introductions and tags obtained by game data scraping (VNDB, Bangumi, Moon Screen Gal, Hikarinagi, etc.) are from third-party metadata services, which may be inaccurate or incomplete and are for collation and reference only." +
+                "7. System storage permissions, Shizuku, GameHub and other capabilities depend on the system environment and third-party applications, and may be unavailable due to device, system version, permission status or service changes." +
+                "8. The developer does not bear additional responsibility for data loss, synchronization anomalies, startup failures, compatibility issues or other losses caused by third-party services, system limitations, user misoperation or problems with the resources themselves." +
+                "9. If you do not agree with the above instructions, please stop using relevant functions.";
         TextView tv = new TextView(this);
         int pad = dp(18);
         tv.setPadding(pad, pad, pad, pad);
@@ -8263,9 +8263,9 @@ private void checkUpdateOnStartupIfEnabled() {
         ScrollView scroll = new ScrollView(this);
         scroll.addView(tv);
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("免责声明")
+                .setTitle("Disclaimer")
                 .setView(scroll)
-                .setPositiveButton("知道了", null)
+                .setPositiveButton("Knew", null)
                 .show();
         styleAlertDialogDark(dialog);
         if (dialog.getWindow() != null) {
@@ -8306,7 +8306,7 @@ private String playStatusFromIndex(int index) {
 }
 private void showPlayStatusDialog(Game game, Dialog parentDialog) {
     if (game == null) return;
-    String[] labels = new String[]{"未玩", "在玩", "玩过", "搁置", "抛弃"};
+    String[] labels = new String[]{"Not played", "Playing", "Played", "Put on hold", "Abandon"};
     String[] statusKeys = new String[]{"unplayed", "playing", "completed", "onhold", "dropped"};
     LinearLayout root = new LinearLayout(this);
     root.setOrientation(LinearLayout.VERTICAL);
@@ -8334,7 +8334,7 @@ private void showPlayStatusDialog(Game game, Dialog parentDialog) {
         row.setOnClickListener(v -> {
             game.playStatus = playStatusFromIndex(index);
             repository.update(game);
-            Toast.makeText(this, "已标记为：" + playStatusLabel(game.playStatus), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Tagged:" + playStatusLabel(game.playStatus), Toast.LENGTH_SHORT).show();
             if (ref[0] != null) ref[0].dismiss();
             if (parentDialog != null) parentDialog.dismiss();
             loadGames();
@@ -8342,9 +8342,9 @@ private void showPlayStatusDialog(Game game, Dialog parentDialog) {
         });
     }
     AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle("设置游玩状态")
+            .setTitle("Set play status")
             .setView(wrapDialogScroll(root))
-            .setNegativeButton("取消", null)
+            .setNegativeButton("Cancel", null)
             .show();
     ref[0] = dialog;
     styleAlertDialogDark(dialog);
@@ -8391,8 +8391,8 @@ private void showDetailDialog(Game game) {
             applyImmersiveToWindow(d.getWindow());
         }
         ((TextView)d.findViewById(R.id.detailTitle)).setText(game.title);
-        ((TextView)d.findViewById(R.id.detailInfo)).setText("状态：" + playStatusLabel(game.playStatus) + "\n引擎：" + game.engine.getDisplayName() + "\n总时长：" + TimeFormatUtil.playTime(game.totalPlayTime) + "\n最近游玩：" + TimeFormatUtil.date(game.lastPlayedAt) + "\n模拟器：" + emptyText(game.emulatorPackage, "未配置"));
-        ((TextView)d.findViewById(R.id.detailPath)).setText("路径：" + displayPath(game.rootUri));
+        ((TextView)d.findViewById(R.id.detailInfo)).setText("State:" + playStatusLabel(game.playStatus) + "Engine:" + game.engine.getDisplayName() + "Total duration:" + TimeFormatUtil.playTime(game.totalPlayTime) + "Recently played:" + TimeFormatUtil.date(game.lastPlayedAt) + "Simulator:" + emptyText(game.emulatorPackage, "Not configured"));
+        ((TextView)d.findViewById(R.id.detailPath)).setText("Path:" + displayPath(game.rootUri));
         ImageView cover = d.findViewById(R.id.detailCover);
         TextView ph = d.findViewById(R.id.detailCoverPlaceholder);
         String safeCover = safeCoverUri(game);
@@ -8418,7 +8418,7 @@ private void showDetailDialog(Game game) {
             else if (game.engine == EngineType.FVP) showFvpSettingsDialog(game);
             else showKrSettingsDialog(game);
         });
-        d.findViewById(R.id.btnDelete).setOnClickListener(v -> new AlertDialog.Builder(this).setTitle("删除游戏").setMessage("确定删除 “" + game.title + "”？不会删除本体文件。").setPositiveButton("删除", (x,w)->{ com.yuki.yukihub.shortcut.GameShortcutManager.disableForGame(this, game.id); PcLaunchPrefs.clear(this, game.id); FvpLaunchPrefs.clear(this, game.id); repository.delete(game.id); d.dismiss(); loadGames(); }).setNegativeButton("取消", null).show());
+        d.findViewById(R.id.btnDelete).setOnClickListener(v -> new AlertDialog.Builder(this).setTitle("Delete game").setMessage("Confirm to delete \"" + game.title + "\"? The ontology file will not be deleted.").setPositiveButton("Delete", (x,w)->{ com.yuki.yukihub.shortcut.GameShortcutManager.disableForGame(this, game.id); PcLaunchPrefs.clear(this, game.id); FvpLaunchPrefs.clear(this, game.id); repository.delete(game.id); d.dismiss(); loadGames(); }).setNegativeButton("Cancel", null).show());
         d.findViewById(R.id.btnLaunch).setOnClickListener(v -> launchGame(game));
         d.show();
         applyImmersiveToWindow(d.getWindow());
@@ -8439,11 +8439,11 @@ private void showDetailDialog(Game game) {
                 runOnUiThread(() -> {
                     if (items.isEmpty()) {
                         new AlertDialog.Builder(this)
-                                .setTitle("导入快捷方式")
-                                .setMessage("没有读取到可用的 GameHub 快捷方式。\n\n请确认：1）Shizuku 正在运行并已授权；2）GameHub 已创建桌面快捷方式；3）补丁包包名为 com.xiaoji.egggamz 或原包 com.xiaoji.egggame。\n\n如果是 iQOO/OriginOS 等设备，可点击“复制诊断”把 Shizuku/Shortcut 输出发给开发者排查。也可以粘贴 shortcut dump 参数导入。")
-                                .setPositiveButton("粘贴参数", (x, w) -> showGameHubShortcutTextImport(titleTarget, pkgTarget, gamehubIdTarget))
-                                .setNeutralButton("复制诊断", (x, w) -> copyGameHubShortcutDiagnostics())
-                                .setNegativeButton("知道了", null)
+                                .setTitle("Import shortcuts")
+                                .setMessage("No available GameHub shortcuts were read.\n\nPlease confirm: 1) Shizuku is running and authorized; 2) GameHub has created a desktop shortcut; 3) The patch package is named com.xiaoji.egggamz or the original package com.xiaoji.egggame.\n\nIf it is a device such as iQOO/OriginOS, you can click \"Copy Diagnosis\" to send the Shizuku/Shortcut output to the developer for troubleshooting. You can also paste the shortcut dump parameter import.")
+                                .setPositiveButton("Paste parameters", (x, w) -> showGameHubShortcutTextImport(titleTarget, pkgTarget, gamehubIdTarget))
+                                .setNeutralButton("Copy diagnostics", (x, w) -> copyGameHubShortcutDiagnostics())
+                                .setNegativeButton("Knew", null)
                                 .show();
                         return;
                     }
@@ -8451,9 +8451,9 @@ private void showDetailDialog(Game game) {
                 });
             } catch (Throwable t) {
                 runOnUiThread(() -> new AlertDialog.Builder(this)
-                        .setTitle("导入失败")
-                        .setMessage("读取快捷方式失败：" + t.getClass().getSimpleName() + "\n\n如果系统没有授予读取桌面快捷方式的权限，这属于系统限制。")
-                        .setPositiveButton("知道了", null)
+                        .setTitle("Import failed")
+                        .setMessage("Failed to read shortcut:" + t.getClass().getSimpleName() + "If the system does not grant permission to read desktop shortcuts, this is a system limitation.")
+                        .setPositiveButton("Knew", null)
                         .show());
             }
         });
@@ -8482,17 +8482,17 @@ private void showDetailDialog(Game game) {
             if (gamehubIdTarget != null) gamehubIdTarget.setText(item.localGameId);
             if (titleTarget != null && (titleTarget.getText() == null || titleTarget.getText().toString().trim().isEmpty())) titleTarget.setText(item.localAppName);
             if (pkgTarget != null && (pkgTarget.getText() == null || pkgTarget.getText().toString().trim().isEmpty())) pkgTarget.setText(guessInstalledGameHubPackage());
-            Toast.makeText(MainActivity.this, "已导入 GameHub 快捷方式", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Imported GameHub shortcuts", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
         rv.setAdapter(adapterRef[0]);
-        hint.setText("共 " + adapterRef[0].getItemCount() + " 个快捷方式，可搜索游戏名或ID");
+        hint.setText("Common" + adapterRef[0].getItemCount() + "Shortcut to search for game name or ID");
         search.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
             public void onTextChanged(CharSequence s, int st, int b, int c) {
                 if (adapterRef[0] == null) return;
                 adapterRef[0].filter(s == null ? "" : s.toString());
-                hint.setText("共 " + source.size() + " 个快捷方式，当前显示 " + adapterRef[0].getItemCount() + " 个");
+                hint.setText("Common" + source.size() + "Shortcuts, currently displayed" + adapterRef[0].getItemCount() + " 个");
             }
             public void afterTextChanged(Editable e) {}
         });
@@ -8574,25 +8574,25 @@ private void showDetailDialog(Game game) {
         input.setMinLines(5);
         input.setMaxLines(10);
         input.setGravity(android.view.Gravity.TOP);
-        input.setHint("粘贴包含 localGameId=local_xxx 或 steamAppId=123456 的快捷方式参数");
+        input.setHint("Paste the shortcut parameters containing localGameId=local_xxx or steamAppId=123456");
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         int pad = (int) (16 * getResources().getDisplayMetrics().density);
         input.setPadding(pad, pad / 2, pad, pad / 2);
         new AlertDialog.Builder(this)
-                .setTitle("粘贴 GameHub 快捷方式参数")
+                .setTitle("Paste GameHub shortcut parameters")
                 .setView(input)
-                .setPositiveButton("导入", (d, w) -> {
+                .setPositiveButton("Import", (d, w) -> {
                     GameHubShortcutItem item = parseGameHubShortcutText(input.getText() == null ? "" : input.getText().toString());
                     if (item == null || item.localGameId.isEmpty()) {
-                        Toast.makeText(this, "未识别到 localGameId 或 steamAppId", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "LocalGameId or steamAppId not recognized", Toast.LENGTH_LONG).show();
                         return;
                     }
                     if (gamehubIdTarget != null) gamehubIdTarget.setText(item.localGameId);
                     if (titleTarget != null && (titleTarget.getText() == null || titleTarget.getText().toString().trim().isEmpty())) titleTarget.setText(item.localAppName);
                     if (pkgTarget != null && (pkgTarget.getText() == null || pkgTarget.getText().toString().trim().isEmpty())) pkgTarget.setText(guessInstalledGameHubPackage());
-                    Toast.makeText(MainActivity.this, "已导入 GameHub 快捷方式参数", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "GameHub shortcut parameters imported", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -8688,7 +8688,7 @@ private void showDetailDialog(Game game) {
             if (!Shizuku.pingBinder()) return false;
             if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) return false;
             Shizuku.requestPermission(62001);
-            Toast.makeText(this, "请在 Shizuku 弹窗中授权，授权后再点一次导入快捷方式", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please authorize in the Shizuku pop-up window, and click again to import the shortcut after authorization.", Toast.LENGTH_LONG).show();
             return true;
         } catch (Throwable ignored) {
             return false;
@@ -8771,17 +8771,17 @@ private void showDetailDialog(Game game) {
 
     private void copyGameHubShortcutDiagnostics() {
         if (requestShizukuPermissionIfNeeded()) return;
-        Toast.makeText(MainActivity.this, "正在生成 GameHub 快捷方式诊断...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Generating GameHub shortcut diagnostics...", Toast.LENGTH_SHORT).show();
         AppExecutors.runOnSingle(() -> {
             String result;
             try {
                 if (!Shizuku.pingBinder() || Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
-                    result = "Shizuku 未运行或未授权。";
+                    result = "Shizuku is not running or authorized.";
                 } else {
                     result = runGameHubShizukuCommand(buildGameHubShortcutDumpCommand(true));
                 }
             } catch (Throwable t) {
-                result = "生成诊断失败：" + t.getClass().getName() + "\n" + String.valueOf(t.getMessage());
+                result = "Generating diagnostic failed:" + t.getClass().getName() + "\n" + String.valueOf(t.getMessage());
             }
             final String text = result == null ? "" : (result.length() > 180000 ? result.substring(0, 180000) + "\n--- truncated by YukiHub ---" : result);
             runOnUiThread(() -> {
@@ -8789,12 +8789,12 @@ private void showDetailDialog(Game game) {
                     Object service = getSystemService(Context.CLIPBOARD_SERVICE);
                     if (service instanceof android.content.ClipboardManager) {
                         ((android.content.ClipboardManager) service).setPrimaryClip(android.content.ClipData.newPlainText("YukiHub GameHub shortcut diagnostics", text));
-                        Toast.makeText(this, "诊断信息已复制，可发给开发者排查", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "The diagnostic information has been copied and can be sent to developers for troubleshooting.", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(this, "复制失败：无法获取剪贴板服务", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Copy failed: Unable to obtain clipboard service", Toast.LENGTH_LONG).show();
                     }
                 } catch (Throwable t) {
-                    Toast.makeText(this, "复制诊断失败：" + t.getClass().getSimpleName(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Replication diagnostics failed:" + t.getClass().getSimpleName(), Toast.LENGTH_LONG).show();
                 }
             });
         });
@@ -8974,10 +8974,10 @@ private void showDetailDialog(Game game) {
                 loading.setVisibility(View.GONE);
                 rv.setVisibility(View.VISIBLE);
                 if (items.isEmpty()) {
-                    hint.setText("没有找到可启动的应用");
+                    hint.setText("No launchable application found");
                     return;
                 }
-                hint.setText("共 " + items.size() + " 个可启动应用，可搜索应用名或包名");
+                hint.setText("Common" + items.size() + "A launchable application can be searched for application name or package name");
                 final AppPickerAdapter[] adapterRef = new AppPickerAdapter[1];
                 adapterRef[0] = new AppPickerAdapter(items, item -> {
                     target.setText(item.packageName);
@@ -8992,7 +8992,7 @@ private void showDetailDialog(Game game) {
                     public void onTextChanged(CharSequence s, int st, int b, int c) {
                         if (adapterRef[0] == null) return;
                         adapterRef[0].filter(s == null ? "" : s.toString());
-                        hint.setText("共 " + items.size() + " 个应用，当前显示 " + adapterRef[0].getItemCount() + " 个");
+                        hint.setText("Common" + items.size() + "Apps, currently showing" + adapterRef[0].getItemCount() + " 个");
                     }
                     public void afterTextChanged(Editable e) {}
                 });
@@ -9109,7 +9109,7 @@ private void showDetailDialog(Game game) {
     }
 
 private String displayPath(String value) {
-        if (value == null || value.trim().isEmpty()) return "未选择游戏目录";
+        if (value == null || value.trim().isEmpty()) return "No game directory selected";
         String s = value.trim();
         if (s.startsWith("file://")) {
             try {
@@ -9194,7 +9194,7 @@ private String displayPath(String value) {
             d.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             d.getWindow().setLayout((int) (getResources().getDisplayMetrics().widthPixels * 0.82f), android.view.WindowManager.LayoutParams.WRAP_CONTENT);
         }
-        ((TextView)d.findViewById(R.id.editDialogTitle)).setText(game == null ? "添加游戏" : "编辑游戏");
+        ((TextView)d.findViewById(R.id.editDialogTitle)).setText(game == null ? "add game" : "Edit game");
         EditText title = d.findViewById(R.id.etGameTitle), pkg = d.findViewById(R.id.etEmulatorPackage), desc = d.findViewById(R.id.etDescription);
         EditText gamehubLocalGameId = d.findViewById(R.id.etGameHubLocalGameId);
         Spinner sp = d.findViewById(R.id.spEngine);
@@ -9213,12 +9213,12 @@ private String displayPath(String value) {
         btnClearDir.setOnClickListener(v -> {
             pendingDirUri = null;
             if (pendingEditDialog != null) {
-                ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedDir)).setText("未选择游戏目录");
+                ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedDir)).setText("No game directory selected");
                 List<String> options = buildLaunchOptions(null);
                 launchSp.setAdapter(krSpinnerAdapter(options.toArray(new String[0])));
                 updateClearDirButton(btnClearDir, pendingDirUri);
             }
-            Toast.makeText(MainActivity.this, "已清除游戏目录", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Game directory cleared", Toast.LENGTH_SHORT).show();
         });
         View btnPickEmulatorApp = d.findViewById(R.id.btnPickEmulatorApp);
         View btnResetEmulatorPackage = d.findViewById(R.id.btnResetEmulatorPackage);
@@ -9250,7 +9250,7 @@ private String displayPath(String value) {
             if ("GAMEHUB".equals(engine)) gamehubLocalGameId.setText("");
             if ("ARTEMIS".equals(engine)) updateArtemisVersionButtons(defaultPkg, btnArtemisAuto, btnArtemisStd, btnArtemisCompat, btnArtemisCompatV2);
             updateWinlatorAdvanced.run();
-            Toast.makeText(this, defaultPkg.isEmpty() ? "已清空默认包名" : "已恢复默认包名：" + defaultPkg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, defaultPkg.isEmpty() ? "The default package name has been cleared" : "The default package name has been restored:" + defaultPkg, Toast.LENGTH_SHORT).show();
         });
 
         pkg.addTextChangedListener(new TextWatcher() {
@@ -9260,16 +9260,16 @@ private String displayPath(String value) {
         });
         ArrayAdapter<String> spAdapter = krSpinnerAdapter(new String[]{"AUTO", "KIRIKIRI", "ONS", "TYRANO", "ARTEMIS", "FVP", "WINLATOR", "PC", "GAMEHUB", "PSP", "ANDROID", "UNKNOWN"});
         sp.setAdapter(spAdapter);
-        ArrayAdapter<String> winlatorModeAdapter = krSpinnerAdapter(new String[]{"启动到游戏", "启动到程序"});
+        ArrayAdapter<String> winlatorModeAdapter = krSpinnerAdapter(new String[]{"Boot into game", "Boot into program"});
         winlatorModeSp.setAdapter(winlatorModeAdapter);
-        ArrayAdapter<String> gamehubModeAdapter = krSpinnerAdapter(new String[]{"启动到游戏", "启动到程序"});
+        ArrayAdapter<String> gamehubModeAdapter = krSpinnerAdapter(new String[]{"Boot into game", "Boot into program"});
         gamehubModeSp.setAdapter(gamehubModeAdapter);
         List<String> launchOptions = buildLaunchOptions(pendingDirUri);
         ArrayAdapter<String> launchAdapter = krSpinnerAdapter(launchOptions.toArray(new String[0]));
         launchSp.setAdapter(launchAdapter);
         if (game != null) {
             tvPlayTimeInfo.setVisibility(View.VISIBLE);
-            tvPlayTimeInfo.setText("总时长：" + TimeFormatUtil.playTime(game.totalPlayTime) + " / 最近游玩：" + TimeFormatUtil.date(game.lastPlayedAt));
+            tvPlayTimeInfo.setText("Total duration:" + TimeFormatUtil.playTime(game.totalPlayTime) + "/ Recently played:" + TimeFormatUtil.date(game.lastPlayedAt));
         }
         btnArtemisAuto.setOnClickListener(v -> { pkg.setText(resolveArtemisPackageFromMarkers(pendingDirUri)); updateArtemisVersionButtons(pkg.getText().toString(), btnArtemisAuto, btnArtemisStd, btnArtemisCompat, btnArtemisCompatV2); });
         btnArtemisStd.setOnClickListener(v -> { pkg.setText("internal.artemis"); updateArtemisVersionButtons(pkg.getText().toString(), btnArtemisAuto, btnArtemisStd, btnArtemisCompat, btnArtemisCompatV2); });
@@ -9281,8 +9281,8 @@ private String displayPath(String value) {
             gamehubModeSp.setSelection(gamehubModeIndex(game.gamehubLaunchMode));
             sp.setSelection(engineIndex(game.engine));
             launchSp.setSelection(findLaunchSelection(launchOptions, game.launchTarget));
-            ((TextView)d.findViewById(R.id.tvSelectedDir)).setText(emptyText(game.rootUri, "未选择游戏目录"));
-            ((TextView)d.findViewById(R.id.tvSelectedCover)).setText(emptyText(game.coverUri, "未选择封面"));
+            ((TextView)d.findViewById(R.id.tvSelectedDir)).setText(emptyText(game.rootUri, "No game directory selected"));
+            ((TextView)d.findViewById(R.id.tvSelectedCover)).setText(emptyText(game.coverUri, "No cover selected"));
             if (game.engine == EngineType.ARTEMIS) updateArtemisVersionButtons(pkg.getText().toString(), btnArtemisAuto, btnArtemisStd, btnArtemisCompat, btnArtemisCompatV2);
         } else if (pendingDirUri != null) {
             ((TextView)d.findViewById(R.id.tvSelectedDir)).setText(pendingDirUri);
@@ -9316,7 +9316,7 @@ private String displayPath(String value) {
                     pkg.setText("org.ppsspp.ppsspp");
                     // 检查PPSSPP是否安装，如果未安装给出提示
                     if (!EmulatorLauncher.isPPSSPPInstalled(MainActivity.this)) {
-                        Toast.makeText(MainActivity.this, "提示：PSP游戏需要安装PPSSPP模拟器", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Tip: PSP games need to install the PPSSPP emulator", Toast.LENGTH_LONG).show();
                     }
                 }
                 updateWinlatorAdvanced.run();
@@ -9329,7 +9329,7 @@ private String displayPath(String value) {
             if (useBuiltinFileChooser()) {
                 new com.yuki.yukihub.ui.filechooser.FileChooserDialog(this)
                     .setMode(com.yuki.yukihub.ui.filechooser.FileChooserDialog.Mode.DIRECTORY)
-                    .setTitle("选择游戏目录")
+                    .setTitle("Select game directory")
                     .setOnFileSelectedListener(new com.yuki.yukihub.ui.filechooser.FileChooserDialog.OnFileSelectedListener() {
                         @Override public void onFileSelected(Uri uri, String path, String fileName) {}
                         @Override public void onDirectorySelected(Uri uri, String path) {
@@ -9344,7 +9344,7 @@ if (pendingCoverUri == null || pendingCoverUri.isEmpty()) {
                                 List<String> options = buildLaunchOptions(pendingDirUri);
                                 ArrayAdapter<String> adapter = krSpinnerAdapter(options.toArray(new String[0]));
                                 launchSp.setAdapter(adapter);
-                                ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedCover)).setText(emptyText(pendingCoverUri, "未选择封面"));
+                                ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedCover)).setText(emptyText(pendingCoverUri, "No cover selected"));
                                 updateClearDirButton(pendingEditDialog.findViewById(R.id.btnClearDir), pendingDirUri);
                             }
                         }
@@ -9358,7 +9358,7 @@ if (pendingCoverUri == null || pendingCoverUri.isEmpty()) {
         d.findViewById(R.id.btnPickCover).setOnClickListener(v -> coverLauncher.launch("image/*"));
         d.findViewById(R.id.btnCancel).setOnClickListener(v -> d.dismiss());
         d.findViewById(R.id.btnSave).setOnClickListener(v -> {
-            if (title.getText().toString().trim().isEmpty()) { Toast.makeText(MainActivity.this, "请填写标题", Toast.LENGTH_SHORT).show(); return; }
+            if (title.getText().toString().trim().isEmpty()) { Toast.makeText(MainActivity.this, "Please fill in the title", Toast.LENGTH_SHORT).show(); return; }
             Game g = game == null ? new Game() : game;
             if ((pendingCoverUri == null || pendingCoverUri.isEmpty()) && pendingDirUri != null && !pendingDirUri.isEmpty()) {
                 Uri autoCover = findFirstLevelImage(pendingDirUri);
@@ -9371,7 +9371,7 @@ if (pendingCoverUri == null || pendingCoverUri.isEmpty()) {
             if (g.engine == EngineType.ARTEMIS) {
                 g.emulatorPackage = normalizeArtemisPackage(g.emulatorPackage);
                 if (!saveArtemisVersionMarker(g.rootUri, g.emulatorPackage)) {
-                    Toast.makeText(this, "保存 Artemis 兼容标记失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Failed to save Artemis compatible tag", Toast.LENGTH_LONG).show();
                     return;
                 }
             }
@@ -9383,7 +9383,7 @@ if (pendingCoverUri == null || pendingCoverUri.isEmpty()) {
             if (g.engine != EngineType.GAMEHUB) g.gamehubLocalGameId = "";
             if (g.engine == EngineType.ANDROID) {
                 String androidPkg = pkg.getText() == null ? "" : pkg.getText().toString().trim();
-                if (androidPkg.isEmpty()) { Toast.makeText(MainActivity.this, "请先选择要启动的安卓应用", Toast.LENGTH_SHORT).show(); return; }
+                if (androidPkg.isEmpty()) { Toast.makeText(MainActivity.this, "Please select the Android application to start first", Toast.LENGTH_SHORT).show(); return; }
                 g.rootUri = "";
                 g.winlatorLaunchMode = "game";
                 g.gamehubLaunchMode = "game";
@@ -9392,7 +9392,7 @@ if (pendingCoverUri == null || pendingCoverUri.isEmpty()) {
             g.gamehubLaunchMode = g.engine == EngineType.GAMEHUB ? gamehubModeValue(gamehubModeSp.getSelectedItemPosition()) : "game";
             String selectedLaunchTarget = (String) launchSp.getSelectedItem();
             if (g.engine == EngineType.ANDROID) selectedLaunchTarget = "";
-            if (g.engine == EngineType.ARTEMIS || g.engine == EngineType.TYRANO || g.engine == EngineType.FVP) selectedLaunchTarget = "[游戏目录]";
+            if (g.engine == EngineType.ARTEMIS || g.engine == EngineType.TYRANO || g.engine == EngineType.FVP) selectedLaunchTarget = "[Game Catalog]";
             if (g.engine == EngineType.GAMEHUB) selectedLaunchTarget = "[GameHub]";
             g.launchTarget = selectedLaunchTarget;
             g.description = desc.getText().toString();
@@ -9478,8 +9478,8 @@ if (pendingCoverUri == null || pendingCoverUri.isEmpty()) {
         if (desc != null) desc.setText(state.getString(KEY_EDIT_DESC, ""));
         EditText ghId = pendingEditDialog.findViewById(R.id.etGameHubLocalGameId);
         if (ghId != null) ghId.setText(state.getString(KEY_EDIT_GAMEHUB_ID, ""));
-        ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedDir)).setText(emptyText(pendingDirUri, "未选择游戏目录"));
-        ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedCover)).setText(emptyText(pendingCoverUri, "未选择封面"));
+        ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedDir)).setText(emptyText(pendingDirUri, "No game directory selected"));
+        ((TextView) pendingEditDialog.findViewById(R.id.tvSelectedCover)).setText(emptyText(pendingCoverUri, "No cover selected"));
         updateClearDirButton(pendingEditDialog.findViewById(R.id.btnClearDir), pendingDirUri);
         Spinner launchSp = pendingEditDialog.findViewById(R.id.spLaunchTarget);
         // 恢复的目录可能与 game.rootUri 不同（用户改过目录但未保存），按快照目录重建启动项列表
@@ -9512,7 +9512,7 @@ if (pendingCoverUri == null || pendingCoverUri.isEmpty()) {
                 if (ghMode.equals(ad.getItem(i))) { ghSp.setSelection(i); break; }
             }
         }
-        Toast.makeText(MainActivity.this, "已恢复编辑窗口，请检查后保存", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "The editing window has been restored, please check and save", Toast.LENGTH_SHORT).show();
     }
 
     private void updateClearDirButton(View btn, String dirUri) {
@@ -9681,14 +9681,14 @@ private void showEditPlayTimeDialog(Game game) {
         root.setPadding(pad, dp(12), pad, dp(10));
 
         TextView info = new TextView(this);
-        info.setText("当前总时长：" + TimeFormatUtil.playTime(game.totalPlayTime) + "\n最近游玩：" + TimeFormatUtil.date(game.lastPlayedAt));
+        info.setText("Current total duration:" + TimeFormatUtil.playTime(game.totalPlayTime) + "Recently played:" + TimeFormatUtil.date(game.lastPlayedAt));
         info.setTextColor(getColorCompat(R.color.yh_text_muted));
         info.setTextSize(12);
         info.setLineSpacing(dp(2), 1.0f);
         root.addView(info);
 
         TextView totalLabel = new TextView(this);
-        totalLabel.setText("\n重设总时长（留空则不改）");
+        totalLabel.setText("Reset the total duration (leave blank to not change)");
         totalLabel.setTextColor(getColorCompat(R.color.yh_text));
         totalLabel.setTextSize(14);
         totalLabel.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -9696,21 +9696,21 @@ private void showEditPlayTimeDialog(Game game) {
 
         // 这里不再预填当前时长：预填会让「只想追加」的用户也带上一个总时长值，
         // 从而误触重设路径（重设会清空历史游玩记录）。留空 = 不改，语义才清晰。
-        EditText totalInput = krEdit("留空则不改，当前 " + parseDurationForEdit(game.totalPlayTime), "");
+        EditText totalInput = krEdit("Leave blank to not change, currently" + parseDurationForEdit(game.totalPlayTime), "");
         root.addView(totalInput, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
 
         TextView addLabel = new TextView(this);
-        addLabel.setText("\n追加游玩时长");
+        addLabel.setText("Add play time");
         addLabel.setTextColor(getColorCompat(R.color.yh_text));
         addLabel.setTextSize(14);
         addLabel.setTypeface(null, android.graphics.Typeface.BOLD);
         root.addView(addLabel);
 
-        EditText addInput = krEdit("例如 30m / 1h30m / 0.5h", "");
+        EditText addInput = krEdit("For example 30m / 1h30m / 0.5h", "");
         root.addView(addInput, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
 
         TextView hint = new TextView(this);
-        hint.setText("说明：“追加游玩时长”只在当前基础上增加，会新增一条游玩记录，历史记录不受影响。“重设总时长”会把累计时长直接改成填写的值，并清空该游戏已有的游玩记录，填写后会二次确认。");
+        hint.setText("Note: \"Additional play time\" only increases based on the current time, and a new play record will be added, and the historical record will not be affected. \"Reset total time\" will directly change the accumulated time to the filled-in value, and clear the existing play records of the game. After filling in, it will be confirmed again.");
         hint.setTextColor(getColorCompat(R.color.yh_text_muted));
         hint.setTextSize(11);
         hint.setLineSpacing(dp(2), 1.0f);
@@ -9718,10 +9718,10 @@ private void showEditPlayTimeDialog(Game game) {
         root.addView(hint);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("修改游玩时长")
+                .setTitle("Modify play time")
                 .setView(root)
-                .setPositiveButton("保存", null)
-                .setNegativeButton("取消", null)
+                .setPositiveButton("Save", null)
+                .setNegativeButton("Cancel", null)
                 .show();
         styleAlertDialogDark(dialog);
         if (dialog.getWindow() != null) {
@@ -9731,7 +9731,7 @@ private void showEditPlayTimeDialog(Game game) {
             Long totalMs = parseDurationToMillis(totalInput.getText() == null ? "" : totalInput.getText().toString().trim());
             Long addMs = parseDurationToMillis(addInput.getText() == null ? "" : addInput.getText().toString().trim());
             if ((totalMs == null || totalMs < 0) && (addMs == null || addMs <= 0)) {
-                Toast.makeText(MainActivity.this, "请填写有效的时长", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Please fill in the valid duration", Toast.LENGTH_SHORT).show();
                 return;
             }
             // 重设与追加是两种语义，必须走不同的数据层方法：
@@ -9741,25 +9741,25 @@ private void showEditPlayTimeDialog(Game game) {
             if (totalMs != null && totalMs >= 0) {
                 final long resetTo = Math.max(0L, totalMs + addDelta);
                 AlertDialog confirm = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("确认重设总时长")
-                        .setMessage("将把《" + game.title + "》的累计时长重设为 " + TimeFormatUtil.playTime(resetTo) + "。\n\n"
-                                + "· 该游戏已有的游玩记录会被清空\n"
-                                + "· 动态列表里这个游戏的历史条目会消失\n"
-                                + "· 此操作不可撤销\n\n"
-                                + "只想增加时长的话，请取消后只填「追加游玩时长」。")
-                        .setPositiveButton("确认重设", (d, w) -> {
+                        .setTitle("Confirm total reset time")
+                        .setMessage("Will put \"" + game.title + "》The cumulative duration is reset to" + TimeFormatUtil.playTime(resetTo) + "。\n\n"
+                                + "· Existing play records of this game will be cleared"
+                                + "· The history entry of this game in the dynamic list will disappear"
+                                + "· This operation is irreversible"
+                                + "If you just want to increase the play time, please cancel and just fill in \"Add play time\".")
+                        .setPositiveButton("Confirm reset", (d, w) -> {
                             repository.setManualPlayTimeForGame(game.id, resetTo);
-                            Toast.makeText(MainActivity.this, "游玩时长已重设", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Play time has been reset", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                             refreshAfterPlayTimeEdit(game);
                         })
-                        .setNegativeButton("取消", null)
+                        .setNegativeButton("Cancel", null)
                         .show();
                 styleAlertDialogDark(confirm);
                 return;
             }
             repository.addManualPlayTime(game.id, addDelta);
-            Toast.makeText(MainActivity.this, "已追加 " + TimeFormatUtil.playTime(addDelta), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Added" + TimeFormatUtil.playTime(addDelta), Toast.LENGTH_SHORT).show();
             dialog.dismiss();
             refreshAfterPlayTimeEdit(game);
         });
@@ -9868,7 +9868,7 @@ private void showEditPlayTimeDialog(Game game) {
         boolean artemis = game.engine == EngineType.ARTEMIS;
         boolean fvp = game.engine == EngineType.FVP;
         if (!krkr && !artemis && !fvp) {
-            Toast.makeText(this, "该引擎暂不支持虚拟鼠标", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "This engine does not currently support virtual mouse", Toast.LENGTH_SHORT).show();
             return;
         }
         GameCursorConfig cfg = GameCursorConfig.load(this);
@@ -9882,7 +9882,7 @@ private void showEditPlayTimeDialog(Game game) {
         panel.setPadding(pad, pad, pad, pad);
 
         TextView title = new TextView(this);
-        title.setText(krkr ? "KRKR 虚拟鼠标" : (artemis ? "Artemis 虚拟鼠标" : "FVP 虚拟鼠标"));
+        title.setText(krkr ? "KRKR virtual mouse" : (artemis ? "Artemis Virtual Mouse" : "FVP virtual mouse"));
         title.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text));
         title.setTextSize(22);
         title.setPadding(0, 0, 0, pad / 2);
@@ -9896,21 +9896,21 @@ private void showEditPlayTimeDialog(Game game) {
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
 
         CheckBox enable = krCheckBox(krkr
-                        ? "启用 KRKR 虚拟鼠标（悬浮光标，拖动定位，抬手点击）"
+                        ? "Enable KRKR virtual mouse (hover cursor, drag to position, raise hand to click)"
                         : (artemis
-                        ? "启用 Artemis 虚拟鼠标（悬浮光标，拖动定位，抬手点击）"
-                        : "启用 FVP 虚拟鼠标（悬浮光标，拖动定位，抬手点击）"),
+                        ? "Enable Artemis virtual mouse (hover cursor, drag to position, raise your hand to click)"
+                        : "Enable FVP virtual mouse (hover cursor, drag to position, raise your hand to click)"),
                 krkr ? cfg.krkrEnabled : (artemis ? cfg.artemisEnabled : cfg.fvpEnabled));
         root.addView(enable);
 
         // ===== 实时预览（与游戏内同一渲染代码）=====
-        TextView previewLabel = krLabel("光标预览（与游戏内一致，红十字 = 鼠标尖位置）");
+        TextView previewLabel = krLabel("Cursor preview (consistent with in-game, red cross = mouse tip position)");
         root.addView(previewLabel);
         final CursorPreviewView preview = new CursorPreviewView(this, cfg);
         gameCursorPreview = preview;   // 供导入回调刷新
         root.addView(preview, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(80)));
 
-        TextView scaleLabel = krLabel("光标大小");
+        TextView scaleLabel = krLabel("Cursor size");
         root.addView(scaleLabel);
         android.widget.SeekBar scaleSeek = new android.widget.SeekBar(this);
         scaleSeek.setMax(100);
@@ -9927,7 +9927,7 @@ private void showEditPlayTimeDialog(Game game) {
         });
         root.addView(scaleSeek);
 
-        TextView alphaLabel = krLabel("光标不透明度");
+        TextView alphaLabel = krLabel("Cursor opacity");
         root.addView(alphaLabel);
         android.widget.SeekBar alphaSeek = new android.widget.SeekBar(this);
         alphaSeek.setMax(80);
@@ -9942,7 +9942,7 @@ private void showEditPlayTimeDialog(Game game) {
         });
         root.addView(alphaSeek);
 
-        TextView sensLabel = krLabel("鼠标模式移动灵敏度");
+        TextView sensLabel = krLabel("Mouse mode movement sensitivity");
         root.addView(sensLabel);
         android.widget.SeekBar sensSeek = new android.widget.SeekBar(this);
         sensSeek.setMax(100);
@@ -9957,7 +9957,7 @@ private void showEditPlayTimeDialog(Game game) {
         root.addView(sensSeek);
 
         // ===== 光标外观来源 =====
-        TextView srcLabel = krLabel("光标外观");
+        TextView srcLabel = krLabel("Cursor appearance");
         root.addView(srcLabel);
 
         TextView srcStatus = new TextView(this);
@@ -9966,27 +9966,27 @@ private void showEditPlayTimeDialog(Game game) {
         srcStatus.setTextSize(11);
         srcStatus.setPadding(0, 0, 0, dp(6));
         srcStatus.setText(cfg.hasWinCursor()
-                ? "当前：" + cfg.winCursorName
+                ? "Current:" + cfg.winCursorName
                 : (cfg.iconUri != null && !cfg.iconUri.isEmpty()
-                ? "当前：自定义图片" : "当前：内置箭头"));
+                ? "Current: Custom image" : "Current: Built-in arrows"));
         root.addView(srcStatus);
 
         // Windows 光标包：整包导入，能读 inf 就自动标出哪个是正常状态
-        Button importScheme = krButton("导入 Windows 光标包（文件夹）…");
+        Button importScheme = krButton("Import Windows cursor package (folder)…");
         importScheme.setOnClickListener(v -> {
             try {
                 cursorSchemePickerLauncher.launch(null);
             } catch (Throwable t) {
-                Toast.makeText(this, "无法打开文件选择器", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Unable to open file chooser", Toast.LENGTH_SHORT).show();
             }
         });
         root.addView(importScheme, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dp(44)));
 
         TextView schemeHint = new TextView(this);
-        schemeHint.setText("支持 .ani（动画）与 .cur（静态）。选中包含光标文件的文件夹后，"
-                + "会列出里面的光标让你挑一个，带 AutoSetup.inf 的包能自动标出「正常状态」那一个。"
-                + "动画光标会按原速播放，鼠标尖的位置直接取自文件本身。");
+        schemeHint.setText("Supports .ani (animation) and .cur (static). After selecting the folder containing the cursor file,"
+                + "The cursors inside will be listed for you to select one. The package with AutoSetup.inf can automatically mark the \"normal state\" one."
+                + "The animated cursor plays at original speed, with the position of the mouse tip taken directly from the file itself.");
         schemeHint.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text_muted));
         schemeHint.setTextSize(10);
         schemeHint.setPadding(0, dp(4), 0, dp(8));
@@ -9994,9 +9994,9 @@ private void showEditPlayTimeDialog(Game game) {
 
         LinearLayout iconRow = new LinearLayout(this);
         iconRow.setOrientation(LinearLayout.HORIZONTAL);
-        Button pickIcon = krButton("选择图片…");
+        Button pickIcon = krButton("Select image…");
         pickIcon.setOnClickListener(v -> cursorIconPickerLauncher.launch("image/*"));
-        Button resetIcon = krButton("恢复默认箭头");
+        Button resetIcon = krButton("Restore default arrow");
         resetIcon.setOnClickListener(v -> {
             cfg.iconUri = null;
             // 同时卸掉光标包，否则"恢复默认"只清了 PNG 却仍显示光标包
@@ -10006,8 +10006,8 @@ private void showEditPlayTimeDialog(Game game) {
             }
             cfg.save(this);
             preview.refresh(cfg);
-            srcStatus.setText("当前：内置箭头");
-            Toast.makeText(this, "已恢复内置箭头", Toast.LENGTH_SHORT).show();
+            srcStatus.setText("Current: Built-in arrows");
+            Toast.makeText(this, "Built-in arrows restored", Toast.LENGTH_SHORT).show();
         });
         iconRow.addView(pickIcon, new LinearLayout.LayoutParams(0, dp(44), 1f));
         iconRow.addView(resetIcon, new LinearLayout.LayoutParams(0, dp(44), 1f));
@@ -10020,10 +10020,10 @@ private void showEditPlayTimeDialog(Game game) {
             boolean nativeOk = probe >= 1; // 库已加载且符号取到（2 才是引擎也就绪）
             boolean ready = isAccessibilityTapReady();
             accStatus.setText(nativeOk
-                    ? "✓ 引擎直连注入可用，无需额外权限"
+                    ? "✓ Engine direct injection is available, no additional permissions required"
                     : (ready
-                    ? "引擎直连不可用，将回退到无障碍手势"
-                    : "⚠ 引擎直连不可用，且无障碍未开启：点击不会生效"));
+                    ? "Engine direct connection is unavailable and will fall back to accessibility gestures"
+                    : "⚠ Engine direct connection is not available and accessibility is not turned on: clicking will not take effect"));
             accStatus.setTextColor(getColorCompat(nativeOk || ready
                     ? com.yuki.yukihub.R.color.yh_text : com.yuki.yukihub.R.color.yh_warning));
             accStatus.setTextSize(12);
@@ -10032,12 +10032,12 @@ private void showEditPlayTimeDialog(Game game) {
 
             // 只在直连不可用时才提供无障碍入口，避免让人以为必须开
             if (!nativeOk) {
-                Button accBtn = krButton(ready ? "无障碍服务设置（已开启）" : "去开启无障碍服务（备用通道）");
+                Button accBtn = krButton(ready ? "Accessibility service settings (enabled)" : "Go to enable accessibility services (alternative channel)");
                 accBtn.setOnClickListener(v -> {
                     try {
                         startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
                     } catch (Throwable t) {
-                        Toast.makeText(this, "无法打开系统设置，请手动前往：设置 → 无障碍", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Unable to open system settings, please go to: Settings → Accessibility manually", Toast.LENGTH_LONG).show();
                     }
                 });
                 root.addView(accBtn, new LinearLayout.LayoutParams(
@@ -10046,16 +10046,16 @@ private void showEditPlayTimeDialog(Game game) {
         }
 
         TextView tip = new TextView(this);
-        tip.setText("用法：进游戏后右下角有一个模式浮标（可拖动换位置）。\n"
-                + "· 点浮标切到鼠标模式（浮标变蓝）：全屏任意位置滑动移动光标，原地轻点 = 在光标尖端注入点击。\n"
-                + "· 再点一次切回直接触摸（浮标变灰）：触摸原样给游戏，光标隐藏。\n"
+        tip.setText("Usage: After entering the game, there is a mode float in the lower right corner (can be dragged to change position)."
+                + "· Switch the point float to mouse mode (the float turns blue): slide the cursor anywhere on the full screen and tap in place = inject a click at the tip of the cursor."
+                + "· Click again to switch back to direct touch (the float turns gray): the touch is given to the game as is, and the cursor is hidden."
                 + (krkr
-                ? "KRKR 的点击走引擎自身触摸管线，原引擎「虚拟光标缩放」等设置不受影响。"
+                ? "KRKR's click-and-go engine uses its own touch pipeline, and settings such as the original engine's \"virtual cursor scaling\" are not affected."
                 : (artemis
-                ? "Artemis 的点击与悬停直接写入引擎输入层，不经过系统输入派发，"
-                + "因此不需要无障碍权限。光标显示仍需要「显示在其他应用上层」权限。"
-                : "FVP 的点击与悬停直接投给 rfvp 引擎（rfvp_android_touch），"
-                + "挂在游戏窗口 View 树上，不需要悬浮窗权限。")));
+                ? "Artemis' clicks and hovers are written directly to the engine input layer and are not dispatched through system input."
+                + "Therefore no accessibility permissions are required. Cursor display still requires the \"Show on top of other apps\" permission."
+                : "FVP's clicks and hovers are directly sent to the rfvp engine (rfvp_android_touch),"
+                + "Hanging on the game window View tree, no floating window permission is required.")));
         tip.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text));
         tip.setTextSize(11);
         tip.setPadding(0, dp(10), 0, 0);
@@ -10063,9 +10063,9 @@ private void showEditPlayTimeDialog(Game game) {
 
         LinearLayout actions = new LinearLayout(this);
         actions.setOrientation(LinearLayout.HORIZONTAL);
-        Button cancel = krButton("取消");
+        Button cancel = krButton("Cancel");
         cancel.setOnClickListener(v -> dialog.dismiss());
-        Button save = krButton("保存");
+        Button save = krButton("Save");
         save.setOnClickListener(v -> {
             // 只改当前引擎自己的开关，另一个引擎的设置必须原样保留。
             // 之前写成 cfg.krkrEnabled = krkr && checked，在 artemis 对话框里
@@ -10092,7 +10092,7 @@ private void showEditPlayTimeDialog(Game game) {
                 promptAccessibilityForCursor(dialog);
                 return;
             }
-            Toast.makeText(this, "虚拟鼠标设置已保存，下次进游戏生效", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The virtual mouse settings have been saved and will take effect next time you enter the game.", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
         actions.addView(cancel, new LinearLayout.LayoutParams(0, dp(46), 1f));
@@ -10128,17 +10128,17 @@ private void showEditPlayTimeDialog(Game game) {
                     Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } catch (Throwable ignored) { }
 
-        Toast.makeText(this, "正在扫描光标包…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Scanning cursor packages...", Toast.LENGTH_SHORT).show();
         new Thread(() -> {
             final com.yuki.yukihub.gamecursor.wincursor.CursorSchemeScanner.Scheme scheme =
                     com.yuki.yukihub.gamecursor.wincursor.CursorSchemeScanner.scan(this, treeUri);
             runOnUiThread(() -> {
                 if (scheme.entries.isEmpty()) {
                     new AlertDialog.Builder(this)
-                            .setTitle("没有找到光标文件")
-                            .setMessage("这个文件夹里没有 .ani 或 .cur 文件。\n\n"
-                                    + "请选择包含光标文件的文件夹（通常还有一个 AutoSetup.inf）。")
-                            .setPositiveButton("知道了", null)
+                            .setTitle("Cursor file not found")
+                            .setMessage("There are no .ani or .cur files in this folder."
+                                    + "Please select the folder containing the cursor file (usually also an AutoSetup.inf).")
+                            .setPositiveButton("Knew", null)
                             .show();
                     return;
                 }
@@ -10165,10 +10165,10 @@ private void showEditPlayTimeDialog(Game game) {
 
         TextView hint = new TextView(this);
         hint.setText(scheme.hasRoleInfo
-                ? "已从安装信息识别出各光标的用途。选一个作为游戏内的光标：\n"
-                + "推荐选「普通选择」——那是桌面上的常态指针。"
-                : "这个包没有可读的安装信息，无法确定每个文件的用途。\n"
-                + "下面按文件名列出，点开预览自己挑一个。");
+                ? "The purpose of each cursor has been identified from the installation information. Choose one as the in-game cursor:"
+                + "It is recommended to select \"Normal Selection\" - that is the normal pointer on the desktop."
+                : "This package has no readable installation information to determine the purpose of each file."
+                + "Listed below by file name, click on the preview to pick one yourself.");
         hint.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text_muted));
         hint.setTextSize(11);
         hint.setPadding(0, dp(8), 0, dp(10));
@@ -10194,7 +10194,7 @@ private void showEditPlayTimeDialog(Game game) {
         panel.addView(scroll, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
 
-        Button cancel = krButton("取消");
+        Button cancel = krButton("Cancel");
         cancel.setOnClickListener(v -> dialog.dismiss());
         panel.addView(cancel, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dp(46)));
@@ -10223,13 +10223,13 @@ private void showEditPlayTimeDialog(Game game) {
     private void installCursorScheme(
             String schemeName,
             com.yuki.yukihub.gamecursor.wincursor.CursorSchemeScanner.Entry entry) {
-        Toast.makeText(this, "正在导入…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Importing…", Toast.LENGTH_SHORT).show();
         new Thread(() -> {
             final int frames = com.yuki.yukihub.gamecursor.wincursor.WinCursorSupport
                     .install(this, entry.uri, entry.fileName);
             runOnUiThread(() -> {
                 if (frames <= 0) {
-                    Toast.makeText(this, "这个光标文件无法解码，换一个试试", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "This cursor file cannot be decoded, try another one.", Toast.LENGTH_LONG).show();
                     return;
                 }
                 final String name = schemeName + " · " + entry.label();
@@ -10248,9 +10248,9 @@ private void showEditPlayTimeDialog(Game game) {
                     cfg.save(this);
                 }
                 if (gameCursorPreview != null) gameCursorPreview.refresh(gameCursorEditing);
-                if (gameCursorSourceStatus != null) gameCursorSourceStatus.setText("当前：" + name);
+                if (gameCursorSourceStatus != null) gameCursorSourceStatus.setText("Current:" + name);
                 Toast.makeText(this,
-                        frames > 1 ? "已导入（" + frames + " 帧动画）" : "已导入（静态光标）",
+                        frames > 1 ? "Imported (" + frames + "Frame animation)" : "Imported (static cursor)",
                         Toast.LENGTH_SHORT).show();
             });
         }, "cursor-install").start();
@@ -10297,11 +10297,11 @@ private void showEditPlayTimeDialog(Game game) {
                             .decode(MainActivity.this, entry.uri, entry.fileName);
             runOnUiThread(() -> {
                 if (pack == null) {
-                    label.setText(entry.label() + "（无法解码）");
+                    label.setText(entry.label() + "(cannot decode)");
                     return;
                 }
                 int n = pack.sequence != null ? pack.sequence.length : 1;
-                label.setText(entry.label() + (n > 1 ? "  " + n + " 帧" : "  静态"));
+                label.setText(entry.label() + (n > 1 ? "  " + n + " 帧" : "Static"));
                 icon.setPack(pack);
             });
         }
@@ -10423,23 +10423,23 @@ private void showEditPlayTimeDialog(Game game) {
     /** 引导用户开启无障碍服务（Artemis 点击注入的唯一通道）。 */
     private void promptAccessibilityForCursor(Dialog parent) {
         new AlertDialog.Builder(this)
-                .setTitle("需要开启无障碍服务")
-                .setMessage("Artemis 引擎是 NativeActivity，触摸事件由引擎自己的 native 层消费，"
-                        + "应用层无法直接注入点击。\n\n"
-                        + "因此 Artemis 的虚拟鼠标点击必须借助系统无障碍手势："
-                        + "光标移动不受影响，但「点击」需要开启 YukiHub 的无障碍服务才生效。\n\n"
-                        + "开启路径：系统设置 → 无障碍 → 已下载的服务 → YukiHub → 开启。\n"
-                        + "（该服务与屏幕翻译共用，只做截图与手势，不读取窗口内容）")
-                .setPositiveButton("去开启", (d, w) -> {
+                .setTitle("Accessibility services need to be turned on")
+                .setMessage("The Artemis engine is NativeActivity, and touch events are consumed by the engine's own native layer."
+                        + "The application layer cannot directly inject clicks."
+                        + "Therefore, Artemis's virtual mouse click must use system accessibility gestures:"
+                        + "Cursor movement is not affected, but \"clicking\" requires turning on YukiHub's accessibility service to take effect."
+                        + "Enable path: System Settings → Accessibility → Downloaded Services → YukiHub → Enable."
+                        + "(This service is shared with screen translation, it only takes screenshots and gestures, and does not read the window content)")
+                .setPositiveButton("To open", (d, w) -> {
                     try {
                         startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
                     } catch (Throwable t) {
-                        Toast.makeText(this, "无法打开系统设置，请手动前往：设置 → 无障碍", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Unable to open system settings, please go to: Settings → Accessibility manually", Toast.LENGTH_LONG).show();
                     }
                     if (parent != null) parent.dismiss();
                 })
-                .setNegativeButton("稍后再说", (d, w) -> {
-                    Toast.makeText(this, "已保存。未开启无障碍前，Artemis 光标可移动但点击无效", Toast.LENGTH_LONG).show();
+                .setNegativeButton("Talk to you later", (d, w) -> {
+                    Toast.makeText(this, "Saved. Before accessibility is turned on, the Artemis cursor can be moved but clicks are invalid.", Toast.LENGTH_LONG).show();
                     if (parent != null) parent.dismiss();
                 })
                 .show();
@@ -10575,7 +10575,7 @@ private void showEditPlayTimeDialog(Game game) {
 
     private void showKrSettingsDialog(Game game) {
         if (game == null || game.rootUri == null || game.rootUri.isEmpty()) {
-            Toast.makeText(MainActivity.this, "请先选择游戏目录", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Please select the game directory first", Toast.LENGTH_SHORT).show();
             return;
         }
         Map<String, String> prefs = loadKrPrefs(game.rootUri);
@@ -10587,7 +10587,7 @@ private void showEditPlayTimeDialog(Game game) {
         panel.setPadding(pad, pad, pad, pad);
 
         TextView title = new TextView(this);
-        title.setText("KR 游戏设置");
+        title.setText("KR Game Settings");
         title.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text));
         title.setTextSize(22);
         title.setPadding(0, 0, 0, pad / 2);
@@ -10597,40 +10597,40 @@ private void showEditPlayTimeDialog(Game game) {
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(0, 0, 0, 0);
 
-        CheckBox outputLog = krCheckBox("打印日志", "1".equals(pref(prefs, "outputlog", "1")));
-        CheckBox showFps = krCheckBox("显示 FPS", "1".equals(pref(prefs, "showfps", "0")));
-        CheckBox keepScreen = krCheckBox("保持屏幕常亮", "1".equals(pref(prefs, "keep_screen_alive", "1")));
-        CheckBox forceFont = krCheckBox("强制使用默认字体", "1".equals(pref(prefs, "force_default_font", "0")));
-        CheckBox textureCompress = krCheckBox("纹理压缩", "1".equals(pref(prefs, "texture_compress", "0")));
-        Spinner renderer = krSpinner(new String[]{"软件渲染器", "OpenGL（试验性）"}, rendererToLabel(pref(prefs, "renderer", "software")));
+        CheckBox outputLog = krCheckBox("Print log", "1".equals(pref(prefs, "outputlog", "1")));
+        CheckBox showFps = krCheckBox("Show FPS", "1".equals(pref(prefs, "showfps", "0")));
+        CheckBox keepScreen = krCheckBox("Keep the screen on", "1".equals(pref(prefs, "keep_screen_alive", "1")));
+        CheckBox forceFont = krCheckBox("Force default font", "1".equals(pref(prefs, "force_default_font", "0")));
+        CheckBox textureCompress = krCheckBox("Texture compression", "1".equals(pref(prefs, "texture_compress", "0")));
+        Spinner renderer = krSpinner(new String[]{"Software renderer", "OpenGL (experimental)"}, rendererToLabel(pref(prefs, "renderer", "software")));
         Spinner memusage = krSpinner(new String[]{"unlimited", "low", "medium", "high"}, pref(prefs, "memusage", "unlimited"));
         Spinner renderThread = krSpinner(new String[]{"auto", "1", "2", "3", "4", "6", "8"}, pref(prefs, "render_thread", "auto"));
-        EditText fpsLimit = krEdit("FPS 限制，例如 60", pref(prefs, "fps_limit", "60"));
+        EditText fpsLimit = krEdit("FPS limit, e.g. 60", pref(prefs, "fps_limit", "60"));
         fpsLimit.setInputType(InputType.TYPE_CLASS_NUMBER);
-        EditText menuOpa = krEdit("手柄/菜单透明度，例如 0.15", pref(prefs, "menu_handler_opa", "0.15"));
+        EditText menuOpa = krEdit("Handle/menu transparency, e.g. 0.15", pref(prefs, "menu_handler_opa", "0.15"));
         menuOpa.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        EditText cursorScale = krEdit("虚拟光标缩放，例如 0.5", pref(prefs, "vcursor_scale", "0.5"));
+        EditText cursorScale = krEdit("Virtual cursor scaling, e.g. 0.5", pref(prefs, "vcursor_scale", "0.5"));
         cursorScale.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        EditText defaultFont = krEdit("默认字体路径，留空使用内置字体", pref(prefs, "default_font", ""));
+        EditText defaultFont = krEdit("Default font path, leave blank to use built-in fonts", pref(prefs, "default_font", ""));
 
-        root.addView(krLabel("图形渲染器")); root.addView(renderer);
-        root.addView(krLabel("内存用量")); root.addView(memusage);
-        root.addView(krLabel("渲染线程数")); root.addView(renderThread);
-        root.addView(krLabel("限制 FPS")); root.addView(fpsLimit);
-        root.addView(krLabel("手柄/菜单透明度")); root.addView(menuOpa);
-        root.addView(krLabel("虚拟光标缩放")); root.addView(cursorScale);
+        root.addView(krLabel("Graphics renderer")); root.addView(renderer);
+        root.addView(krLabel("Memory usage")); root.addView(memusage);
+        root.addView(krLabel("Number of rendering threads")); root.addView(renderThread);
+        root.addView(krLabel("Limit FPS")); root.addView(fpsLimit);
+        root.addView(krLabel("Handle/menu transparency")); root.addView(menuOpa);
+        root.addView(krLabel("Virtual cursor zoom")); root.addView(cursorScale);
         root.addView(outputLog);
         root.addView(showFps);
         root.addView(keepScreen);
         root.addView(textureCompress);
         root.addView(forceFont);
-        root.addView(krLabel("默认字体路径")); root.addView(defaultFont);
+        root.addView(krLabel("Default font path")); root.addView(defaultFont);
 
         LinearLayout actions = new LinearLayout(this);
         actions.setOrientation(LinearLayout.HORIZONTAL);
         actions.setPadding(0, pad / 2, 0, 0);
-        Button cancel = krButton("取消");
-        Button save = krButton("保存");
+        Button cancel = krButton("Cancel");
+        Button save = krButton("Save");
         actions.addView(cancel, new LinearLayout.LayoutParams(0, (int) (44 * getResources().getDisplayMetrics().density), 1));
         LinearLayout.LayoutParams saveLp = new LinearLayout.LayoutParams(0, (int) (44 * getResources().getDisplayMetrics().density), 1);
         saveLp.leftMargin = pad / 2;
@@ -10660,10 +10660,10 @@ private void showEditPlayTimeDialog(Game game) {
             prefs.put("force_default_font", forceFont.isChecked() ? "1" : "0");
             prefs.put("default_font", defaultFont.getText().toString().trim());
             if (saveKrPrefs(game.rootUri, prefs)) {
-                Toast.makeText(MainActivity.this, "KR 设置已保存", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "KR settings saved", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             } else {
-                Toast.makeText(this, "保存 KR 设置失败", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Failed to save KR settings", Toast.LENGTH_LONG).show();
             }
         });
         dialog.show();
@@ -10684,7 +10684,7 @@ private void showEditPlayTimeDialog(Game game) {
         panel.setPadding(pad, pad, pad, pad);
 
         TextView title = new TextView(this);
-        title.setText("ONScripter 设置");
+        title.setText("ONScripter settings");
         title.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text));
         title.setTextSize(22);
         title.setPadding(0, 0, 0, pad / 2);
@@ -10693,35 +10693,35 @@ private void showEditPlayTimeDialog(Game game) {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
 
-        CheckBox stretchFull = krCheckBox("拉伸全屏（--fullscreen2）", settings.stretchFull);
+        CheckBox stretchFull = krCheckBox("Stretch full screen (--fullscreen2)", settings.stretchFull);
         CheckBox ignoreCutout = krCheckBox("忽略刘海/挖孔区域", settings.ignoreCutout);
-        CheckBox disableVideo = krCheckBox("禁用视频播放（--no-video）", settings.disableVideo);
-        CheckBox scopedSave = krCheckBox("使用 YukiHub 独立存档目录", settings.scopedSaveDir);
-        CheckBox allowEditArgs = krCheckBox("允许在详情中编辑启动参数", settings.allowEditArgs);
-        CheckBox sharpness = krCheckBox("启用锐化（--sharpness）", settings.sharpness);
-        EditText sharpnessValue = krEdit("锐化值，例如 2", settings.sharpnessValue);
+        CheckBox disableVideo = krCheckBox("Disable video playback (--no-video)", settings.disableVideo);
+        CheckBox scopedSave = krCheckBox("Use YukiHub independent archive directory", settings.scopedSaveDir);
+        CheckBox allowEditArgs = krCheckBox("Allow editing startup parameters in details", settings.allowEditArgs);
+        CheckBox sharpness = krCheckBox("Enable sharpening (--sharpness)", settings.sharpness);
+        EditText sharpnessValue = krEdit("Sharpening value, for example 2", settings.sharpnessValue);
         sharpnessValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         Spinner encoding = krSpinner(new String[]{"gbk", "sjis", "utf8"}, settings.encoding);
         // 引擎版本可切换：0.7.7 为默认，遇到兼容问题可退回 0.7.6。
         Spinner engineVersion = krSpinner(OnsLibLoader.AVAILABLE_VERSIONS, OnsLibLoader.getSelectedVersion(this));
 
-        CheckBox noVsync = krCheckBox("关闭垂直同步（--no-vsync）", settings.noVsync);
-        CheckBox fontCache = krCheckBox("缓存字体（--fontcache）", settings.fontCache);
-        CheckBox renderFontOutline = krCheckBox("文字描边替代投影（--render-font-outline）", settings.renderFontOutline);
-        CheckBox disableRescale = krCheckBox("不缩放档案内图片（--disable-rescale）", settings.disableRescale);
-        CheckBox forceButtonShortcut = krCheckBox("强制启用按键快捷（--force-button-shortcut）", settings.forceButtonShortcut);
-        CheckBox wheelDownAdvance = krCheckBox("滚轮下滚推进文本", settings.wheelDownAdvance);
-        CheckBox debugLog = krCheckBox("输出引擎调试日志（--debug:1）", settings.debugLog);
-        EditText forceWidth = krEdit("宽度，0 为自动", settings.forceWidth > 0 ? String.valueOf(settings.forceWidth) : "");
+        CheckBox noVsync = krCheckBox("Turn off vertical synchronization (--no-vsync)", settings.noVsync);
+        CheckBox fontCache = krCheckBox("Cache fonts (--fontcache)", settings.fontCache);
+        CheckBox renderFontOutline = krCheckBox("Text stroke instead of drop shadow (--render-font-outline)", settings.renderFontOutline);
+        CheckBox disableRescale = krCheckBox("Do not scale images in files (--disable-rescale)", settings.disableRescale);
+        CheckBox forceButtonShortcut = krCheckBox("Force button shortcuts to be enabled (--force-button-shortcut)", settings.forceButtonShortcut);
+        CheckBox wheelDownAdvance = krCheckBox("Scroll down to advance text", settings.wheelDownAdvance);
+        CheckBox debugLog = krCheckBox("Output engine debug log (--debug:1)", settings.debugLog);
+        EditText forceWidth = krEdit("Width, 0 is automatic", settings.forceWidth > 0 ? String.valueOf(settings.forceWidth) : "");
         forceWidth.setInputType(InputType.TYPE_CLASS_NUMBER);
-        EditText forceHeight = krEdit("高度，0 为自动", settings.forceHeight > 0 ? String.valueOf(settings.forceHeight) : "");
+        EditText forceHeight = krEdit("Height, 0 is automatic", settings.forceHeight > 0 ? String.valueOf(settings.forceHeight) : "");
         forceHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-        root.addView(krLabel("引擎版本")); root.addView(engineVersion);
-        root.addView(krLabel("文本编码")); root.addView(encoding);
+        root.addView(krLabel("Engine version")); root.addView(engineVersion);
+        root.addView(krLabel("Text encoding")); root.addView(encoding);
 
         // 虚拟按键布局编辑器入口：进全屏界面直接拖，所见即所得
-        Button btnLayout = krButton("编辑虚拟按键布局…");
+        Button btnLayout = krButton("Edit virtual key layout…");
         final TextView layoutSummary = krLabel(onsLayoutSummary());
         layoutSummary.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text_muted));
         btnLayout.setOnClickListener(v -> {
@@ -10730,10 +10730,10 @@ private void showEditPlayTimeDialog(Game game) {
                         com.yuki.yukihub.ons.OnsButtonLayoutActivity.class));
             } catch (Throwable t) {
                 android.widget.Toast.makeText(MainActivity.this,
-                        "打开布局编辑器失败：" + t, android.widget.Toast.LENGTH_LONG).show();
+                        "Failed to open layout editor:" + t, android.widget.Toast.LENGTH_LONG).show();
             }
         });
-        root.addView(krLabel("虚拟按键"));
+        root.addView(krLabel("Virtual keys"));
         root.addView(btnLayout);
         root.addView(layoutSummary);
 
@@ -10743,8 +10743,8 @@ private void showEditPlayTimeDialog(Game game) {
         root.addView(scopedSave);
         root.addView(allowEditArgs);
         root.addView(sharpness);
-        root.addView(krLabel("锐化值")); root.addView(sharpnessValue);
-        root.addView(krLabel("进阶选项"));
+        root.addView(krLabel("Sharpening value")); root.addView(sharpnessValue);
+        root.addView(krLabel("Advanced options"));
         root.addView(noVsync);
         root.addView(fontCache);
         root.addView(renderFontOutline);
@@ -10752,7 +10752,7 @@ private void showEditPlayTimeDialog(Game game) {
         root.addView(forceButtonShortcut);
         root.addView(wheelDownAdvance);
         root.addView(debugLog);
-        root.addView(krLabel("强制分辨率（宽高需同时填写，留空为自动）"));
+        root.addView(krLabel("Forced resolution (width and height must be filled in at the same time, leave blank for automatic)"));
         root.addView(forceWidth);
         root.addView(forceHeight);
 
@@ -10763,8 +10763,8 @@ private void showEditPlayTimeDialog(Game game) {
         LinearLayout actions = new LinearLayout(this);
         actions.setOrientation(LinearLayout.HORIZONTAL);
         actions.setPadding(0, pad / 2, 0, 0);
-        Button cancel = krButton("取消");
-        Button save = krButton("保存");
+        Button cancel = krButton("Cancel");
+        Button save = krButton("Save");
         actions.addView(cancel, new LinearLayout.LayoutParams(0, (int) (44 * getResources().getDisplayMetrics().density), 1));
         LinearLayout.LayoutParams saveLp = new LinearLayout.LayoutParams(0, (int) (44 * getResources().getDisplayMetrics().density), 1);
         saveLp.leftMargin = pad / 2;
@@ -10801,7 +10801,7 @@ private void showEditPlayTimeDialog(Game game) {
                 repository.update(game);
                 loadGames();
             }
-            Toast.makeText(MainActivity.this, "ONS 设置已保存", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "ONS settings saved", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
         dialog.show();
@@ -10830,7 +10830,7 @@ private void showEditPlayTimeDialog(Game game) {
         panel.setPadding(pad, pad, pad, pad);
 
         TextView title = new TextView(this);
-        title.setText("PC 引擎设置（Winlator）");
+        title.setText("PC Engine Settings (Winlator)");
         title.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text));
         title.setTextSize(22);
         title.setPadding(0, 0, 0, pad / 2);
@@ -10839,9 +10839,9 @@ private void showEditPlayTimeDialog(Game game) {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
 
-        EditText containerId = krEdit("留空 = 跟随容器配置（如 1）", prefs.containerId);
+        EditText containerId = krEdit("Leave blank = follow container configuration (e.g. 1)", prefs.containerId);
         containerId.setInputType(InputType.TYPE_CLASS_NUMBER);
-        EditText containerName = krEdit("留空 = 跟随容器配置（如 容器-1）", prefs.containerName);
+        EditText containerName = krEdit("Leave blank = follow container configuration (e.g. container-1)", prefs.containerName);
         // 下拉：展示中文标签，保存时映射回协议值；回显用「值 → 标签」反查
         android.widget.Spinner graphicsDriver = krSpinner(
                 PcLaunchPrefs.GRAPHICS_DRIVER_LABELS,
@@ -10873,49 +10873,49 @@ private void showEditPlayTimeDialog(Game game) {
         android.widget.Spinner audioDriver = krSpinner(
                 PcLaunchPrefs.AUDIO_LABELS,
                 PcLaunchPrefs.labelOfValue(PcLaunchPrefs.AUDIO_LABELS, PcLaunchPrefs.AUDIO_VALUES, prefs.audioDriver));
-        EditText envVars = krEdit("如 WINEDLLOVERRIDES=d3d9=n,b（空格分隔，留空跟随）", prefs.envVars);
-        EditText execArgs = krEdit("如 -windowed（追加启动参数，留空跟随）", prefs.execArgs);
-        CheckBox saveToContainer = krCheckBox("把本次覆盖写入容器配置（持久化到容器）", prefs.save);
+        EditText envVars = krEdit("For example, WINEDLLOVERRIDES=d3d9=n,b (separated by spaces, leave blank to follow)", prefs.envVars);
+        EditText execArgs = krEdit("Such as -windowed (append startup parameters, leave blank to follow)", prefs.execArgs);
+        CheckBox saveToContainer = krCheckBox("Write this override into the container configuration (persist to the container)", prefs.save);
 
-        root.addView(krLabel("容器 ID（数字，优先于容器名；留空跟随容器配置）"));
+        root.addView(krLabel("Container ID (number, takes precedence over container name; leave blank to follow container configuration)"));
         root.addView(containerId);
-        root.addView(krLabel("容器名（支持中文，大小写不敏感）"));
+        root.addView(krLabel("Container name (supports Chinese, case insensitive)"));
         root.addView(containerName);
-        root.addView(krLabel("图形驱动"));
+        root.addView(krLabel("Graphics driver"));
         root.addView(graphicsDriver);
-        root.addView(krLabel("图形加速"));
+        root.addView(krLabel("Graphics acceleration"));
         root.addView(dxwrapper);
-        root.addView(krLabel("分辨率"));
+        root.addView(krLabel("Resolution"));
         root.addView(screenSize);
-        root.addView(krLabel("语言环境（LC_ALL）"));
+        root.addView(krLabel("Locale (LC_ALL)"));
         root.addView(lcAll);
-        root.addView(krLabel("Box64 预设"));
+        root.addView(krLabel("Box64 default"));
         root.addView(box64);
-        root.addView(krLabel("屏幕方向"));
+        root.addView(krLabel("Screen orientation"));
         root.addView(screenOrientation);
-        root.addView(krLabel("交换宽高"));
+        root.addView(krLabel("Swap width and height"));
         root.addView(swapResolution);
-        root.addView(krLabel("强制全屏"));
+        root.addView(krLabel("Force full screen"));
         root.addView(forceFullscreen);
-        root.addView(krLabel("可切换全屏"));
+        root.addView(krLabel("Switchable to full screen"));
         root.addView(toggleFullscreen);
-        root.addView(krLabel("音频驱动"));
+        root.addView(krLabel("Audio driver"));
         root.addView(audioDriver);
-        root.addView(krLabel("环境变量（高级）"));
+        root.addView(krLabel("Environment variables (advanced)"));
         root.addView(envVars);
-        root.addView(krLabel("追加启动参数（会话级，不写入容器）"));
+        root.addView(krLabel("Append startup parameters (session level, not written to the container)"));
         root.addView(execArgs);
         root.addView(saveToContainer);
 
-        TextView tip = krLabel("说明：留空或「跟随容器配置」表示不下发该参数，交由 Winlator 按容器自身配置处理（想全局调整请直接改容器设置）。环境变量格式不合法时会自动忽略（不下发）；需要改时区可在环境变量里填 TZ=Asia/Tokyo。修改后下次启动生效。");
+        TextView tip = krLabel("Note: Leave it blank or \"Follow container configuration\" means that this parameter will not be issued and will be handled by Winlator according to the container's own configuration (if you want to make global adjustments, please change the container settings directly). If the format of the environment variable is illegal, it will be automatically ignored (not issued); if you need to change the time zone, you can fill in TZ=Asia/Tokyo in the environment variable. The modification will take effect the next time you start it.");
         tip.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text_muted));
         root.addView(tip);
 
         LinearLayout actions = new LinearLayout(this);
         actions.setOrientation(LinearLayout.HORIZONTAL);
         actions.setPadding(0, pad / 2, 0, 0);
-        Button cancel = krButton("取消");
-        Button save = krButton("保存");
+        Button cancel = krButton("Cancel");
+        Button save = krButton("Save");
         actions.addView(cancel, new LinearLayout.LayoutParams(0, (int) (44 * getResources().getDisplayMetrics().density), 1));
         LinearLayout.LayoutParams saveLp = new LinearLayout.LayoutParams(0, (int) (44 * getResources().getDisplayMetrics().density), 1);
         saveLp.leftMargin = pad / 2;
@@ -10944,7 +10944,7 @@ private void showEditPlayTimeDialog(Game game) {
             prefs.execArgs = execArgs.getText().toString();
             prefs.save = saveToContainer.isChecked();
             prefs.save(this, game.id);
-            Toast.makeText(MainActivity.this, "PC 引擎设置已保存", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "PC Engine settings saved", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
         dialog.show();
@@ -10984,7 +10984,7 @@ private void showEditPlayTimeDialog(Game game) {
         panel.setPadding(pad, pad, pad, pad);
 
         TextView title = new TextView(this);
-        title.setText("FVP 引擎设置（rfvp）");
+        title.setText("FVP engine settings (rfvp)");
         title.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text));
         title.setTextSize(22);
         title.setPadding(0, 0, 0, pad / 2);
@@ -10995,9 +10995,9 @@ private void showEditPlayTimeDialog(Game game) {
 
         android.widget.Spinner nlsSpinner = krSpinner(FvpLaunchPrefs.NLS_LABELS,
                 FvpLaunchPrefs.labelOfNls(prefs.nls));
-        CheckBox textHidpi = krCheckBox("文本高分辨率渲染（小字更清晰）", prefs.textHidpi);
-        CheckBox systemFont = krCheckBox("启用系统字体回退（缺字时用系统字体补齐）", prefs.systemFont);
-        CheckBox stretchFill = krCheckBox("画面铺满全屏（拉伸画面消除黑边，画面比例会轻微变形）", prefs.stretchFill);
+        CheckBox textHidpi = krCheckBox("High-resolution rendering of text (small text is clearer)", prefs.textHidpi);
+        CheckBox systemFont = krCheckBox("Enable system font fallback (use system fonts to fill in missing characters)", prefs.systemFont);
+        CheckBox stretchFill = krCheckBox("The picture fills the entire screen (stretching the picture to eliminate black edges, the picture ratio will be slightly distorted)", prefs.stretchFill);
         CheckBox virtualKeys = krCheckBox("虚拟按键（左侧竖排：ESC 菜单 / 历史 / Ctrl 快进）", prefs.virtualKeys);
         CheckBox virtualMouse = krCheckBox("虚拟鼠标（可拖动光标；配合触摸板模式，与 KRKR/Artemis 同一套）", prefs.virtualMouse);
         android.widget.Spinner screenScale = krSpinner(FvpLaunchPrefs.SCALE_LABELS,
@@ -11009,51 +11009,51 @@ private void showEditPlayTimeDialog(Game game) {
 
         fvpFontPathView = krLabel(fvpFontSummary(prefs.fontPath));
         fvpFontPathView.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text_muted));
-        Button pickFont = krButton("选择字体文件…");
-        Button clearFont = krButton("清除自定义字体");
+        Button pickFont = krButton("Select font file…");
+        Button clearFont = krButton("Clear custom fonts");
         pickFont.setOnClickListener(v -> {
             try {
                 fvpFontLauncher.launch("*/*");
             } catch (Throwable t) {
-                Toast.makeText(MainActivity.this, "打开文件选择器失败：" + t, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Failed to open file picker:" + t, Toast.LENGTH_SHORT).show();
             }
         });
         clearFont.setOnClickListener(v -> {
             if (fvpEditingPrefs != null) fvpEditingPrefs.fontPath = "";
-            if (fvpFontPathView != null) fvpFontPathView.setText("当前：游戏自带字体");
-            Toast.makeText(MainActivity.this, "已清除自定义字体（点「保存」生效）", Toast.LENGTH_SHORT).show();
+            if (fvpFontPathView != null) fvpFontPathView.setText("Current: The game comes with fonts");
+            Toast.makeText(MainActivity.this, "Custom font has been cleared (click \"Save\" to take effect)", Toast.LENGTH_SHORT).show();
         });
 
-        root.addView(krLabel("文本编码（已自动识别，若仍有乱码可手动更改）"));
+        root.addView(krLabel("Text encoding (automatically recognized, if there are still garbled characters, you can change it manually)"));
         root.addView(nlsSpinner);
-        root.addView(krLabel("画面放大（等比放大并裁边，字会变大；渲染负担随之增加）"));
+        root.addView(krLabel("Magnify the screen (enlarge proportionally and crop the edges, the text will become larger; the rendering burden will increase)"));
         root.addView(screenScale);
-        root.addView(krLabel("文字大小（只放大文字，画面布局不变；过大会超出对话框）"));
+        root.addView(krLabel("Text size (only the text is enlarged, the screen layout remains unchanged; if it is too large, the dialog box will be exceeded)"));
         root.addView(textScale);
-        root.addView(krLabel("行距（字号放大时，行与行之间的距离跟随多少）"));
+        root.addView(krLabel("Line spacing (how much distance follows between lines when the font size is enlarged)"));
         root.addView(lineScale);
         root.addView(textHidpi);
         root.addView(systemFont);
         root.addView(stretchFill);
-        root.addView(krLabel("虚拟控件（手机上没有键盘鼠标时使用；默认关闭）"));
+        root.addView(krLabel("Virtual controls (used when there is no keyboard or mouse on the phone; turned off by default)"));
         root.addView(virtualKeys);
         root.addView(virtualMouse);
         root.addView(krLabel("虚拟鼠标的光标外观/大小/灵敏度请在「虚拟鼠标设置」里调整"));
-        root.addView(krLabel("自定义字体（强制用指定字体渲染；留空则用游戏自带字体）"));
+        root.addView(krLabel("Custom font (forced to use the specified font for rendering; leave it blank to use the game's own font)"));
         root.addView(pickFont);
         root.addView(clearFont);
         root.addView(fvpFontPathView);
 
-        TextView tip = krLabel("说明：设置按游戏单独保存，修改后下次启动生效。"
-                + "存档位于游戏目录的 save 文件夹（rfvp_s###.bin），随游戏目录一起备份即可。");
+        TextView tip = krLabel("Note: The settings are saved individually by game and will take effect the next time you start them after modification."
+                + "The archive is located in the save folder (rfvp_s###.bin) of the game directory and can be backed up together with the game directory.");
         tip.setTextColor(getColorCompat(com.yuki.yukihub.R.color.yh_text_muted));
         root.addView(tip);
 
         LinearLayout actions = new LinearLayout(this);
         actions.setOrientation(LinearLayout.HORIZONTAL);
         actions.setPadding(0, pad / 2, 0, 0);
-        Button cancel = krButton("取消");
-        Button save = krButton("保存");
+        Button cancel = krButton("Cancel");
+        Button save = krButton("Save");
         actions.addView(cancel, new LinearLayout.LayoutParams(0, (int) (44 * getResources().getDisplayMetrics().density), 1));
         LinearLayout.LayoutParams saveLp = new LinearLayout.LayoutParams(0, (int) (44 * getResources().getDisplayMetrics().density), 1);
         saveLp.leftMargin = pad / 2;
@@ -11077,7 +11077,7 @@ private void showEditPlayTimeDialog(Game game) {
             prefs.virtualMouse = virtualMouse.isChecked();
             // fontPath 由「选择/清除」按钮直接改 prefs，这里不能覆盖（否则会把刚选的字体抹掉）。
             prefs.save(this, game.id);
-            Toast.makeText(MainActivity.this, "FVP 引擎设置已保存", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "FVP engine settings saved", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
         dialog.setOnDismissListener(d -> {
@@ -11096,10 +11096,10 @@ private void showEditPlayTimeDialog(Game game) {
     /** FVP 设置里的「当前字体」一句话描述。 */
     private String fvpFontSummary(String fontPath) {
         String p = FvpLaunchPrefs.normalizePath(fontPath);
-        if (p.isEmpty()) return "当前：游戏自带字体";
+        if (p.isEmpty()) return "Current: The game comes with fonts";
         File f = new File(p);
-        if (!f.isFile()) return "当前：自定义字体（文件已丢失，将自动忽略）";
-        return "当前：自定义字体（" + f.getName() + "）";
+        if (!f.isFile()) return "Current: Custom font (file is missing and will be automatically ignored)";
+        return "Current: Custom font (" + f.getName() + "）";
     }
 
     /**
@@ -11115,14 +11115,14 @@ private void showEditPlayTimeDialog(Game game) {
                 if (it.isCustom()) custom++;
             }
             StringBuilder sb = new StringBuilder();
-            sb.append("共 ").append(c.items.size()).append(" 个（左 ").append(left)
-              .append(" / 右 ").append(right).append("）");
-            if (custom > 0) sb.append("，含 ").append(custom).append(" 个自定义");
-            sb.append("　直径 ").append(c.size).append("dp　不透明度 ")
+            sb.append("Common").append(c.items.size()).append("(left").append(left)
+              .append("/ right").append(right).append("）");
+            if (custom > 0) sb.append(", including").append(custom).append("Custom");
+            sb.append("Diameter").append(c.size).append("Dp opacity")
               .append(c.opacity).append("%");
             return sb.toString();
         } catch (Throwable t) {
-            return "点击上方按钮进行配置";
+            return "Click the button above to configure";
         }
     }
 
@@ -11264,10 +11264,10 @@ return b;
     }
 
     private String rendererToLabel(String value) {
-        if (value == null) return "软件渲染器";
+        if (value == null) return "Software renderer";
         String v = value.trim().toLowerCase(Locale.ROOT);
-        if ("opengl".equals(v) || "open_gl".equals(v) || "gl".equals(v) || "hardware".equals(v)) return "OpenGL（试验性）";
-        return "软件渲染器";
+        if ("opengl".equals(v) || "open_gl".equals(v) || "gl".equals(v) || "hardware".equals(v)) return "OpenGL (experimental)";
+        return "Software renderer";
     }
 
     private String rendererFromLabel(String label) {
@@ -11279,7 +11279,7 @@ private String krEngineVersionToLabel(String value) {
 String mode = normalizeKrEngineVersion(value);
 if ("1.3.4".equals(mode)) return "1.3.4";
 if ("1.3.9".equals(mode)) return "1.3.9";
-return "自动";
+return "Auto";
 }
 
 private String krEngineVersionFromLabel(String label) {
@@ -11338,9 +11338,9 @@ private String pref(Map<String, String> prefs, String key, String def) {
             if (kb) return 1;
             return 0;
         });
-        if (options.contains("[游戏目录]")) options.remove("[游戏目录]");
-        options.add("[游戏目录]");
-        if (options.isEmpty()) options.add("未扫描到可启动文件，请先选择目录");
+        if (options.contains("[Game Catalog]")) options.remove("[Game Catalog]");
+        options.add("[Game Catalog]");
+        if (options.isEmpty()) options.add("No bootable files were scanned, please select a directory first");
         return options;
     }
 
@@ -11361,11 +11361,11 @@ private String pref(Map<String, String> prefs, String key, String def) {
 
     private int findLaunchSelection(List<String> options, String target) {
         if (options == null || options.isEmpty()) return 0;
-        if (target == null || target.trim().isEmpty()) target = "[游戏目录]";
+        if (target == null || target.trim().isEmpty()) target = "[Game Catalog]";
         for (int i = 0; i < options.size(); i++) {
             if (target.equals(options.get(i))) return i;
         }
-        int dirIndex = options.indexOf("[游戏目录]");
+        int dirIndex = options.indexOf("[Game Catalog]");
         return dirIndex >= 0 ? dirIndex : 0;
     }
 
@@ -11460,7 +11460,7 @@ return file == null ? null : getContentResolver().openOutputStream(file.getUri()
 } catch (Throwable ignored) { return null; }
 }
 private void showScanResults(List<ScanResult> results) {
-        if (results.isEmpty()) { Toast.makeText(this, "未发现子目录候选游戏", Toast.LENGTH_LONG).show(); return; }
+        if (results.isEmpty()) { Toast.makeText(this, "No subdirectory candidate games found", Toast.LENGTH_LONG).show(); return; }
         Dialog d = new Dialog(this); d.requestWindowFeature(Window.FEATURE_NO_TITLE); d.setContentView(R.layout.dialog_scan_result);
         tintDialogRoot(d.findViewById(android.R.id.content));
         if (d.getWindow() != null) {
@@ -11468,14 +11468,14 @@ private void showScanResults(List<ScanResult> results) {
             d.getWindow().setLayout((int) (getResources().getDisplayMetrics().widthPixels * 0.88f), android.view.WindowManager.LayoutParams.WRAP_CONTENT);
         }
         RecyclerView rv = d.findViewById(R.id.recyclerScanResults); rv.setLayoutManager(new LinearLayoutManager(this)); rv.setAdapter(new ScanResultAdapter(results));
-        ((TextView)d.findViewById(R.id.tvScanTitle)).setText("扫描结果：" + results.size() + " 个候选游戏");
+        ((TextView)d.findViewById(R.id.tvScanTitle)).setText("Scan results:" + results.size() + "Candidate games");
         d.findViewById(R.id.btnCancelScan).setOnClickListener(v -> d.dismiss());
         d.findViewById(R.id.btnImportScan).setOnClickListener(v -> {
             ScanImportStats stats = importScannedGames(results);
             if (stats.added > 0) AppExecutors.runOnIo(() -> autoMatchVndbForImportedGames(stats.importedGames));
             d.dismiss();
             loadGames();
-            Toast.makeText(this, "新增 " + stats.added + " 个，已存在 " + stats.skipped + " 个" + (stats.added > 0 ? "，正在自动匹配" + metadataSourceLabel() + "封面" : ""), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "New" + stats.added + ", already exists" + stats.skipped + " 个" + (stats.added > 0 ? ", matching automatically" + metadataSourceLabel() + "Cover" : ""), Toast.LENGTH_SHORT).show();
         });
         d.show();
     }
@@ -11485,12 +11485,12 @@ if (rootUris == null || rootUris.isEmpty()) return;
 if (autoLibraryScanRunning) return;
 autoLibraryScanRunning = true;
 runOnUiThread(() -> setScanLoading(true));
-if (showToast) Toast.makeText(MainActivity.this, "正在扫描 " + rootUris.size() + " 个目录，请稍候...", Toast.LENGTH_SHORT).show();
+if (showToast) Toast.makeText(MainActivity.this, "Scanning" + rootUris.size() + "Directory, please wait...", Toast.LENGTH_SHORT).show();
         int scanDepth = prefs == null ? DEFAULT_STARTUP_SCAN_DEPTH : prefs.getInt(KEY_STARTUP_SCAN_DEPTH, DEFAULT_STARTUP_SCAN_DEPTH);
         scanDepth = Math.max(1, Math.min(MAX_STARTUP_SCAN_DEPTH, scanDepth));
         final int finalScanDepth = scanDepth;
         final boolean useFastScan = prefs == null || SCAN_MODE_FAST.equals(prefs.getString(KEY_SCAN_MODE, SCAN_MODE_FAST));
-        final String scanModeLabel = useFastScan ? "快速" : "兼容";
+        final String scanModeLabel = useFastScan ? "Fast" : "compatible";
         final List<String> scanRoots = new ArrayList<>(rootUris);
         AppExecutors.runOnSingle(() -> {
             List<ScanResult> results = new ArrayList<>();
@@ -11512,7 +11512,7 @@ if (showToast) Toast.makeText(MainActivity.this, "正在扫描 " + rootUris.size
                 autoLibraryScanRunning = false;
                 setScanLoading(false);
                 loadGames();
-                if (showToast) Toast.makeText(this, "扫描[" + scanModeLabel + "] " + scanRoots.size() + " 个目录：新增 " + stats.added + " 个，已存在 " + stats.skipped + " 个" + (stats.added > 0 ? "，正在自动匹配" + metadataSourceLabel() + "封面" : ""), Toast.LENGTH_SHORT).show();
+                if (showToast) Toast.makeText(this, "Scanning[" + scanModeLabel + "] " + scanRoots.size() + "Catalog: New" + stats.added + ", already exists" + stats.skipped + " 个" + (stats.added > 0 ? ", matching automatically" + metadataSourceLabel() + "Cover" : ""), Toast.LENGTH_SHORT).show();
                 // 覆盖已绑定目录的老用户：扫描完成后检查一次是否需要询问 .nomedia。
                 // 只在用户主动扫描时触发，开机自动扫描不打扰。
                 if (showToast) maybePromptNoMediaForActiveRoots();
@@ -11547,10 +11547,10 @@ if (showToast) Toast.makeText(MainActivity.this, "正在扫描 " + rootUris.size
     }
 
     private String defaultLaunchTargetForEngine(EngineType engine) {
-        if (engine == EngineType.TYRANO || engine == EngineType.ARTEMIS || engine == EngineType.KIRIKIRI) return "[游戏目录]";
+        if (engine == EngineType.TYRANO || engine == EngineType.ARTEMIS || engine == EngineType.KIRIKIRI) return "[Game Catalog]";
         if (engine == EngineType.GAMEHUB) return "[GameHub]";
-        if (engine == EngineType.PSP) return "[PSP游戏文件]";
-        return "[游戏目录]";
+        if (engine == EngineType.PSP) return "[PSP game files]";
+        return "[Game Catalog]";
     }
 
     private void autoMatchVndbForImportedGames(List<Game> games) {
@@ -11562,7 +11562,7 @@ if (showToast) Toast.makeText(MainActivity.this, "正在扫描 " + rootUris.size
         int matched = metadataController.autoMatchCurrentSourceForImportedGames(games);
         if (matched > 0) runOnUiThread(() -> {
             loadGames();
-            Toast.makeText(MainActivity.this, "已自动补全 " + matched + " 个" + sourceLabel + "封面", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Autocompleted" + matched + " 个" + sourceLabel + "Cover", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -11768,8 +11768,8 @@ private String guessInstalledWinlatorPackage() {
                 if (copyDir == null) {
                     clearLaunchLoadingOverlay();
                     Toast.makeText(this,
-                            "复制到内部存储失败（空间不足或读写错误），已中止启动。\n"
-                                    + "可关闭「KRKR 内部存储启动」后按原方式游玩。",
+                            "Copy to internal storage failed (out of space or read/write error), startup aborted."
+                                    + "You can turn off \"KRKR Internal Storage Startup\" and play the game in the original way.",
                             Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -11863,13 +11863,13 @@ private String guessInstalledWinlatorPackage() {
             emulatorPackage = normalizeArtemisPackage(emulatorPackage);
         }
         String launchTarget = game.launchTarget;
-        if (game.engine == EngineType.ARTEMIS || game.engine == EngineType.TYRANO || game.engine == EngineType.FVP) launchTarget = "[游戏目录]";
+        if (game.engine == EngineType.ARTEMIS || game.engine == EngineType.TYRANO || game.engine == EngineType.FVP) launchTarget = "[Game Catalog]";
         if (game.engine == EngineType.GAMEHUB) {
             String ghMode = game.gamehubLaunchMode == null ? "game" : game.gamehubLaunchMode.trim().toLowerCase(Locale.ROOT);
-            if (!("program".equals(ghMode) || "normal".equals(ghMode)) && (game.gamehubLocalGameId == null || game.gamehubLocalGameId.trim().isEmpty())) { clearLaunchLoadingOverlay(); Toast.makeText(this, "请先编辑游戏，通过Shizuku导入GameHub localGameId。", Toast.LENGTH_LONG).show(); return; }
+            if (!("program".equals(ghMode) || "normal".equals(ghMode)) && (game.gamehubLocalGameId == null || game.gamehubLocalGameId.trim().isEmpty())) { clearLaunchLoadingOverlay(); Toast.makeText(this, "Please edit the game first and import GameHub localGameId through Shizuku.", Toast.LENGTH_LONG).show(); return; }
             launchTarget = game.title;
         }
-        if (emulatorPackage.isEmpty()) { clearLaunchLoadingOverlay(); Toast.makeText(this, "请先编辑游戏，填写模拟器包名。", Toast.LENGTH_LONG).show(); return; }
+        if (emulatorPackage.isEmpty()) { clearLaunchLoadingOverlay(); Toast.makeText(this, "Please edit the game first and fill in the emulator package name.", Toast.LENGTH_LONG).show(); return; }
         runningGameId = game.id;
         sessionStart = System.currentTimeMillis();
         String launchType = resolveLaunchType(emulatorPackage);
@@ -11898,7 +11898,7 @@ private String guessInstalledWinlatorPackage() {
                     com.yuki.yukihub.social.PresenceService.refresh(this);
                 }
             } catch (Throwable ignored) {}
-            Toast.makeText(this, lastLaunchFailReason != null ? lastLaunchFailReason : "启动失败：未找到该模拟器，或该模拟器不接受当前启动目标", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, lastLaunchFailReason != null ? lastLaunchFailReason : "Launch failed: The emulator was not found or the emulator does not accept the current launch target", Toast.LENGTH_LONG).show();
             lastLaunchFailReason = null;
         }
     }
@@ -11939,10 +11939,10 @@ private String guessInstalledWinlatorPackage() {
         if (result != null && result.rawResolved && !result.rawWriteOk) {
             boolean scopedEnabled = isScopedSaveEnabledFor(game.engine);
             boolean safCanHandle = canUseKrSafFileFallback(game, result);
-            String engine = game.engine == null ? "引擎" : game.engine.getDisplayName();
+            String engine = game.engine == null ? "Engine" : game.engine.getDisplayName();
             Log.w("YukiStorageProbe", "raw write unavailable for " + engine + ", scopedSaveEnabled=" + scopedEnabled + ", safCanHandle=" + safCanHandle + ", rawPath=" + result.rawPath + ", err=" + result.writeError + ", safErr=" + result.safError);
             if (!scopedEnabled && !safCanHandle) {
-                Toast.makeText(this, "检测到游戏目录可能无法写入，若闪退或无法存档，请在设置中开启" + engine + "独立存档目录。", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "It is detected that the game directory may not be writable. If it crashes or cannot be archived, please enable it in the settings." + engine + "Independent archive directory.", Toast.LENGTH_LONG).show();
             }
         }
         if (result != null && result.rawResolved && !result.rawReadOk) {
@@ -11962,9 +11962,9 @@ private boolean isScopedSaveEnabledFor(EngineType engine) {
     /** 设置页的「已用 / 可用」摘要文本。 */
     private void refreshKrInternalUsage(TextView tv) {
         if (tv == null) return;
-        tv.setText("当前内部已用：" + com.yuki.yukihub.krkr.KrkrInternalStore.formatSize(
+        tv.setText("Currently used internally:" + com.yuki.yukihub.krkr.KrkrInternalStore.formatSize(
                         com.yuki.yukihub.krkr.KrkrInternalStore.usedBytes(this))
-                + "　可用：" + com.yuki.yukihub.krkr.KrkrInternalStore.formatSize(
+                + "Available:" + com.yuki.yukihub.krkr.KrkrInternalStore.formatSize(
                         com.yuki.yukihub.krkr.KrkrInternalStore.availableBytes(this)));
     }
 
@@ -11994,17 +11994,17 @@ private boolean isScopedSaveEnabledFor(EngineType engine) {
         view.findViewById(R.id.btnKrMgrDone).setOnClickListener(v -> dialog.dismiss());
         view.findViewById(R.id.btnKrMgrClearAll).setOnClickListener(v ->
                 new AlertDialog.Builder(this)
-                        .setTitle("清空全部内部副本？")
-                        .setMessage("将删除所有已复制的游戏及其内部存档，且无法恢复。\n（外部原目录不受影响）")
-                        .setPositiveButton("确认清空", (d2, w) -> AppExecutors.io().execute(() -> {
+                        .setTitle("Clear all internal copies?")
+                        .setMessage("All copied games and their internal saves will be deleted and cannot be recovered.\n(The external original directory is not affected)")
+                        .setPositiveButton("Confirm clearing", (d2, w) -> AppExecutors.io().execute(() -> {
                             com.yuki.yukihub.krkr.KrkrInternalStore.removeAll(this);
                             runOnUiThread(() -> {
                                 loadKrInternalList(listBox, summary, usageBar);
                                 refreshKrInternalUsage(usageView);
-                                Toast.makeText(this, "已清空", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Cleared", Toast.LENGTH_SHORT).show();
                             });
                         }))
-                        .setNegativeButton("取消", null)
+                        .setNegativeButton("Cancel", null)
                         .show());
 
         dialog.show();
@@ -12014,7 +12014,7 @@ private boolean isScopedSaveEnabledFor(EngineType engine) {
     /** 异步填充副本列表。 */
     private void loadKrInternalList(android.widget.LinearLayout listBox, TextView summary,
                                     android.widget.ProgressBar usageBar) {
-        summary.setText("正在统计…");
+        summary.setText("Counting...");
         listBox.removeAllViews();
         AppExecutors.io().execute(() -> {
             final java.util.List<com.yuki.yukihub.krkr.KrkrInternalStore.Entry> entries =
@@ -12022,9 +12022,9 @@ private boolean isScopedSaveEnabledFor(EngineType engine) {
             final long used = com.yuki.yukihub.krkr.KrkrInternalStore.usedBytes(this);
             final long avail = com.yuki.yukihub.krkr.KrkrInternalStore.availableBytes(this);
             runOnUiThread(() -> {
-                summary.setText("已用 " + com.yuki.yukihub.krkr.KrkrInternalStore.formatSize(used)
-                        + "　·　可用 " + com.yuki.yukihub.krkr.KrkrInternalStore.formatSize(avail)
-                        + "　·　共 " + entries.size() + " 个");
+                summary.setText("Used" + com.yuki.yukihub.krkr.KrkrInternalStore.formatSize(used)
+                        + "·Available" + com.yuki.yukihub.krkr.KrkrInternalStore.formatSize(avail)
+                        + "· common" + entries.size() + " 个");
                 if (usageBar != null) {
                     // 进度 = 已用 /（已用 + 可用），直观展示内部空间占用
                     long denom = used + avail;
@@ -12032,7 +12032,7 @@ private boolean isScopedSaveEnabledFor(EngineType engine) {
                 }
                 if (entries.isEmpty()) {
                     TextView empty = new TextView(this);
-                    empty.setText("暂无内部副本\n\n开启「KRKR 内部存储启动」后\n首次启动 KR 游戏会自动复制到这里");
+                    empty.setText("No internal copy yet\n\nAfter turning on \"KRKR Internal Storage Startup\"\nThe KR game will be automatically copied here when you start it for the first time.");
                     empty.setTextColor(getColorCompat(R.color.yh_text_muted));
                     empty.setTextSize(12);
                     empty.setGravity(android.view.Gravity.CENTER);
@@ -12084,21 +12084,21 @@ private boolean isScopedSaveEnabledFor(EngineType engine) {
         row.addView(textCol, new android.widget.LinearLayout.LayoutParams(0, -2, 1f));
 
         TextView del = new TextView(this);
-        del.setText("删除");
+        del.setText("Delete");
         del.setTextColor(getColorCompat(R.color.yh_warning));
         del.setTextSize(12);
         del.setPadding(dp(12), dp(6), dp(4), dp(6));
         del.setOnClickListener(v -> new AlertDialog.Builder(this)
-                .setTitle("删除「" + e.displayName + "」？")
-                .setMessage("将同时删除该副本内的存档，且无法恢复。\n（外部原目录不受影响）")
-                .setPositiveButton("确认删除", (d2, w) -> AppExecutors.io().execute(() -> {
+                .setTitle("Delete\"" + e.displayName + "」？")
+                .setMessage("The archives in this copy will also be deleted and cannot be restored.\n(The external original directory is not affected)")
+                .setPositiveButton("Confirm deletion", (d2, w) -> AppExecutors.io().execute(() -> {
                     com.yuki.yukihub.krkr.KrkrInternalStore.remove(this, e.dirName);
                     runOnUiThread(() -> {
                         loadKrInternalList(listBox, summary, usageBar);
-                        Toast.makeText(this, "已删除", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
                     });
                 }))
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show());
         row.addView(del);
         return row;
@@ -12449,7 +12449,7 @@ return startActivitySafely(intent);
             Intent fvpIntent = EmulatorLauncher.buildInternalFvpIntent(
                     this, game.rootUri, launchTarget, FvpLaunchPrefs.load(this, game.id, game.rootUri));
             if (fvpIntent == null) {
-                lastLaunchFailReason = "FVP 引擎无法定位游戏目录（SAF 目录不支持内置引擎），请重新选择本地真实路径";
+                lastLaunchFailReason = "The FVP engine cannot locate the game directory (the SAF directory does not support the built-in engine), please reselect the local real path.";
                 return false;
             }
             return startActivitySafely(fvpIntent);
@@ -12459,16 +12459,16 @@ return startActivitySafely(intent);
             if (!EmulatorLauncher.isPPSSPPInstalled(this)) {
                 // 显示提示对话框
                 new AlertDialog.Builder(this)
-                    .setTitle("需要PPSSPP模拟器")
-                    .setMessage("启动PSP游戏需要安装PPSSPP模拟器。\n\n是否现在去下载？")
-                    .setPositiveButton("去下载", (d, w) -> {
+                    .setTitle("Requires PPSSPP emulator")
+                    .setMessage("Launching PSP games requires installing the PPSSPP emulator.\n\nDo you want to download it now?")
+                    .setPositiveButton("Go to download", (d, w) -> {
                         try {
                             startActivity(EmulatorLauncher.getPPSSPPDownloadIntent());
                         } catch (Exception e) {
-                            Toast.makeText(MainActivity.this, "无法打开应用商店", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Can't open app store", Toast.LENGTH_SHORT).show();
                         }
                     })
-                    .setNegativeButton("取消", null)
+                    .setNegativeButton("Cancel", null)
                     .show();
                 return false;
             }
@@ -12483,15 +12483,15 @@ return startActivitySafely(intent);
             if (!result.success) {
                 // 具体原因写入 lastLaunchFailReason，由外层 doLaunchGame 统一弹一条，避免双 Toast
                 if (WinlatorPcLauncher.CODE_PACKAGE_NOT_INSTALLED.equals(result.code)) {
-                    lastLaunchFailReason = "PC 游戏需要安装 Winlator（winlator-cn 版）才能启动";
+                    lastLaunchFailReason = "PC games need to install Winlator (winlator-cn version) to start";
                 } else if (WinlatorPcLauncher.CODE_EXTERNAL_LAUNCH_UNSUPPORTED.equals(result.code)) {
-                    lastLaunchFailReason = "当前 Winlator 不支持外置启动协议，请安装最新版 winlator-cn";
+                    lastLaunchFailReason = "Currently Winlator does not support external boot protocol, please install the latest version of winlator-cn";
                 } else if (WinlatorPcLauncher.CODE_DIR_UNRESOLVED.equals(result.code)) {
-                    lastLaunchFailReason = "PC 引擎无法定位游戏目录（SAF 目录不支持外置启动），请重新选择本地真实路径";
+                    lastLaunchFailReason = "PC Engine cannot locate the game directory (the SAF directory does not support external startup), please reselect the local real path.";
                 } else if (WinlatorPcLauncher.CODE_EXE_UNRESOLVED.equals(result.code)) {
-                    lastLaunchFailReason = "未找到可启动的 exe，请在编辑中重新选择启动目标";
+                    lastLaunchFailReason = "No bootable exe found, please reselect the startup target in editing";
                 } else {
-                    lastLaunchFailReason = "PC 引擎启动失败，请检查 Winlator 安装状态";
+                    lastLaunchFailReason = "PC engine failed to start, please check Winlator installation status";
                 }
                 return false;
             }
@@ -12599,31 +12599,31 @@ return startActivitySafely(intent);
         long now = System.currentTimeMillis();
         long rawDuration = Math.max(0L, now - open.startTime);
         long duration = Math.min(rawDuration, MAX_PLAY_SESSION_MS);
-        String message = "检测到最近一次游玩未正常结束。\n\n"
-                + "游戏：" + emptyText(open.gameTitle, "未命名游戏") + "\n"
-                + "开始时间：" + TimeFormatUtil.date(open.startTime) + "\n"
-                + "可补记时长：" + TimeFormatUtil.playTime(duration) + "\n\n"
+        String message = "It was detected that the latest play session did not end normally."
+                + "Game:" + emptyText(open.gameTitle, "Unnamed game") + "\n"
+                + "Start time:" + TimeFormatUtil.date(open.startTime) + "\n"
+                + "The amount of time that can be added to the record:" + TimeFormatUtil.playTime(duration) + "\n\n"
                 + (total > 1
-                    ? "另有 " + (total - 1) + " 条更早的未完成记录，将一并处理。\n\n"
+                    ? "Also" + (total - 1) + "Earlier unfinished records will be processed together."
                     : "")
-                + "如果这段时间确实在游玩，可选择补记；如果只是测试启动、闪退或误操作，请选择忽略。";
+                + "If you are really playing during this period, you can choose to make a supplementary note; if it is just a test startup, crash or misoperation, please choose to ignore.";
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("发现未完成的游玩记录")
+                .setTitle("Found unfinished game history")
                 .setMessage(message)
-                .setPositiveButton("补记", (d, w) -> {
+                .setPositiveButton("Supplementary note", (d, w) -> {
                     // 一次性结算全部未完成记录，避免下次进来又弹
                     repository.finishUnfinishedPlaySessions(
                             System.currentTimeMillis(), MIN_PLAY_SESSION_MS, MAX_PLAY_SESSION_MS);
                     loadGames();
                     updateProfilePanel();
-                    Toast.makeText(MainActivity.this, "已补记上次游玩时长", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Last play time has been recorded", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("忽略", (d, w) -> {
+                .setNegativeButton("Neglect", (d, w) -> {
                     // 同样一次性清掉全部，而非只删这一条
                     repository.deleteOpenPlaySessions();
                     loadGames();
                     updateProfilePanel();
-                    Toast.makeText(MainActivity.this, "已忽略未完成记录", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Incomplete records ignored", Toast.LENGTH_SHORT).show();
                 })
                 .setCancelable(false)
                 // 这个弹窗是模态的。桌面快捷方式冷启动时它会先弹出来，

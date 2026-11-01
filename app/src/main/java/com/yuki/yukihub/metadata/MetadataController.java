@@ -171,7 +171,7 @@ public class MetadataController {
     }
     public String metadataSourceLabel(String source) {
         if (SOURCE_BANGUMI.equals(source)) return "Bangumi";
-        if (SOURCE_YMGAL.equals(source)) return "月幕Gal";
+        if (SOURCE_YMGAL.equals(source)) return "Moon Curtain Gal";
         if (SOURCE_HIKARINAGI.equals(source)) return "Hikarinagi";
         if (SOURCE_NEXTMOE.equals(source)) return "NextMoe";
         return "VNDB";
@@ -257,7 +257,7 @@ public class MetadataController {
         delegate.sideMetadataSourceBadge().setText(text);
         int color = delegate.getColorCompat(R.color.yh_primary);
         if (text.contains("Bangumi")) color = delegate.getColorCompat(R.color.yh_secondary);
-        else if (text.contains("月幕")) color = delegate.getColorCompat(R.color.yh_warning);
+        else if (text.contains("Moon curtain")) color = delegate.getColorCompat(R.color.yh_warning);
         else if (text.contains("Hikarinagi")) color = delegate.getColorCompat(R.color.yh_secondary);
         delegate.sideMetadataSourceBadge().setTextColor(color);
         delegate.sideMetadataSourceBadge().setVisibility(View.VISIBLE);
@@ -535,7 +535,7 @@ public class MetadataController {
             applyVndbMetadata(cached, game);
             return;
         }
-        delegate.setSideDescription("正在从 VNDB 获取资料…");
+        delegate.setSideDescription("Retrieving data from VNDB...");
         VndbClient.searchCandidatesAsync(keyword, 5, new VndbClient.CandidatesCallback() {
             @Override public void onSuccess(List<VnMetadata> data) {
                 if (!isActivityAlive()) return;
@@ -557,7 +557,7 @@ public class MetadataController {
 
                 delegate.runOnUiThread(() -> {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != id) return;
-                    delegate.setSideDescription(delegate.emptyText(game.description, "VNDB 暂未匹配到资料。"));
+                    delegate.setSideDescription(delegate.emptyText(game.description, "VNDB has not matched the data yet."));
                 });
             }
         });
@@ -575,11 +575,11 @@ public class MetadataController {
         }
         String token = bangumiToken();
         if (token == null || token.trim().isEmpty()) {
-            delegate.sideDetailOriginalTitle().setText("Bangumi 未配置 Token");
-            delegate.setSideDescription("请在右上角 设置 -> 元数据源 中填写 Bangumi Access Token。\n\n提示：Bangumi 官方建议账号注册超过三个月后再申请和使用 Token。");
+            delegate.sideDetailOriginalTitle().setText("Bangumi is not configured with Token");
+            delegate.setSideDescription("Please fill in Bangumi Access Token in Settings -> Metadata Source in the upper right corner.\n\nTip: Bangumi officially recommends that you wait for more than three months after the account has been registered before applying for and using Token.");
             return;
         }
-        delegate.setSideDescription("正在从 Bangumi 获取资料…");
+        delegate.setSideDescription("Retrieving information from Bangumi…");
         AppExecutors.runOnIo(() -> {
             try {
                 VnMetadata meta = BangumiClient.searchFirst(keyword, token);
@@ -599,7 +599,7 @@ public class MetadataController {
 
                 delegate.runOnUiThread(() -> {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != id) return;
-                    delegate.setSideDescription("Bangumi 获取失败。请检查 Token 是否正确，账号是否满足使用条件，或稍后重试。\n\n" + t.getMessage());
+                    delegate.setSideDescription("Bangumi acquisition failed. Please check whether the Token is correct and whether the account meets the usage conditions, or try again later." + t.getMessage());
                 });
             }
         });
@@ -615,7 +615,7 @@ public class MetadataController {
             applyVndbMetadata(cached, game);
             return;
         }
-        delegate.setSideDescription("正在从月幕 Gal 获取资料…");
+        delegate.setSideDescription("Retrieving information from Moon Curtain Gal…");
         AppExecutors.runOnIo(() -> {
             try {
                 List<VnMetadata> data = YmgalClient.searchCandidates(keyword, 5);
@@ -637,7 +637,7 @@ public class MetadataController {
 
                 delegate.runOnUiThread(() -> {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != id) return;
-                    delegate.setSideDescription("月幕 Gal 获取失败。请检查网络或稍后重试。\n\n" + t.getMessage());
+                    delegate.setSideDescription("Failed to obtain Moon Curtain Gal. Please check the network or try again later." + t.getMessage());
                 });
             }
         });
@@ -646,7 +646,7 @@ public class MetadataController {
     public void fetchAndApplyYmgalDetail(Game game, VnMetadata candidate) {
         if (game == null || candidate == null) return;
         final long id = game.id;
-        delegate.setSideDescription("正在从月幕 Gal 获取详情…");
+        delegate.setSideDescription("Getting details from Moon Curtain Gal…");
         AppExecutors.runOnIo(() -> {
             try {
                 VnMetadata full = YmgalClient.getGame(candidate.id, candidate);
@@ -665,7 +665,7 @@ public class MetadataController {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != id) return;
                     if (delegate.metadataRepository() != null) saveCurrentSourceMetadata(id, candidate);
                     applyVndbMetadata(candidate, game);
-                    delegate.showToast("月幕详情获取失败，已使用搜索结果", Toast.LENGTH_SHORT);
+                    delegate.showToast("Failed to obtain moon curtain details, search results have been used", Toast.LENGTH_SHORT);
                 });
             }
         });
@@ -683,7 +683,7 @@ public class MetadataController {
             applyVndbMetadata(cached, game);
             return;
         }
-        delegate.setSideDescription("正在从 Hikarinagi 获取资料…");
+        delegate.setSideDescription("Retrieving information from Hikarinagi…");
         AppExecutors.runOnIo(() -> {
             try {
                 List<VnMetadata> data = HikarinagiClient.searchCandidates(keyword, 5);
@@ -705,7 +705,7 @@ public class MetadataController {
 
                 delegate.runOnUiThread(() -> {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != id) return;
-                    delegate.setSideDescription("Hikarinagi 获取失败。请检查网络或稍后重试。\n\n" + t.getMessage());
+                    delegate.setSideDescription("Hikarinagi acquisition failed. Please check the network or try again later." + t.getMessage());
                 });
             }
         });
@@ -714,7 +714,7 @@ public class MetadataController {
     public void fetchAndApplyHikarinagiDetail(Game game, VnMetadata candidate) {
         if (game == null || candidate == null) return;
         final long id = game.id;
-        delegate.setSideDescription("正在从 Hikarinagi 获取详情…");
+        delegate.setSideDescription("Getting details from Hikarinagi...");
         AppExecutors.runOnIo(() -> {
             try {
                 VnMetadata full = HikarinagiClient.getGalgame(candidate.id, candidate);
@@ -735,11 +735,11 @@ public class MetadataController {
                     VnMetadata existing = delegate.metadataRepository() == null ? null : currentSourceMetadata(id);
                     if (existing != null && isMetadataComplete(existing)) {
                         applyVndbMetadata(existing, game);
-                        delegate.showToast("Hikarinagi 详情获取失败，已保留原有资料", Toast.LENGTH_SHORT);
+                        delegate.showToast("Failed to obtain Hikarinagi details, original information has been retained", Toast.LENGTH_SHORT);
                     } else {
                         if (delegate.metadataRepository() != null) saveCurrentSourceMetadata(id, candidate);
                         applyVndbMetadata(candidate, game);
-                        delegate.showToast("Hikarinagi 详情获取失败，已使用搜索结果", Toast.LENGTH_SHORT);
+                        delegate.showToast("Failed to obtain Hikarinagi details, search results have been used", Toast.LENGTH_SHORT);
                     }
                 });
             }
@@ -759,7 +759,7 @@ public class MetadataController {
             return;
         }
         // 登录可选：未登录走匿名档（按来源 IP 计配额），一样能读目录，不再因为没登录而挡下整个流程
-        delegate.setSideDescription("正在从 NextMoe 获取资料…");
+        delegate.setSideDescription("Retrieving data from NextMoe…");
         AppExecutors.runOnIo(() -> {
             try {
                 List<VnMetadata> data = com.yuki.yukihub.nextmoe.NextMoeClient.searchCandidates(keyword, 5);
@@ -783,8 +783,8 @@ public class MetadataController {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != id) return;
                     String msg = t.getMessage() == null ? "" : t.getMessage();
                     String hint = (msg.contains("QUOTA_EXCEEDED") || msg.contains("HTTP 429"))
-                            ? "NextMoe 暂时限流了。\n\n" + msg
-                            : "NextMoe 获取失败。请检查网络或稍后重试。\n\n" + msg;
+                            ? "NextMoe is temporarily limited." + msg
+                            : "NextMoe acquisition failed. Please check the network or try again later." + msg;
                     delegate.setSideDescription(hint);
                 });
             }
@@ -794,7 +794,7 @@ public class MetadataController {
     public void fetchAndApplyNextMoeDetail(Game game, VnMetadata candidate) {
         if (game == null || candidate == null) return;
         final long id = game.id;
-        delegate.setSideDescription("正在从 NextMoe 获取详情…");
+        delegate.setSideDescription("Getting details from NextMoe…");
         AppExecutors.runOnIo(() -> {
             try {
                 VnMetadata full = com.yuki.yukihub.nextmoe.NextMoeClient.getWork(candidate.id, candidate);
@@ -815,11 +815,11 @@ public class MetadataController {
                     VnMetadata existing = delegate.metadataRepository() == null ? null : currentSourceMetadata(id);
                     if (existing != null && isMetadataComplete(existing)) {
                         applyVndbMetadata(existing, game);
-                        delegate.showToast("NextMoe 详情获取失败，已保留原有资料", Toast.LENGTH_SHORT);
+                        delegate.showToast("Failed to obtain NextMoe details, original information has been retained", Toast.LENGTH_SHORT);
                     } else {
                         if (delegate.metadataRepository() != null) saveCurrentSourceMetadata(id, candidate);
                         applyVndbMetadata(candidate, game);
-                        delegate.showToast("NextMoe 详情获取失败，已使用搜索结果", Toast.LENGTH_SHORT);
+                        delegate.showToast("Failed to obtain NextMoe details, search results have been used", Toast.LENGTH_SHORT);
                     }
                 });
             }
@@ -833,26 +833,26 @@ public class MetadataController {
         input.setSingleLine(true);
         input.setText(delegate.emptyText(game.title, ""));
         input.setSelectAllOnFocus(true);
-        input.setHint("输入 NextMoe 搜索关键词");
+        input.setHint("Enter NextMoe search keywords");
         input.setTextColor(ctx.getResources().getColor(R.color.yh_text));
         input.setHintTextColor(ctx.getResources().getColor(R.color.yh_text_muted));
         input.setBackgroundResource(R.drawable.bg_input);
         input.setPadding(delegate.dp(12), 0, delegate.dp(12), 0);
         new AlertDialog.Builder(ctx)
-                .setTitle("自定义搜索 NextMoe")
+                .setTitle("Custom search NextMoe")
                 .setView(input)
-                .setPositiveButton("搜索", (d, w) -> {
+                .setPositiveButton("Search", (d, w) -> {
                     String keyword = input.getText() == null ? "" : input.getText().toString().trim();
-                    if (keyword.isEmpty()) { delegate.showToast("请输入搜索关键词", Toast.LENGTH_SHORT); return; }
+                    if (keyword.isEmpty()) { delegate.showToast("Please enter search keywords", Toast.LENGTH_SHORT); return; }
                     searchNextMoeWithKeyword(game, keyword);
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
     public void searchNextMoeWithKeyword(Game game, String keyword) {
         if (game == null || keyword == null || keyword.trim().isEmpty()) return;
-        delegate.setSideDescription("正在按自定义关键词搜索 NextMoe…");
+        delegate.setSideDescription("Searching NextMoe by custom keywords…");
         AppExecutors.runOnIo(() -> {
             try {
                 List<VnMetadata> data = com.yuki.yukihub.nextmoe.NextMoeClient.searchCandidates(keyword, 8);
@@ -861,15 +861,15 @@ public class MetadataController {
                 delegate.runOnUiThread(() -> {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != game.id) return;
                     if (data == null || data.isEmpty()) {
-                        delegate.showToast("没有匹配到 NextMoe 结果", Toast.LENGTH_SHORT);
-                        delegate.setSideDescription(delegate.emptyText(game.description, "NextMoe 暂未匹配到资料。"));
+                        delegate.showToast("No matching results for NextMoe", Toast.LENGTH_SHORT);
+                        delegate.setSideDescription(delegate.emptyText(game.description, "NextMoe has not matched the information yet."));
                     } else {
                         showVndbCandidateDialog(game, data);
                     }
                 });
             } catch (Throwable t) {
                 if (!isActivityAlive()) return;
-                delegate.runOnUiThread(() -> delegate.showToast("NextMoe 搜索失败：" + t.getMessage(), Toast.LENGTH_SHORT));
+                delegate.runOnUiThread(() -> delegate.showToast("NextMoe search failed:" + t.getMessage(), Toast.LENGTH_SHORT));
             }
         });
     }
@@ -899,27 +899,27 @@ public class MetadataController {
         input.setSingleLine(true);
         input.setText(delegate.emptyText(game.title, ""));
         input.setSelectAllOnFocus(true);
-        input.setHint("输入 VNDB 搜索关键词或原名");
+        input.setHint("Enter VNDB search keywords or original name");
         input.setTextColor(ctx.getResources().getColor(R.color.yh_text));
         input.setHintTextColor(ctx.getResources().getColor(R.color.yh_text_muted));
         input.setBackgroundResource(R.drawable.bg_input);
         input.setPadding(delegate.dp(12), 0, delegate.dp(12), 0);
         new AlertDialog.Builder(ctx)
-                .setTitle("自定义搜索 VNDB")
+                .setTitle("Custom Search VNDB")
                 .setView(input)
-                .setPositiveButton("搜索", (d, w) -> {
+                .setPositiveButton("Search", (d, w) -> {
                     String keyword = input.getText() == null ? "" : input.getText().toString().trim();
-                    if (keyword.isEmpty()) { delegate.showToast("请输入搜索关键词", Toast.LENGTH_SHORT); return; }
+                    if (keyword.isEmpty()) { delegate.showToast("Please enter search keywords", Toast.LENGTH_SHORT); return; }
                     searchVndbWithKeyword(game, keyword);
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
     public void showCustomBangumiSearchDialog(Game game) {
         if (game == null) return;
         if (bangumiToken() == null || bangumiToken().trim().isEmpty()) {
-            delegate.showToast("请先在设置里填写 Bangumi Token", Toast.LENGTH_SHORT);
+            delegate.showToast("Please fill in Bangumi Token in settings first", Toast.LENGTH_SHORT);
             return;
         }
         android.app.Activity ctx = delegate.activity();
@@ -927,20 +927,20 @@ public class MetadataController {
         input.setSingleLine(true);
         input.setText(delegate.emptyText(game.title, ""));
         input.setSelectAllOnFocus(true);
-        input.setHint("输入 Bangumi 搜索关键词");
+        input.setHint("Enter Bangumi search keywords");
         input.setTextColor(ctx.getResources().getColor(R.color.yh_text));
         input.setHintTextColor(ctx.getResources().getColor(R.color.yh_text_muted));
         input.setBackgroundResource(R.drawable.bg_input);
         input.setPadding(delegate.dp(12), 0, delegate.dp(12), 0);
         new AlertDialog.Builder(ctx)
-                .setTitle("自定义搜索 Bangumi")
+                .setTitle("Custom Search Bangumi")
                 .setView(input)
-                .setPositiveButton("搜索", (d, w) -> {
+                .setPositiveButton("Search", (d, w) -> {
                     String keyword = input.getText() == null ? "" : input.getText().toString().trim();
-                    if (keyword.isEmpty()) { delegate.showToast("请输入搜索关键词", Toast.LENGTH_SHORT); return; }
+                    if (keyword.isEmpty()) { delegate.showToast("Please enter search keywords", Toast.LENGTH_SHORT); return; }
                     searchBangumiWithKeyword(game, keyword);
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -951,27 +951,27 @@ public class MetadataController {
         input.setSingleLine(true);
         input.setText(delegate.emptyText(game.title, ""));
         input.setSelectAllOnFocus(true);
-        input.setHint("输入月幕 Gal 搜索关键词");
+        input.setHint("Enter Moon Curtain Gal search keywords");
         input.setTextColor(ctx.getResources().getColor(R.color.yh_text));
         input.setHintTextColor(ctx.getResources().getColor(R.color.yh_text_muted));
         input.setBackgroundResource(R.drawable.bg_input);
         input.setPadding(delegate.dp(12), 0, delegate.dp(12), 0);
         new AlertDialog.Builder(ctx)
-                .setTitle("自定义搜索月幕 Gal")
+                .setTitle("Custom Search Moon Curtain Gal")
                 .setView(input)
-                .setPositiveButton("搜索", (d, w) -> {
+                .setPositiveButton("Search", (d, w) -> {
                     String keyword = input.getText() == null ? "" : input.getText().toString().trim();
-                    if (keyword.isEmpty()) { delegate.showToast("请输入搜索关键词", Toast.LENGTH_SHORT); return; }
+                    if (keyword.isEmpty()) { delegate.showToast("Please enter search keywords", Toast.LENGTH_SHORT); return; }
                     searchYmgalWithKeyword(game, keyword);
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
     public void searchBangumiWithKeyword(Game game, String keyword) {
         if (game == null || keyword == null || keyword.trim().isEmpty()) return;
         String token = bangumiToken();
-        delegate.setSideDescription("正在按自定义关键词搜索 Bangumi…");
+        delegate.setSideDescription("Searching Bangumi by custom keywords…");
         AppExecutors.runOnIo(() -> {
             try {
                 List<VnMetadata> data = BangumiClient.searchCandidates(keyword, token, 8);
@@ -980,22 +980,22 @@ public class MetadataController {
                 delegate.runOnUiThread(() -> {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != game.id) return;
                     if (data == null || data.isEmpty()) {
-                        delegate.showToast("没有匹配到 Bangumi 结果", Toast.LENGTH_SHORT);
-                        delegate.setSideDescription(delegate.emptyText(game.description, "Bangumi 暂未匹配到资料。"));
+                        delegate.showToast("No results matched for Bangumi", Toast.LENGTH_SHORT);
+                        delegate.setSideDescription(delegate.emptyText(game.description, "Bangumi No matching information has been found yet."));
                     } else {
                         showVndbCandidateDialog(game, data);
                     }
                 });
             } catch (Throwable t) {
                 if (!isActivityAlive()) return;
-                delegate.runOnUiThread(() -> delegate.showToast("Bangumi 搜索失败：" + t.getMessage(), Toast.LENGTH_SHORT));
+                delegate.runOnUiThread(() -> delegate.showToast("Bangumi search failed:" + t.getMessage(), Toast.LENGTH_SHORT));
             }
         });
     }
 
     public void searchYmgalWithKeyword(Game game, String keyword) {
         if (game == null || keyword == null || keyword.trim().isEmpty()) return;
-        delegate.setSideDescription("正在按自定义关键词搜索月幕 Gal…");
+        delegate.setSideDescription("Searching for Moon Curtain Gal by custom keywords…");
         AppExecutors.runOnIo(() -> {
             try {
                 List<VnMetadata> data = YmgalClient.searchCandidates(keyword, 8);
@@ -1004,15 +1004,15 @@ public class MetadataController {
                 delegate.runOnUiThread(() -> {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != game.id) return;
                     if (data == null || data.isEmpty()) {
-                        delegate.showToast("没有匹配到月幕 Gal 结果", Toast.LENGTH_SHORT);
-                        delegate.setSideDescription(delegate.emptyText(game.description, "月幕 Gal 暂未匹配到资料。"));
+                        delegate.showToast("No matching results for Moon Curtain Gal", Toast.LENGTH_SHORT);
+                        delegate.setSideDescription(delegate.emptyText(game.description, "Moon Curtain Gal has not matched the information yet."));
                     } else {
                         showVndbCandidateDialog(game, data);
                     }
                 });
             } catch (Throwable t) {
                 if (!isActivityAlive()) return;
-                delegate.runOnUiThread(() -> delegate.showToast("月幕 Gal 搜索失败：" + t.getMessage(), Toast.LENGTH_SHORT));
+                delegate.runOnUiThread(() -> delegate.showToast("Moon Curtain Gal search failed:" + t.getMessage(), Toast.LENGTH_SHORT));
             }
         });
     }
@@ -1024,26 +1024,26 @@ public class MetadataController {
         input.setSingleLine(true);
         input.setText(delegate.emptyText(game.title, ""));
         input.setSelectAllOnFocus(true);
-        input.setHint("输入 Hikarinagi 搜索关键词");
+        input.setHint("Enter Hikarinagi search keyword");
         input.setTextColor(ctx.getResources().getColor(R.color.yh_text));
         input.setHintTextColor(ctx.getResources().getColor(R.color.yh_text_muted));
         input.setBackgroundResource(R.drawable.bg_input);
         input.setPadding(delegate.dp(12), 0, delegate.dp(12), 0);
         new AlertDialog.Builder(ctx)
-                .setTitle("自定义搜索 Hikarinagi")
+                .setTitle("Custom Search Hikarinagi")
                 .setView(input)
-                .setPositiveButton("搜索", (d, w) -> {
+                .setPositiveButton("Search", (d, w) -> {
                     String keyword = input.getText() == null ? "" : input.getText().toString().trim();
-                    if (keyword.isEmpty()) { delegate.showToast("请输入搜索关键词", Toast.LENGTH_SHORT); return; }
+                    if (keyword.isEmpty()) { delegate.showToast("Please enter search keywords", Toast.LENGTH_SHORT); return; }
                     searchHikarinagiWithKeyword(game, keyword);
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
     public void searchHikarinagiWithKeyword(Game game, String keyword) {
         if (game == null || keyword == null || keyword.trim().isEmpty()) return;
-        delegate.setSideDescription("正在按自定义关键词搜索 Hikarinagi…");
+        delegate.setSideDescription("Searching for Hikarinagi by custom keywords…");
         AppExecutors.runOnIo(() -> {
             try {
                 List<VnMetadata> data = HikarinagiClient.searchCandidates(keyword, 8);
@@ -1052,22 +1052,22 @@ public class MetadataController {
                 delegate.runOnUiThread(() -> {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != game.id) return;
                     if (data == null || data.isEmpty()) {
-                        delegate.showToast("没有匹配到 Hikarinagi 结果", Toast.LENGTH_SHORT);
-                        delegate.setSideDescription(delegate.emptyText(game.description, "Hikarinagi 暂未匹配到资料。"));
+                        delegate.showToast("No results matched for Hikarinagi", Toast.LENGTH_SHORT);
+                        delegate.setSideDescription(delegate.emptyText(game.description, "Hikarinagi No matching information has been found yet."));
                     } else {
                         showVndbCandidateDialog(game, data);
                     }
                 });
             } catch (Throwable t) {
                 if (!isActivityAlive()) return;
-                delegate.runOnUiThread(() -> delegate.showToast("Hikarinagi 搜索失败：" + t.getMessage(), Toast.LENGTH_SHORT));
+                delegate.runOnUiThread(() -> delegate.showToast("Hikarinagi search failed:" + t.getMessage(), Toast.LENGTH_SHORT));
             }
         });
     }
 
     public void searchVndbWithKeyword(Game game, String keyword) {
         if (game == null || keyword == null || keyword.trim().isEmpty()) return;
-        delegate.setSideDescription("正在按自定义关键词搜索 VNDB…");
+        delegate.setSideDescription("Searching VNDB by custom keywords…");
         VndbClient.searchCandidatesAsync(keyword, 8, new VndbClient.CandidatesCallback() {
             @Override public void onSuccess(List<VnMetadata> data) {
                 if (!isActivityAlive()) return;
@@ -1075,8 +1075,8 @@ public class MetadataController {
                 delegate.runOnUiThread(() -> {
                     if (delegate.selectedGame() == null || delegate.selectedGame().id != game.id) return;
                     if (data == null || data.isEmpty()) {
-                        delegate.showToast("没有匹配到 VNDB 结果", Toast.LENGTH_SHORT);
-                        delegate.setSideDescription(delegate.emptyText(game.description, "VNDB 暂未匹配到资料。"));
+                        delegate.showToast("No VNDB results matched", Toast.LENGTH_SHORT);
+                        delegate.setSideDescription(delegate.emptyText(game.description, "VNDB has not matched the data yet."));
                     } else {
                         showVndbCandidateDialog(game, data);
                     }
@@ -1084,7 +1084,7 @@ public class MetadataController {
             }
             @Override public void onError(Exception error) {
                 if (!isActivityAlive()) return;
-                delegate.runOnUiThread(() -> delegate.showToast("VNDB 搜索失败", Toast.LENGTH_SHORT));
+                delegate.runOnUiThread(() -> delegate.showToast("VNDB search failed", Toast.LENGTH_SHORT));
             }
         });
     }
@@ -1124,15 +1124,15 @@ public class MetadataController {
                 }
                 if (m == null) {
                     String sourceLabel = metadataSourceLabel();
-                    ((TextView) itemView.findViewById(R.id.tvCandidateTitle)).setText("不匹配 / 暂不使用" + sourceLabel);
-                    ((TextView) itemView.findViewById(R.id.tvCandidateOriginal)).setText("保留当前本地资料");
-                    ((TextView) itemView.findViewById(R.id.tvCandidateInfo)).setText("关闭弹窗，不绑定" + sourceLabel);
+                    ((TextView) itemView.findViewById(R.id.tvCandidateTitle)).setText("Not matching / not used yet" + sourceLabel);
+                    ((TextView) itemView.findViewById(R.id.tvCandidateOriginal)).setText("Keep current local data");
+                    ((TextView) itemView.findViewById(R.id.tvCandidateInfo)).setText("Close the pop-up window without binding" + sourceLabel);
                     ImageView cover = itemView.findViewById(R.id.ivCandidateCover);
                     delegate.loadRemoteImage("", cover, "cand_empty_" + position);
                 } else {
-                    ((TextView) itemView.findViewById(R.id.tvCandidateTitle)).setText(delegate.emptyText(m.chineseTitle, delegate.emptyText(m.romanTitle, "未命名")));
+                    ((TextView) itemView.findViewById(R.id.tvCandidateTitle)).setText(delegate.emptyText(m.chineseTitle, delegate.emptyText(m.romanTitle, "Unnamed")));
                     ((TextView) itemView.findViewById(R.id.tvCandidateOriginal)).setText(delegate.emptyText(m.originalTitle, m.id));
-                    ((TextView) itemView.findViewById(R.id.tvCandidateInfo)).setText(delegate.emptyText(m.developer, metadataSourceLabel() + " 候选"));
+                    ((TextView) itemView.findViewById(R.id.tvCandidateInfo)).setText(delegate.emptyText(m.developer, metadataSourceLabel() + "Candidate"));
                     ImageView cover = itemView.findViewById(R.id.ivCandidateCover);
                     cover.setImageDrawable(null);
                     if (m.coverUrl != null && !m.coverUrl.isEmpty()) delegate.loadRemoteImage(m.coverUrl, cover, "cand_" + m.id);
@@ -1159,16 +1159,16 @@ public class MetadataController {
                     } else {
                         clearCurrentSourceMetadata(game.id);
                         applyVndbMetadata(null, game);
-                        delegate.setSideDescription(delegate.emptyText(game.description, "已跳过" + metadataSourceLabel() + "匹配，使用本地资料。"));
+                        delegate.setSideDescription(delegate.emptyText(game.description, "Skipped" + metadataSourceLabel() + "Match, using local data."));
                     }
                     if (dialogRef[0] != null) dialogRef[0].dismiss();
                 });
             }
         });
         AlertDialog dialog = new AlertDialog.Builder(ctx)
-                .setTitle("选择" + metadataSourceLabel() + "匹配结果")
+                .setTitle("Select" + metadataSourceLabel() + "Match results")
                 .setView(rv)
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
         dialogRef[0] = dialog;
         if (dialog.getWindow() != null) {
@@ -1185,8 +1185,8 @@ public class MetadataController {
         if (meta == null) {
             updateSideMetadataSourceBadge("");
             delegate.updateTranslateButtonState();
-            delegate.sideDetailTitle().setText(delegate.emptyText(game == null ? "" : game.title, "未命名游戏"));
-            delegate.sideDetailOriginalTitle().setText("未绑定" + metadataSourceLabel());
+            delegate.sideDetailTitle().setText(delegate.emptyText(game == null ? "" : game.title, "Unnamed game"));
+            delegate.sideDetailOriginalTitle().setText("Not bound" + metadataSourceLabel());
             delegate.loadRemoteImage("", delegate.sideDetailCover(), "cover_empty_" + gameId);
             delegate.loadRemoteImage("", delegate.sideScreenshot1(), "shot1_empty_" + gameId);
             delegate.loadRemoteImage("", delegate.sideScreenshot2(), "shot2_empty_" + gameId);
@@ -1203,7 +1203,7 @@ public class MetadataController {
                 delegate.sideDetailPlaceholder().setVisibility(View.VISIBLE);
                 if (delegate.sideDetailPlaceholder() instanceof TextView) ((TextView) delegate.sideDetailPlaceholder()).setText(delegate.initials(game == null ? "" : game.title));
             }
-            delegate.setSideDescription(delegate.emptyText(game == null ? "" : game.description, metadataSourceLabel() + " 暂未匹配到资料。"));
+            delegate.setSideDescription(delegate.emptyText(game == null ? "" : game.description, metadataSourceLabel() + "No information has been matched yet."));
             return;
         }
         // NSFW 自动检测：VNDB/Hikarinagi 的 coverSexual 范围 0~2，>0.5 视为 R18
@@ -1221,15 +1221,15 @@ public class MetadataController {
         }
         String visibleSourceLabel = metadataSourceLabelForVisibleMetadata(gameId, meta);
         updateSideMetadataSourceBadge(visibleSourceLabel);
-        delegate.sideDetailTitle().setText(delegate.emptyText(meta.chineseTitle, delegate.emptyText(game.title, "未命名游戏")));
+        delegate.sideDetailTitle().setText(delegate.emptyText(meta.chineseTitle, delegate.emptyText(game.title, "Unnamed game")));
         delegate.sideDetailOriginalTitle().setText(delegate.emptyText(meta.originalTitle, meta.romanTitle));
         delegate.updateTranslateButtonState();
-        delegate.setSideDescription(delegate.sideShowingTranslatedDescription() ? meta.translatedDescription : delegate.emptyText(meta.description, "暂无" + delegate.emptyText(visibleSourceLabel, metadataSourceLabel()) + "简介。"));
-        delegate.sideDetailDate().setText("发布日期：" + delegate.emptyText(meta.released, "-"));
-        delegate.sideDetailDeveloper().setText("开发商：" + delegate.emptyText(meta.developer, "-"));
-        if (delegate.sideDetailPath() != null) delegate.sideDetailPath().setText("路径：" + delegate.displayPath(game.rootUri));
+        delegate.setSideDescription(delegate.sideShowingTranslatedDescription() ? meta.translatedDescription : delegate.emptyText(meta.description, "None yet" + delegate.emptyText(visibleSourceLabel, metadataSourceLabel()) + "Introduction."));
+        delegate.sideDetailDate().setText("Release date:" + delegate.emptyText(meta.released, "-"));
+        delegate.sideDetailDeveloper().setText("Developer:" + delegate.emptyText(meta.developer, "-"));
+        if (delegate.sideDetailPath() != null) delegate.sideDetailPath().setText("Path:" + delegate.displayPath(game.rootUri));
         delegate.sideDetailRating().setText(delegate.emptyText(meta.ratingText, "评分：-/10"));
-        if (delegate.sideDetailLength() != null) delegate.sideDetailLength().setText(delegate.emptyText(meta.lengthText, "游玩时长：-"));
+        if (delegate.sideDetailLength() != null) delegate.sideDetailLength().setText(delegate.emptyText(meta.lengthText, "Play time:-"));
         delegate.renderTagChips(delegate.emptyText(meta.tagsText, "-"));
         if (meta.coverUrl != null && !meta.coverUrl.isEmpty()) {
             delegate.sideDetailCover().setVisibility(View.VISIBLE);
@@ -1255,20 +1255,20 @@ public class MetadataController {
         String label = metadataSourceLabel();
         VnMetadata meta = currentSourceMetadata(game.id);
         if (meta == null) {
-            delegate.showToast("请先匹配" + label + "资料", Toast.LENGTH_SHORT);
+            delegate.showToast("Please match first" + label + "Material", Toast.LENGTH_SHORT);
             return;
         }
 
         android.app.Activity ctx = delegate.activity();
         TextView progressText = new TextView(ctx);
-        progressText.setText("正在准备同步" + label + "资料…");
+        progressText.setText("Preparing to sync" + label + "Material…");
         progressText.setTextColor(ctx.getResources().getColor(R.color.yh_text));
         progressText.setTextSize(12);
         progressText.setLineSpacing(delegate.dp(2), 1.0f);
         progressText.setPadding(delegate.dp(16), delegate.dp(12), delegate.dp(16), delegate.dp(12));
         progressText.setBackgroundResource(R.drawable.bg_dialog);
         AlertDialog progressDialog = new AlertDialog.Builder(ctx)
-                .setTitle("同步游戏资料")
+                .setTitle("Sync game data")
                 .setView(progressText)
                 .setCancelable(false)
                 .create();
@@ -1283,7 +1283,7 @@ public class MetadataController {
                 if (meta.coverUrl != null && !meta.coverUrl.trim().isEmpty()) {
                     coverAttempted = true;
                     if (isActivityAlive()) {
-                        delegate.runOnUiThread(() -> progressText.setText("正在下载并缓存封面…\n这一步取决于图片站点速度，可能需要几秒。"));
+                        delegate.runOnUiThread(() -> progressText.setText("Downloading and caching cover...\nThis step may take a few seconds depending on your image site speed."));
                     }
                     localCover = cacheRemoteImageSync(meta.coverUrl, "card_cover_" + delegate.emptyText(meta.id, String.valueOf(game.id)));
                     coverFailed = localCover == null || localCover.isEmpty();
@@ -1294,7 +1294,7 @@ public class MetadataController {
                 final boolean finalCoverFailed = coverFailed;
                 if (!isActivityAlive()) return;
 
-                delegate.runOnUiThread(() -> progressText.setText("正在写入游戏卡片…"));
+                delegate.runOnUiThread(() -> progressText.setText("Writing game cards..."));
 
                 delegate.runOnUiThread(() -> {
                     try {
@@ -1323,20 +1323,20 @@ public class MetadataController {
                         delegate.updateSideDetail(game);
                         try { progressDialog.dismiss(); } catch (Throwable ignored) { }
                         if (finalCoverAttempted && finalCoverFailed) {
-                            delegate.showToast("资料已同步，但封面下载失败。可稍后重试或手动设置封面。", Toast.LENGTH_LONG);
+                            delegate.showToast("The data has been synchronized, but the cover download failed. You can try again later or set the cover manually.", Toast.LENGTH_LONG);
                         } else {
-                            delegate.showToast("已同步" + label + "资料到游戏卡片", Toast.LENGTH_SHORT);
+                            delegate.showToast("Synced" + label + "Data to game card", Toast.LENGTH_SHORT);
                         }
                     } catch (Throwable t) {
                         try { progressDialog.dismiss(); } catch (Throwable ignored) { }
-                        delegate.showToast("同步失败：" + (t.getMessage() == null ? "未知错误" : t.getMessage()), Toast.LENGTH_LONG);
+                        delegate.showToast("Sync failed:" + (t.getMessage() == null ? "Unknown error" : t.getMessage()), Toast.LENGTH_LONG);
                     }
                 });
             } catch (Throwable t) {
                 if (!isActivityAlive()) return;
                 delegate.runOnUiThread(() -> {
                     try { progressDialog.dismiss(); } catch (Throwable ignored) { }
-                    delegate.showToast("同步失败：" + (t.getMessage() == null ? "未知错误" : t.getMessage()), Toast.LENGTH_LONG);
+                    delegate.showToast("Sync failed:" + (t.getMessage() == null ? "Unknown error" : t.getMessage()), Toast.LENGTH_LONG);
                 });
             }
         });
@@ -1563,15 +1563,15 @@ public class MetadataController {
                             result.details.add("✓ " + title);
                         } else if (outcome == 1) {
                             result.needConfirm++;
-                            result.details.add("⚠ " + title + "（多候选未自动命中，可手动重扫）");
+                            result.details.add("⚠ " + title + "(If multiple candidates are not hit automatically, you can manually rescan)");
                         } else {
                             result.failed++;
-                            result.details.add("✗ " + title + "（未找到或获取失败）");
+                            result.details.add("✗ " + title + "(Not found or failed to obtain)");
                         }
                     } catch (Throwable t) {
                         result.failed++;
                         String em = t.getMessage();
-                        result.details.add("✗ " + title + "（" + (em == null || em.trim().isEmpty() ? "未知错误" : em) + "）");
+                        result.details.add("✗ " + title + "（" + (em == null || em.trim().isEmpty() ? "Unknown error" : em) + "）");
                     }
                     done++;
                     if (!bulkRefreshCancelled && done < total) {
@@ -1616,7 +1616,7 @@ public class MetadataController {
         }
         if (usingBangumi()) {
             String token = bangumiToken();
-            if (token == null || token.trim().isEmpty()) throw new Exception("Bangumi未配置 Token");
+            if (token == null || token.trim().isEmpty()) throw new Exception("Bangumi is not configured with Token");
             VnMetadata meta = BangumiClient.searchFirst(keyword, token);
             if (meta == null) return 2;
             saveCurrentSourceMetadata(id, meta);

@@ -170,7 +170,7 @@ public class ColorPickerDialog {
     private void setColorText(int color1, Integer color2) {
         int alpha = Color.alpha(editingTarget == EditingTarget.GRADIENT_END ? gradientColor2 : color1);
         int percent = Math.round(alpha / 255f * 100f);
-        if (alphaHintText != null) alphaHintText.setText("强度/透明度：" + percent + "%");
+        if (alphaHintText != null) alphaHintText.setText("Strength/Transparency:" + percent + "%");
         if (colorValueText == null) return;
         if (color2 == null) {
             colorValueText.setText(String.format("#%08X", color1));

@@ -124,7 +124,7 @@ public static void attachKrkr(Activity host) {
                 // 这是 Artemis 点击的首选路径；无障碍作为降级备份保留。
                 int probe = ArtemisNativeInput.probe();
                 android.util.Log.i(TAG, "artemis native probe=" + probe
-                        + " (-1=库未加载 0=符号缺失 1=引擎未就绪 2=可用)");
+                        + "(-1=Library not loaded 0=Symbol missing 1=Engine not ready 2=Available)");
                 // Artemis 在 :artemis 独立进程，无障碍服务在主进程，
                 // 静态实例拿不到 —— 必须走广播桥投递到主进程执行手势。
                 final Context appCtx = host.getApplicationContext();

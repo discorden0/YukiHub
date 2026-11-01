@@ -32,7 +32,7 @@ public final class ScreenshotServiceManager {
                                       YukiScreenshotAccessibilityService.Callback callback) {
         YukiScreenshotAccessibilityService current = service;
         if (current == null) {
-            if (callback != null) callback.onFailure("无障碍截图服务尚未连接");
+            if (callback != null) callback.onFailure("The accessibility screenshot service is not connected yet");
             return;
         }
         current.takeScreenshot(cropRect, offset, callback);

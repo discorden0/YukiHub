@@ -207,7 +207,7 @@ public class FriendsChatDialog {
 
     public void show() {
         if (!isLoggedIn()) {
-            Toast.makeText(activity, "请先登录后再使用好友/聊天功能", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Please log in first before using the friend/chat function", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -222,7 +222,7 @@ public class FriendsChatDialog {
         header.setGravity(Gravity.CENTER_VERTICAL);
 
         backButton = new TextView(activity);
-        backButton.setText("← 返回");
+        backButton.setText("← Return");
         backButton.setTextColor(0xFF8AB4FF);
         backButton.setTextSize(14);
         backButton.setVisibility(View.GONE);
@@ -324,7 +324,7 @@ public class FriendsChatDialog {
             if (hit != null) {
                 showChatView(hit);
             } else {
-                Toast.makeText(activity, "找不到该好友，可能已被删除", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "The friend cannot be found. It may have been deleted.", Toast.LENGTH_SHORT).show();
             }
             return;
         }
@@ -338,7 +338,7 @@ public class FriendsChatDialog {
         if (ghit != null) {
             showGroupChatView(ghit);
         } else {
-            Toast.makeText(activity, "找不到该群聊，可能你已退群", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "The group chat cannot be found, maybe you have left the group", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -379,7 +379,7 @@ public class FriendsChatDialog {
         currentView = VIEW_FRIEND_LIST;
         resetContent(true);
         stopAllPolling();
-        contentContainer.addView(loadingLabel("正在加载..."));
+        contentContainer.addView(loadingLabel("Loading..."));
 
         AppExecutors.runOnIo(() -> {
             try {
@@ -388,7 +388,7 @@ public class FriendsChatDialog {
                 List<GroupInfo> groups = apiClient.getGroupsList();
                 uiHandler.post(() -> renderFriendList(loaded, pendingCount, groups));
             } catch (Throwable t) {
-                uiHandler.post(() -> showError("加载失败：" + t.getMessage(), () -> showFriendList()));
+                uiHandler.post(() -> showError("Loading failed:" + t.getMessage(), () -> showFriendList()));
             }
         });
     }
@@ -401,7 +401,7 @@ public class FriendsChatDialog {
         // 操作栏
         LinearLayout bar = new LinearLayout(activity);
         bar.setOrientation(LinearLayout.HORIZONTAL);
-        Button addBtn = socialButton("+ 添加好友", v -> showAddFriendView());
+        Button addBtn = socialButton("+ add friends", v -> showAddFriendView());
         addBtn.setLayoutParams(new LinearLayout.LayoutParams(0, dp(36), 1));
         bar.addView(addBtn);
 
@@ -409,7 +409,7 @@ public class FriendsChatDialog {
         sp.setLayoutParams(new LinearLayout.LayoutParams(dp(8), 0));
         bar.addView(sp);
 
-        String reqText = pendingCount > 0 ? "好友请求 (" + pendingCount + ")" : "好友请求";
+        String reqText = pendingCount > 0 ? "Friend request (" + pendingCount + ")" : "Friend request";
         Button reqBtn = socialButton(reqText, v -> showRequestsView());
         reqBtn.setLayoutParams(new LinearLayout.LayoutParams(0, dp(36), 1));
         bar.addView(reqBtn);
@@ -419,7 +419,7 @@ public class FriendsChatDialog {
 
         // ====== 群组分区 ======
         if (groupList != null && !groupList.isEmpty()) {
-            contentContainer.addView(sectionLabel("群组 — " + groupList.size()));
+            contentContainer.addView(sectionLabel("Group —" + groupList.size()));
             for (GroupInfo g : groupList) {
                 contentContainer.addView(buildGroupItem(g));
             }
@@ -428,7 +428,7 @@ public class FriendsChatDialog {
 
         // ====== 好友分区 ======
         if (friends.isEmpty()) {
-            contentContainer.addView(emptyLabel("还没有好友\n点击上方「添加好友」搜索其他用户"));
+            contentContainer.addView(emptyLabel("No friends yet\nClick \"Add Friend\" above to search for other users"));
         } else {
             // 排序规则（与网页端 server/api/friends/list.php 保持同一套排序键）：
             //   ① 有未读消息的置顶
@@ -477,22 +477,22 @@ public class FriendsChatDialog {
             }
             // Steam 风格：有未读的最前，其次正在玩游戏
             if (!unread.isEmpty()) {
-                contentContainer.addView(sectionLabel("未读消息 — " + unread.size()));
+                contentContainer.addView(sectionLabel("Unread messages —" + unread.size()));
                 for (FriendInfo f : unread) contentContainer.addView(buildFriendItem(f));
                 contentContainer.addView(divider());
             }
             if (!playing.isEmpty()) {
-                contentContainer.addView(sectionLabel("正在游戏 — " + playing.size()));
+                contentContainer.addView(sectionLabel("Playing now —" + playing.size()));
                 for (FriendInfo f : playing) contentContainer.addView(buildFriendItem(f));
                 contentContainer.addView(divider());
             }
             if (!online.isEmpty()) {
-                contentContainer.addView(sectionLabel("在线 — " + online.size()));
+                contentContainer.addView(sectionLabel("Online —" + online.size()));
                 for (FriendInfo f : online) contentContainer.addView(buildFriendItem(f));
                 contentContainer.addView(divider());
             }
             if (!offline.isEmpty()) {
-                contentContainer.addView(sectionLabel("离线 — " + offline.size()));
+                contentContainer.addView(sectionLabel("Offline —" + offline.size()));
                 for (FriendInfo f : offline) contentContainer.addView(buildFriendItem(f));
             }
         }
@@ -626,7 +626,7 @@ public class FriendsChatDialog {
             String lastSeen = formatHeartbeatRelative(friend.lastHeartbeat);
             if (lastSeen != null && !lastSeen.isEmpty()) {
                 TextView st = new TextView(activity);
-                st.setText("最后在线 " + lastSeen);
+                st.setText("Last online" + lastSeen);
                 st.setTextColor(0xFF7A8599);
                 st.setTextSize(11);
                 st.setMaxLines(1);
@@ -710,7 +710,7 @@ public class FriendsChatDialog {
 
         // 类型/描述行
         String desc = group.description != null && !group.description.isEmpty()
-                ? group.description : (group.isNotice() ? "仅管理员可发言" : "公开聊天室");
+                ? group.description : (group.isNotice() ? "Only administrators can speak" : "Public chat room");
         TextView descView = new TextView(activity);
         descView.setText(desc);
         descView.setTextColor(group.isAdmin() ? 0xFF90BA3C : 0xFF9AA4BF);
@@ -724,7 +724,7 @@ public class FriendsChatDialog {
         // 公告版小标签
         if (group.isNotice()) {
             TextView badge = new TextView(activity);
-            badge.setText("公告");
+            badge.setText("Announcement");
             badge.setTextColor(0xFFFF9500);
             badge.setTextSize(10);
             badge.setPadding(dp(5), dp(2), dp(5), dp(2));
@@ -860,7 +860,7 @@ public class FriendsChatDialog {
         inputRow.addView(imgBtn);
 
         chatInput = new EditText(activity);
-        chatInput.setHint("输入消息...");
+        chatInput.setHint("Enter message...");
         chatInput.setTextColor(0xFFF5F7FF);
         chatInput.setHintTextColor(0x889AA4BF);
         chatInput.setBackgroundResource(R.drawable.bg_chat_input);
@@ -881,7 +881,7 @@ public class FriendsChatDialog {
         il.setMargins(dp(4), 0, dp(4), 0);
         inputRow.addView(chatInput, il);
 
-        Button sendBtn = socialButton("发送", v -> sendMessage());
+        Button sendBtn = socialButton("Send", v -> sendMessage());
         sendBtn.setLayoutParams(new LinearLayout.LayoutParams(dp(48), dp(36)));
         inputRow.addView(sendBtn);
         contentContainer.addView(inputRow);
@@ -937,7 +937,7 @@ public class FriendsChatDialog {
                 if (cached.isEmpty()) {
                     uiHandler.post(() -> {
                         if (!friendId.equals(openingFriendId)) return;
-                        showError("加载消息失败", () -> openFriendChat());
+                        showError("Loading message failed", () -> openFriendChat());
                     });
                     return;
                 }
@@ -950,7 +950,7 @@ public class FriendsChatDialog {
     private void renderCachedFriendMessages(List<ChatMessage> msgs, boolean serverHasMore) {
         chatMessageList.removeAllViews();
         if (msgs == null || msgs.isEmpty()) {
-            chatMessageList.addView(emptyLabel("开始聊天吧"));
+            chatMessageList.addView(emptyLabel("Start chatting"));
             oldestLoadedMessageId = 0;
             hasMoreHistory = serverHasMore;
         } else {
@@ -1113,13 +1113,13 @@ public class FriendsChatDialog {
 
         boolean isText = msg.msgType == null || "text".equals(msg.msgType);
         if (isText) {
-            menuRoot.addView(menuButton("复制", v -> {
+            menuRoot.addView(menuButton("Copy", v -> {
                 dismissOptionDialog();
                 copyToClipboard(msg.content);
             }));
         }
 
-        menuRoot.addView(menuButton("回复", v -> {
+        menuRoot.addView(menuButton("Reply", v -> {
             dismissOptionDialog();
             startReplyToChat(msg);
         }));
@@ -1127,7 +1127,7 @@ public class FriendsChatDialog {
         // 只能举报别人的消息；乐观 UI 气泡（id=0）还没入库也不能举报
         if (!msg.isMine && msg.id > 0) {
             Button reportBtn = new Button(activity);
-            reportBtn.setText("举报");
+            reportBtn.setText("Report");
             reportBtn.setTextColor(0xFFFF6B6B);
             reportBtn.setTextSize(13);
             reportBtn.setBackgroundResource(R.drawable.bg_input);
@@ -1142,8 +1142,8 @@ public class FriendsChatDialog {
             menuRoot.addView(reportBtn);
         }
 
-        menuRoot.addView(menuButton("取消", v -> dismissOptionDialog()));
-        showOptionDialog("消息操作", menuRoot);
+        menuRoot.addView(menuButton("Cancel", v -> dismissOptionDialog()));
+        showOptionDialog("Message operations", menuRoot);
     }
 
     private void sendMessage() {
@@ -1184,7 +1184,7 @@ public class FriendsChatDialog {
                     }
                 });
             } catch (Throwable t) {
-                uiHandler.post(() -> Toast.makeText(activity, "发送失败: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+                uiHandler.post(() -> Toast.makeText(activity, "Sending failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
                 handleApiError(t);
             }
         });
@@ -1324,7 +1324,7 @@ public class FriendsChatDialog {
                     showEmojiPicker(true);
                 }
             } else {
-                Toast.makeText(activity, "公告版仅管理员可发言", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Only administrators can speak on the bulletin board", Toast.LENGTH_SHORT).show();
             }
         });
         LinearLayout.LayoutParams elp = new LinearLayout.LayoutParams(dp(40), dp(40));
@@ -1339,7 +1339,7 @@ public class FriendsChatDialog {
         gImgBtn.setGravity(Gravity.CENTER);
         gImgBtn.setOnClickListener(v -> {
             if (canSpeak) pickAndSendImage(true);
-            else Toast.makeText(activity, "公告版仅管理员可发言", Toast.LENGTH_SHORT).show();
+            else Toast.makeText(activity, "Only administrators can speak on the bulletin board", Toast.LENGTH_SHORT).show();
         });
         LinearLayout.LayoutParams gIlp = new LinearLayout.LayoutParams(dp(36), dp(40));
         gIlp.setMargins(0, 0, dp(2), 0);
@@ -1357,7 +1357,7 @@ public class FriendsChatDialog {
         groupChatInput.setHorizontallyScrolling(false);
 
         if (canSpeak) {
-            groupChatInput.setHint("输入消息...");
+            groupChatInput.setHint("Enter message...");
             groupChatInput.setEnabled(true);
             groupChatInput.setOnEditorActionListener((v, actionId, event) -> {
                 if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEND
@@ -1370,7 +1370,7 @@ public class FriendsChatDialog {
                 return false;
             });
         } else {
-            groupChatInput.setHint("仅管理员可发言");
+            groupChatInput.setHint("Only administrators can speak");
             groupChatInput.setEnabled(false);
             groupChatInput.setAlpha(0.5f);
         }
@@ -1379,9 +1379,9 @@ public class FriendsChatDialog {
         il.setMargins(dp(4), 0, dp(4), 0);
         inputRow.addView(groupChatInput, il);
 
-        Button sendBtn = socialButton("发送", v -> {
+        Button sendBtn = socialButton("Send", v -> {
             if (canSpeak) sendGroupMessage();
-            else Toast.makeText(activity, "公告版仅管理员可发言", Toast.LENGTH_SHORT).show();
+            else Toast.makeText(activity, "Only administrators can speak on the bulletin board", Toast.LENGTH_SHORT).show();
         });
         sendBtn.setLayoutParams(new LinearLayout.LayoutParams(dp(48), dp(36)));
         inputRow.addView(sendBtn);
@@ -1444,10 +1444,10 @@ public class FriendsChatDialog {
                 startGroupPolling();
             } catch (Throwable t) {
                 if (cached.isEmpty()) {
-                    String err = t.getMessage() != null ? t.getMessage() : "未知错误";
+                    String err = t.getMessage() != null ? t.getMessage() : "Unknown error";
                     uiHandler.post(() -> {
                         if (openingGroupId != groupId) return;
-                        showError("加载消息失败：" + err, () -> openGroupChat());
+                        showError("Loading message failed:" + err, () -> openGroupChat());
                     });
                     return;
                 }
@@ -1460,7 +1460,7 @@ public class FriendsChatDialog {
     private void renderCachedGroupMessages(List<GroupMessage> msgs, boolean serverHasMore) {
         groupMessageList.removeAllViews();
         if (msgs == null || msgs.isEmpty()) {
-            groupMessageList.addView(emptyLabel("还没有消息，来说点什么吧"));
+            groupMessageList.addView(emptyLabel("There is no news yet. Let me tell you something."));
             groupOldestLoadedMessageId = 0;
             groupHasMoreHistory = serverHasMore;
         } else {
@@ -1549,7 +1549,7 @@ public class FriendsChatDialog {
     private void updateOnlineCount(int count) {
         if (chatGroup == null) return;
         String titleIcon = chatGroup.icon != null && !chatGroup.icon.isEmpty() ? chatGroup.icon + " " : "";
-        titleBar.setText(titleIcon + chatGroup.name + "  ·  🟢" + count + "在线");
+        titleBar.setText(titleIcon + chatGroup.name + "  ·  🟢" + count + "Online");
     }
 
     /**
@@ -1635,20 +1635,20 @@ public class FriendsChatDialog {
 
         boolean isText = msg.msgType == null || "text".equals(msg.msgType);
         if (isText) {
-            menuRoot.addView(menuButton("复制", v -> {
+            menuRoot.addView(menuButton("Copy", v -> {
                 dismissOptionDialog();
                 copyToClipboard(msg.content);
             }));
         }
 
-        menuRoot.addView(menuButton("回复", v -> {
+        menuRoot.addView(menuButton("Reply", v -> {
             dismissOptionDialog();
             startReplyToGroup(msg);
         }));
 
         if (!msg.isMine && msg.id > 0) {
             Button reportBtn = new Button(activity);
-            reportBtn.setText("举报");
+            reportBtn.setText("Report");
             reportBtn.setTextColor(0xFFFF6B6B);
             reportBtn.setTextSize(13);
             reportBtn.setBackgroundResource(R.drawable.bg_input);
@@ -1666,12 +1666,12 @@ public class FriendsChatDialog {
         // 管理员专属
         if (chatGroup != null && chatGroup.isAdmin() && msg.id > 0) {
             menuRoot.addView(divider());
-            menuRoot.addView(menuButton("撤回消息（管理）", v -> {
+            menuRoot.addView(menuButton("Withdraw Message (Management)", v -> {
                 dismissOptionDialog();
                 doManageGroupMessage(msg, "recall");
             }));
             Button deleteBtn = new Button(activity);
-            deleteBtn.setText("删除消息（管理）");
+            deleteBtn.setText("Delete message (admin)");
             deleteBtn.setTextColor(0xFFFF6B6B);
             deleteBtn.setTextSize(13);
             deleteBtn.setBackgroundResource(R.drawable.bg_input);
@@ -1686,8 +1686,8 @@ public class FriendsChatDialog {
             menuRoot.addView(deleteBtn);
         }
 
-        menuRoot.addView(menuButton("取消", v -> dismissOptionDialog()));
-        showOptionDialog("消息操作", menuRoot);
+        menuRoot.addView(menuButton("Cancel", v -> dismissOptionDialog()));
+        showOptionDialog("Message operations", menuRoot);
     }
 
     /**
@@ -2326,7 +2326,7 @@ public class FriendsChatDialog {
     /** 构建管理员标识小标签 */
     private TextView buildAdminBadge() {
         TextView badge = new TextView(activity);
-        badge.setText("管理");
+        badge.setText("Manage");
         badge.setTextColor(0xFFF5A623);
         badge.setTextSize(8);
         badge.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -2347,7 +2347,7 @@ public class FriendsChatDialog {
         // 撤回消息
         if (msg.recalled) {
             TextView recalled = new TextView(activity);
-            recalled.setText("管理员撤回了一条消息");
+            recalled.setText("The administrator retracted a message");
             recalled.setTextColor(0x889AA4BF);
             recalled.setTextSize(11);
             recalled.setGravity(Gravity.CENTER);
@@ -2371,7 +2371,7 @@ public class FriendsChatDialog {
 
             String myNick = msg.senderNickname != null && !msg.senderNickname.isEmpty()
                     ? msg.senderNickname : getMyNickname();
-            if (myNick == null || myNick.isEmpty()) myNick = "我";
+            if (myNick == null || myNick.isEmpty()) myNick = "I";
 
             // 昵称行（昵称 + 管理员标识）
             LinearLayout myNickRow = new LinearLayout(activity);
@@ -2602,17 +2602,17 @@ public class FriendsChatDialog {
                 uiHandler.post(() -> {
                     if (ok) {
                         Toast.makeText(activity,
-                                "recall".equals(action) ? "已撤回" : "已删除",
+                                "recall".equals(action) ? "Withdrawn" : "Deleted",
                                 Toast.LENGTH_SHORT).show();
                         // 重新加载当前群聊
                         if (chatGroup != null) showGroupChatView(chatGroup);
                     } else {
-                        Toast.makeText(activity, "操作失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "Operation failed", Toast.LENGTH_SHORT).show();
                     }
                 });
             } catch (Throwable t) {
                 uiHandler.post(() ->
-                        Toast.makeText(activity, "操作失败: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+                        Toast.makeText(activity, "Operation failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -2628,7 +2628,7 @@ public class FriendsChatDialog {
         final int replyToId = pendingReplyGroup == null ? 0 : pendingReplyGroup.id;
         if (pendingReplyGroup != null) {
             String who = pendingReplyGroup.senderNickname == null || pendingReplyGroup.senderNickname.isEmpty()
-                    ? "对方" : pendingReplyGroup.senderNickname;
+                    ? "Other side" : pendingReplyGroup.senderNickname;
             content = buildQuotePrefix(who, previewOfGroup(pendingReplyGroup)) + content;
             clearPendingReply();
         }
@@ -2676,7 +2676,7 @@ public class FriendsChatDialog {
                 });
             } catch (Throwable t) {
                 uiHandler.post(() ->
-                    Toast.makeText(activity, "发送失败: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+                    Toast.makeText(activity, "Sending failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
                 handleApiError(t);
             }
         });
@@ -2778,20 +2778,20 @@ public class FriendsChatDialog {
 
     private void showAddFriendView() {
         currentView = VIEW_ADD_FRIEND;
-        titleBar.setText("添加好友");
+        titleBar.setText("Add friends");
         backButton.setVisibility(View.VISIBLE);
         resetContent(true);
         stopAllPolling();
 
         TextView hint = new TextView(activity);
-        hint.setText("输入对方的 UID（数字）或昵称搜索");
+        hint.setText("Enter the other person’s UID (number) or nickname to search");
         hint.setTextColor(0xFF9AA4BF);
         hint.setTextSize(12);
         hint.setPadding(0, 0, 0, dp(6));
         contentContainer.addView(hint);
 
         EditText input = new EditText(activity);
-        input.setHint("UID 或昵称");
+        input.setHint("UID or nickname");
         input.setTextColor(0xFFF5F7FF);
         input.setHintTextColor(0x889AA4BF);
         input.setBackgroundResource(R.drawable.bg_input);
@@ -2799,9 +2799,9 @@ public class FriendsChatDialog {
         contentContainer.addView(input, new LinearLayout.LayoutParams(-1, dp(42)));
         input.requestFocus();
 
-        Button btn = socialButton("搜索", v -> {
+        Button btn = socialButton("Search", v -> {
             String q = input.getText().toString().trim();
-            if (q.isEmpty()) { Toast.makeText(activity, "请输入搜索关键词", Toast.LENGTH_SHORT).show(); return; }
+            if (q.isEmpty()) { Toast.makeText(activity, "Please enter search keywords", Toast.LENGTH_SHORT).show(); return; }
             doSearch(q);
         });
         contentContainer.addView(btn, new LinearLayout.LayoutParams(-1, dp(38)));
@@ -2809,13 +2809,13 @@ public class FriendsChatDialog {
 
     private void doSearch(String query) {
         resetContent(true);
-        contentContainer.addView(loadingLabel("正在搜索..."));
+        contentContainer.addView(loadingLabel("Searching..."));
         AppExecutors.runOnIo(() -> {
             try {
                 JSONArray results = apiClient.searchUsers(query);
                 uiHandler.post(() -> renderSearchResults(results));
             } catch (Throwable t) {
-                uiHandler.post(() -> showError("搜索失败：" + t.getMessage(), () -> doSearch(query)));
+                uiHandler.post(() -> showError("Search failed:" + t.getMessage(), () -> doSearch(query)));
             }
         });
     }
@@ -2823,7 +2823,7 @@ public class FriendsChatDialog {
     private void renderSearchResults(JSONArray results) {
         resetContent(true);
         if (results == null || results.length() == 0) {
-            contentContainer.addView(emptyLabel("未找到匹配的用户"));
+            contentContainer.addView(emptyLabel("No matching user found"));
             return;
         }
         for (int i = 0; i < results.length(); i++) {
@@ -2885,24 +2885,24 @@ public class FriendsChatDialog {
 
                 if ("none".equals(friendStatus)) {
                     Button add = new Button(activity);
-                    add.setText("添加");
+                    add.setText("Add");
                     add.setTextColor(0xFFFFFFFF);
                     add.setTextSize(11);
                     add.setBackgroundResource(R.drawable.bg_social_button);
                     add.setPadding(dp(8), dp(4), dp(8), dp(4));
                     final String targetUid = uid;
                     add.setOnClickListener(v -> {
-                        add.setEnabled(false); add.setText("发送中...");
+                        add.setEnabled(false); add.setText("Sending...");
                         doSendRequest(targetUid, add);
                     });
                     row.addView(add);
                 } else if ("pending".equals(friendStatus)) {
                     TextView st = new TextView(activity);
-                    st.setText("已发送请求"); st.setTextColor(0xFF9AA4BF); st.setTextSize(11);
+                    st.setText("Request sent"); st.setTextColor(0xFF9AA4BF); st.setTextSize(11);
                     row.addView(st);
                 } else if ("accepted".equals(friendStatus)) {
                     TextView st = new TextView(activity);
-                    st.setText("已是好友"); st.setTextColor(0xFF34C759); st.setTextSize(11);
+                    st.setText("Already a friend"); st.setTextColor(0xFF34C759); st.setTextSize(11);
                     row.addView(st);
                 }
                 contentContainer.addView(row);
@@ -2915,12 +2915,12 @@ public class FriendsChatDialog {
             try {
                 boolean success = apiClient.sendFriendRequest(targetId);
                 uiHandler.post(() -> {
-                    if (success) { btn.setText("已发送"); btn.setEnabled(false); btn.setTextColor(0xFF9AA4BF); }
-                    else { btn.setText("添加"); btn.setEnabled(true); }
+                    if (success) { btn.setText("Sent"); btn.setEnabled(false); btn.setTextColor(0xFF9AA4BF); }
+                    else { btn.setText("Add"); btn.setEnabled(true); }
                 });
             } catch (Throwable t) {
-                uiHandler.post(() -> { btn.setText("添加"); btn.setEnabled(true);
-                    Toast.makeText(activity, "发送失败: " + t.getMessage(), Toast.LENGTH_SHORT).show(); });
+                uiHandler.post(() -> { btn.setText("Add"); btn.setEnabled(true);
+                    Toast.makeText(activity, "Sending failed:" + t.getMessage(), Toast.LENGTH_SHORT).show(); });
             }
         });
     }
@@ -2932,20 +2932,20 @@ public class FriendsChatDialog {
         menuRoot.setOrientation(LinearLayout.VERTICAL);
         menuRoot.setPadding(dp(4), dp(4), dp(4), dp(4));
 
-        Button profileBtn = menuButton("查看资料", v -> {
+        Button profileBtn = menuButton("View profile", v -> {
             dismissOptionDialog();
             showUserProfile(friend.uid);
         });
         menuRoot.addView(profileBtn);
 
-        Button noteBtn = menuButton("设置备注", v -> {
+        Button noteBtn = menuButton("Set notes", v -> {
             dismissOptionDialog();
             showNoteDialog(friend);
         });
         menuRoot.addView(noteBtn);
 
         Button deleteBtn = new Button(activity);
-        deleteBtn.setText("删除好友");
+        deleteBtn.setText("Delete friend");
         deleteBtn.setTextColor(0xFFFF6B6B);
         deleteBtn.setTextSize(13);
         deleteBtn.setBackgroundResource(R.drawable.bg_input);
@@ -2956,7 +2956,7 @@ public class FriendsChatDialog {
         });
         menuRoot.addView(deleteBtn);
 
-        showOptionDialog("好友操作", menuRoot);
+        showOptionDialog("Friend operation", menuRoot);
     }
 
     private void showNoteDialog(FriendInfo friend) {
@@ -2965,7 +2965,7 @@ public class FriendsChatDialog {
         root.setPadding(dp(4), dp(6), dp(4), dp(4));
 
         TextView hint = new TextView(activity);
-        hint.setText("为 " + friend.nickname + " 设置备注（最多50字）");
+        hint.setText("为 " + friend.nickname + "Set notes (up to 50 words)");
         hint.setTextColor(0xFF9AA4BF);
         hint.setTextSize(12);
         hint.setPadding(0, 0, 0, dp(6));
@@ -2973,14 +2973,14 @@ public class FriendsChatDialog {
 
         EditText input = new EditText(activity);
         input.setText(friend.note != null ? friend.note : "");
-        input.setHint("输入备注名");
+        input.setHint("Enter the comment name");
         input.setTextColor(0xFFF5F7FF);
         input.setHintTextColor(0x889AA4BF);
         input.setBackgroundResource(R.drawable.bg_input);
         input.setPadding(dp(10), dp(6), dp(10), dp(6));
         root.addView(input, new LinearLayout.LayoutParams(-1, dp(42)));
 
-        Button saveBtn = socialButton("保存", v -> {
+        Button saveBtn = socialButton("Save", v -> {
             String note = input.getText() == null ? "" : input.getText().toString().trim();
             dismissOptionDialog();
             AppExecutors.runOnIo(() -> {
@@ -2990,19 +2990,19 @@ public class FriendsChatDialog {
                         if (ok) {
                             friend.note = note;
                             showFriendList();
-                            Toast.makeText(activity, "备注已保存", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Note saved", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(activity, "保存失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Save failed", Toast.LENGTH_SHORT).show();
                         }
                     });
                 } catch (Throwable t) {
-                    uiHandler.post(() -> Toast.makeText(activity, "保存失败: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+                    uiHandler.post(() -> Toast.makeText(activity, "Save failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
                 }
             });
         });
         root.addView(saveBtn, new LinearLayout.LayoutParams(-1, dp(38)));
 
-        showOptionDialog("设置备注", root);
+        showOptionDialog("Set notes", root);
     }
 
     private void confirmDeleteFriend(FriendInfo friend) {
@@ -3011,7 +3011,7 @@ public class FriendsChatDialog {
         root.setPadding(dp(4), dp(6), dp(4), dp(4));
 
         TextView msg = new TextView(activity);
-        msg.setText("确定要删除好友「" + friend.displayName() + "」吗？\n删除后聊天记录不会丢失，但好友关系将永久解除。");
+        msg.setText("Are you sure you want to delete the friend\"" + friend.displayName() + "\"?\"\nAfter deletion, the chat history will not be lost, but the friend relationship will be permanently terminated.");
         msg.setTextColor(0xFFF5F7FF);
         msg.setTextSize(13);
         msg.setLineSpacing(dp(3), 1.0f);
@@ -3021,7 +3021,7 @@ public class FriendsChatDialog {
         LinearLayout btnRow = new LinearLayout(activity);
         btnRow.setOrientation(LinearLayout.HORIZONTAL);
 
-        Button cancelBtn = socialButton("取消", v -> dismissOptionDialog());
+        Button cancelBtn = socialButton("Cancel", v -> dismissOptionDialog());
         cancelBtn.setLayoutParams(new LinearLayout.LayoutParams(0, dp(38), 1));
         btnRow.addView(cancelBtn);
 
@@ -3030,7 +3030,7 @@ public class FriendsChatDialog {
         btnRow.addView(sp);
 
         Button confirmBtn = new Button(activity);
-        confirmBtn.setText("确认删除");
+        confirmBtn.setText("Confirm deletion");
         confirmBtn.setTextColor(0xFFFF6B6B);
         confirmBtn.setTextSize(12);
         confirmBtn.setBackgroundResource(R.drawable.bg_input);
@@ -3042,14 +3042,14 @@ public class FriendsChatDialog {
                     boolean ok = apiClient.removeFriend(friend.id);
                     uiHandler.post(() -> {
                         if (ok) {
-                            Toast.makeText(activity, "已删除好友", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Friend deleted", Toast.LENGTH_SHORT).show();
                             showFriendList();
                         } else {
-                            Toast.makeText(activity, "删除失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Delete failed", Toast.LENGTH_SHORT).show();
                         }
                     });
                 } catch (Throwable t) {
-                    uiHandler.post(() -> Toast.makeText(activity, "删除失败: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+                    uiHandler.post(() -> Toast.makeText(activity, "Delete failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
                 }
             });
         });
@@ -3057,7 +3057,7 @@ public class FriendsChatDialog {
         btnRow.addView(confirmBtn);
 
         root.addView(btnRow);
-        showOptionDialog("删除好友", root);
+        showOptionDialog("Delete friend", root);
     }
 
     // ==================== 好友请求 ====================
@@ -3067,17 +3067,17 @@ public class FriendsChatDialog {
     private void showUserProfile(int uid) {
         viewBeforeProfile = currentView;
         currentView = VIEW_PROFILE;
-        titleBar.setText("用户资料");
+        titleBar.setText("User profile");
         backButton.setVisibility(View.VISIBLE);
         resetContent(true);
         stopAllPolling();
-        contentContainer.addView(loadingLabel("正在加载..."));
+        contentContainer.addView(loadingLabel("Loading..."));
         AppExecutors.runOnIo(() -> {
             try {
                 JSONObject profile = apiClient.getUserProfile(uid);
                 uiHandler.post(() -> renderUserProfile(profile));
             } catch (Throwable t) {
-                uiHandler.post(() -> showError("加载失败：" + t.getMessage(), () -> showUserProfile(uid)));
+                uiHandler.post(() -> showError("Loading failed:" + t.getMessage(), () -> showUserProfile(uid)));
             }
         });
     }
@@ -3178,7 +3178,7 @@ public class FriendsChatDialog {
         boolean isDisabled = profile.optBoolean("isDisabled", false);
         if (isDisabled) {
             TextView banBadge = new TextView(activity);
-            banBadge.setText("⛔ 已封禁");
+            banBadge.setText("⛔Banned");
             banBadge.setTextColor(0xFFFF6B6B);
             banBadge.setTextSize(10);
             banBadge.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -3211,7 +3211,7 @@ public class FriendsChatDialog {
         }
         TextView statusText = new TextView(activity);
         if (isDisabled) {
-            statusText.setText("已封禁  ·  UID " + uid);
+            statusText.setText("Banned · UID" + uid);
             statusText.setTextColor(0xFFFF6B6B);
         } else {
             statusText.setText(statusLabel(status) + "  ·  UID " + uid);
@@ -3226,7 +3226,7 @@ public class FriendsChatDialog {
         if (friendSince != null && !friendSince.isEmpty()) {
             TextView sinceView = new TextView(activity);
             String sinceStr = formatFriendSince(friendSince);
-            sinceView.setText("成为好友 · " + sinceStr);
+            sinceView.setText("Become a friend ·" + sinceStr);
             sinceView.setTextColor(0xFF6A7485);
             sinceView.setTextSize(11);
             sinceView.setPadding(0, dp(2), 0, 0);
@@ -3255,7 +3255,7 @@ public class FriendsChatDialog {
             playingBar.addView(playingDot);
 
             TextView playingText = new TextView(activity);
-            playingText.setText("正在游戏中");
+            playingText.setText("In game");
             playingText.setTextColor(0xFF90BA3C);
             playingText.setTextSize(11);
             playingText.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -3279,7 +3279,7 @@ public class FriendsChatDialog {
         // ====== 用户简介（Bio）区块 —— Steam 风格 Summary ======
         if (!signature.isEmpty()) {
             contentContainer.addView(divider());
-            TextView bioTitle = sectionLabel("个人简介");
+            TextView bioTitle = sectionLabel("Profile");
             bioTitle.setPadding(0, dp(8), 0, dp(4));
             contentContainer.addView(bioTitle);
 
@@ -3303,7 +3303,7 @@ public class FriendsChatDialog {
         }
 
         // ====== 游戏统计（Bento 风格卡片） ======
-        TextView statsTitle = sectionLabel("游戏统计");
+        TextView statsTitle = sectionLabel("Game statistics");
         statsTitle.setPadding(0, dp(10), 0, dp(4));
         contentContainer.addView(statsTitle);
 
@@ -3312,7 +3312,7 @@ public class FriendsChatDialog {
         statsRow.setPadding(0, 0, 0, dp(4));
 
         // 游戏数卡片
-        LinearLayout gamesCard = buildStatCard("游戏库", String.valueOf(totalGames), "款");
+        LinearLayout gamesCard = buildStatCard("Game library", String.valueOf(totalGames), "Payment");
         LinearLayout.LayoutParams gcLp = new LinearLayout.LayoutParams(0, -2, 1);
         gcLp.setMargins(0, 0, dp(6), 0);
         statsRow.addView(gamesCard, gcLp);
@@ -3328,7 +3328,7 @@ public class FriendsChatDialog {
         } else {
             playTimeStr = mins + "m";
         }
-        LinearLayout playCard = buildStatCard("总时长", playTimeStr, hours > 0 ? "h" : "");
+        LinearLayout playCard = buildStatCard("Total duration", playTimeStr, hours > 0 ? "h" : "");
         statsRow.addView(playCard, new LinearLayout.LayoutParams(0, -2, 1));
 
         contentContainer.addView(statsRow);
@@ -3336,14 +3336,14 @@ public class FriendsChatDialog {
         // ====== 最近游玩记录（Steam Recent Activity 风格） ======
         if (recentGames != null && recentGames.length() > 0) {
             contentContainer.addView(divider());
-            TextView recentTitle = sectionLabel("最近游玩");
+            TextView recentTitle = sectionLabel("Recently visited");
             recentTitle.setPadding(0, dp(8), 0, dp(4));
             contentContainer.addView(recentTitle);
 
             for (int i = 0; i < recentGames.length(); i++) {
                 try {
                     JSONObject g = recentGames.getJSONObject(i);
-                    String title = g.optString("title", "未命名游戏");
+                    String title = g.optString("title", "Unnamed game");
                     int playTime = g.optInt("playTime", 0);
                     long lastPlayedAt = g.optLong("lastPlayedAt", 0);
                     contentContainer.addView(buildRecentGameItem(title, playTime, lastPlayedAt, i));
@@ -3367,7 +3367,7 @@ public class FriendsChatDialog {
 
             if ("accepted".equals(friendStatus)) {
                 TextView doneLabel = new TextView(activity);
-                doneLabel.setText("✓ 已是好友");
+                doneLabel.setText("✓ Already a friend");
                 doneLabel.setTextColor(0xFF34C759);
                 doneLabel.setTextSize(13);
                 doneLabel.setGravity(Gravity.CENTER);
@@ -3378,32 +3378,32 @@ public class FriendsChatDialog {
                 if ("received".equals(friendDirection)) {
                     // 对方发来的请求，可以接受
                     Button acceptBtn = new Button(activity);
-                    acceptBtn.setText("接受好友请求");
+                    acceptBtn.setText("Accept friend request");
                     acceptBtn.setTextColor(0xFFFFFFFF);
                     acceptBtn.setTextSize(13);
                     acceptBtn.setBackgroundResource(R.drawable.bg_social_button);
                     acceptBtn.setPadding(dp(16), dp(10), dp(16), dp(10));
                     acceptBtn.setOnClickListener(v -> {
                         v.setEnabled(false);
-                        ((Button) v).setText("处理中...");
+                        ((Button) v).setText("Processing...");
                         AppExecutors.runOnIo(() -> {
                             try {
                                 boolean ok = apiClient.acceptFriendRequestByUid(uid);
                                 uiHandler.post(() -> {
                                     if (ok) {
-                                        Toast.makeText(activity, "已添加好友", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity, "Friend added", Toast.LENGTH_SHORT).show();
                                         showUserProfile(uid); // 刷新
                                     } else {
-                                        Toast.makeText(activity, "操作失败", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity, "Operation failed", Toast.LENGTH_SHORT).show();
                                         v.setEnabled(true);
-                                        ((Button) v).setText("接受好友请求");
+                                        ((Button) v).setText("Accept friend request");
                                     }
                                 });
                             } catch (Throwable t) {
                                 uiHandler.post(() -> {
-                                    Toast.makeText(activity, "操作失败: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "Operation failed:" + t.getMessage(), Toast.LENGTH_SHORT).show();
                                     v.setEnabled(true);
-                                    ((Button) v).setText("接受好友请求");
+                                    ((Button) v).setText("Accept friend request");
                                 });
                             }
                         });
@@ -3412,7 +3412,7 @@ public class FriendsChatDialog {
                 } else {
                     // 自己发的请求，等待中
                     TextView pendingLabel = new TextView(activity);
-                    pendingLabel.setText("⏳ 等待对方确认");
+                    pendingLabel.setText("⏳ Wait for confirmation from the other party");
                     pendingLabel.setTextColor(0xFF9AA4BF);
                     pendingLabel.setTextSize(13);
                     pendingLabel.setGravity(Gravity.CENTER);
@@ -3423,32 +3423,32 @@ public class FriendsChatDialog {
             } else {
                 // 陌生人，显示添加好友按钮
                 Button addBtn = new Button(activity);
-                addBtn.setText("＋ 添加好友");
+                addBtn.setText("+ Add friends");
                 addBtn.setTextColor(0xFFFFFFFF);
                 addBtn.setTextSize(13);
                 addBtn.setBackgroundResource(R.drawable.bg_social_button);
                 addBtn.setPadding(dp(16), dp(10), dp(16), dp(10));
                 addBtn.setOnClickListener(v -> {
                     v.setEnabled(false);
-                    ((Button) v).setText("发送中...");
+                    ((Button) v).setText("Sending...");
                     AppExecutors.runOnIo(() -> {
                         try {
                             boolean ok = apiClient.sendFriendRequest(String.valueOf(uid));
                             uiHandler.post(() -> {
                                 if (ok) {
-                                    Toast.makeText(activity, "好友请求已发送", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "Friend request sent", Toast.LENGTH_SHORT).show();
                                     showUserProfile(uid); // 刷新
                                 } else {
-                                    Toast.makeText(activity, "发送失败", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "Sending failed", Toast.LENGTH_SHORT).show();
                                     v.setEnabled(true);
-                                    ((Button) v).setText("＋ 添加好友");
+                                    ((Button) v).setText("+ Add friends");
                                 }
                             });
                         } catch (Throwable t) {
                             uiHandler.post(() -> {
-                                Toast.makeText(activity, "发送失败: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, "Sending failed:" + t.getMessage(), Toast.LENGTH_SHORT).show();
                                 v.setEnabled(true);
-                                ((Button) v).setText("＋ 添加好友");
+                                ((Button) v).setText("+ Add friends");
                             });
                         }
                     });
@@ -3569,7 +3569,7 @@ public class FriendsChatDialog {
 
             // 最后游玩时间
             TextView lastView = new TextView(activity);
-            lastView.setText("最后游玩 " + formatRelativeTime(lastPlayedAt));
+            lastView.setText("Last play" + formatRelativeTime(lastPlayedAt));
             lastView.setTextColor(0xFF8995B0);
             lastView.setTextSize(11);
             metaRow.addView(lastView);
@@ -3594,11 +3594,11 @@ public class FriendsChatDialog {
 
     /** 格式化游玩时长（秒 -> "Xh Ym"） */
     private String formatPlayTime(int seconds) {
-        if (seconds <= 0) return "未游玩";
+        if (seconds <= 0) return "Not played";
         int h = seconds / 3600;
         int m = (seconds % 3600) / 60;
-        if (h > 0) return h + " 小时" + (m > 0 ? " " + m + " 分" : "");
-        return m + " 分钟";
+        if (h > 0) return h + "Hour" + (m > 0 ? " " + m + " 分" : "");
+        return m + "Minute";
     }
 
     /** 格式化游玩时长短格式（秒 -> "Xh" 或 "Xm"） */
@@ -3623,13 +3623,13 @@ public class FriendsChatDialog {
             java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
             return fmt.format(new java.util.Date(timestampMs));
         } else if (days >= 1) {
-            return days + " 天前";
+            return days + "Days ago";
         } else if (hours >= 1) {
-            return hours + " 小时前";
+            return hours + "Hours ago";
         } else if (minutes >= 1) {
-            return minutes + " 分钟前";
+            return minutes + "Minutes ago";
         } else {
-            return "刚刚";
+            return "Just";
         }
     }
 
@@ -3659,14 +3659,14 @@ public class FriendsChatDialog {
             long days = diff / (24 * 60 * 60 * 1000);
             if (days > 365) {
                 int years = (int)(days / 365);
-                return years + " 年";
+                return years + "Year";
             } else if (days > 30) {
                 int months = (int)(days / 30);
-                return months + " 个月";
+                return months + "Months";
             } else if (days >= 1) {
-                return (int)days + " 天";
+                return (int)days + "Sky";
             } else {
-                return "今天";
+                return "Today";
             }
         } catch (Throwable t) {
             return "";
@@ -3681,10 +3681,10 @@ public class FriendsChatDialog {
 
     private String statusLabel(String status) {
         switch (status) {
-            case "online": return "🟢 在线";
-            case "away":   return "🟡 离开";
-            case "busy":   return "🔴 忙碌";
-            default:       return "⚫ 离线";
+            case "online": return "🟢 Online";
+            case "away":   return "🟡Leave";
+            case "busy":   return "🔴 busy";
+            default:       return "⚫ Offline";
         }
     }
 
@@ -3898,11 +3898,11 @@ public class FriendsChatDialog {
 
     private void showRequestsView() {
         currentView = VIEW_REQUESTS;
-        titleBar.setText("好友请求");
+        titleBar.setText("Friend request");
         backButton.setVisibility(View.VISIBLE);
         resetContent(true);
         stopAllPolling();
-        contentContainer.addView(loadingLabel("正在加载..."));
+        contentContainer.addView(loadingLabel("Loading..."));
         AppExecutors.runOnIo(() -> {
             try {
                 JSONObject resp = apiClient.getFriendRequests();
@@ -3910,14 +3910,14 @@ public class FriendsChatDialog {
                 outgoingRequests = resp.optJSONArray("outgoing");
                 uiHandler.post(() -> renderRequests());
             } catch (Throwable t) {
-                uiHandler.post(() -> showError("加载失败：" + t.getMessage(), () -> showRequestsView()));
+                uiHandler.post(() -> showError("Loading failed:" + t.getMessage(), () -> showRequestsView()));
             }
         });
     }
 
     private void renderRequests() {
         resetContent(true);
-        contentContainer.addView(sectionLabel("收到的请求"));
+        contentContainer.addView(sectionLabel("Requests received"));
         if (incomingRequests != null && incomingRequests.length() > 0) {
             for (int i = 0; i < incomingRequests.length(); i++) {
                 try {
@@ -3959,7 +3959,7 @@ public class FriendsChatDialog {
                     row.addView(col);
 
                     Button accept = new Button(activity);
-                    accept.setText("接受");
+                    accept.setText("Accept");
                     accept.setTextColor(0xFFFFFFFF);
                     accept.setTextSize(11);
                     accept.setBackgroundResource(R.drawable.bg_social_button);
@@ -3974,7 +3974,7 @@ public class FriendsChatDialog {
                     row.addView(sp2);
 
                     Button reject = new Button(activity);
-                    reject.setText("拒绝");
+                    reject.setText("Reject");
                     reject.setTextColor(0xFF9AA4BF);
                     reject.setTextSize(11);
                     reject.setBackgroundResource(R.drawable.bg_input);
@@ -3987,11 +3987,11 @@ public class FriendsChatDialog {
                 } catch (Throwable ignored) {}
             }
         } else {
-            contentContainer.addView(emptyLabel("暂无收到的请求"));
+            contentContainer.addView(emptyLabel("No requests received yet"));
         }
 
         contentContainer.addView(divider());
-        contentContainer.addView(sectionLabel("已发出的请求"));
+        contentContainer.addView(sectionLabel("Requests made"));
         if (outgoingRequests != null && outgoingRequests.length() > 0) {
             for (int i = 0; i < outgoingRequests.length(); i++) {
                 try {
@@ -4019,7 +4019,7 @@ public class FriendsChatDialog {
                 } catch (Throwable ignored) {}
             }
         } else {
-            contentContainer.addView(emptyLabel("暂无已发出的请求"));
+            contentContainer.addView(emptyLabel("No requests have been sent yet"));
         }
     }
 
@@ -4030,12 +4030,12 @@ public class FriendsChatDialog {
                 uiHandler.post(() -> {
                     if (success) {
                         row.setVisibility(View.GONE);
-                        Toast.makeText(activity, "已接受好友请求", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "Friend request accepted", Toast.LENGTH_SHORT).show();
                     } else { btn.setEnabled(true); }
                 });
             } catch (Throwable t) {
                 uiHandler.post(() -> { btn.setEnabled(true);
-                    Toast.makeText(activity, "操作失败: " + t.getMessage(), Toast.LENGTH_SHORT).show(); });
+                    Toast.makeText(activity, "Operation failed:" + t.getMessage(), Toast.LENGTH_SHORT).show(); });
             }
         });
     }
@@ -4060,7 +4060,7 @@ public class FriendsChatDialog {
             try {
                 int unread = apiClient.getTotalUnread();
                 uiHandler.post(() -> {
-                    if (unread > 0) titleBar.setText("好友 / 聊天 (" + unread + ")");
+                    if (unread > 0) titleBar.setText("Friends / Chat (" + unread + ")");
                     else titleBar.setText("好友 / 聊天");
                 });
             } catch (Throwable t) {
@@ -4124,7 +4124,7 @@ public class FriendsChatDialog {
     private void handleApiError(Throwable t) {
         if (t instanceof SocialApiClient.AccountDisabledException) {
             uiHandler.post(() -> {
-                Toast.makeText(activity, "您的账号已被管理员禁用", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Your account has been disabled by the administrator", Toast.LENGTH_LONG).show();
                 try { if (dialog != null && dialog.isShowing()) dialog.dismiss(); } catch (Throwable ignored) {}
                 try { if (optionDialog != null && optionDialog.isShowing()) optionDialog.dismiss(); } catch (Throwable ignored) {}
             });
@@ -4264,7 +4264,7 @@ public class FriendsChatDialog {
 
     private Button retryButton(Runnable action) {
         Button btn = new Button(activity);
-        btn.setText("重试");
+        btn.setText("Retry");
         btn.setTextColor(0xFF8AB4FF);
         btn.setBackgroundResource(R.drawable.bg_input);
         btn.setOnClickListener(v -> action.run());
@@ -4392,13 +4392,13 @@ public class FriendsChatDialog {
 
             if (now.get(java.util.Calendar.YEAR) == msg.get(java.util.Calendar.YEAR)
                     && now.get(java.util.Calendar.DAY_OF_YEAR) == msg.get(java.util.Calendar.DAY_OF_YEAR)) {
-                return "今天 " + timeStr;
+                return "Today" + timeStr;
             }
 
             now.add(java.util.Calendar.DAY_OF_YEAR, -1);
             if (now.get(java.util.Calendar.YEAR) == msg.get(java.util.Calendar.YEAR)
                     && now.get(java.util.Calendar.DAY_OF_YEAR) == msg.get(java.util.Calendar.DAY_OF_YEAR)) {
-                return "昨天 " + timeStr;
+                return "Yesterday" + timeStr;
             }
 
             java.text.SimpleDateFormat dateFmt = new java.text.SimpleDateFormat("MM/dd HH:mm", java.util.Locale.getDefault());
@@ -4509,12 +4509,12 @@ public class FriendsChatDialog {
         // ===== 顶部双 tab：整行等宽大按钮，入口显眼 =====
         pickerTabRow = new LinearLayout(activity);
         pickerTabRow.setOrientation(LinearLayout.HORIZONTAL);
-        TextView tabLocal = buildPickerTabBtn("表情包");
+        TextView tabLocal = buildPickerTabBtn("Emoticons");
         tabLocal.setOnClickListener(v -> switchPickerTab(0));
-        TextView tabNm = buildPickerTabBtn("未萌贴纸");
+        TextView tabNm = buildPickerTabBtn("Uncut stickers");
         tabNm.setOnClickListener(v -> {
             if (!pickerNmEnabled) {
-                Toast.makeText(activity, pickerNmLoaded ? "未萌贴纸未启用" : "贴纸加载中，请稍候", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, pickerNmLoaded ? "Uncut stickers are not enabled" : "Stickers are loading, please wait.", Toast.LENGTH_SHORT).show();
                 return;
             }
             switchPickerTab(1);
@@ -4546,7 +4546,7 @@ public class FriendsChatDialog {
         pickerSubRow.setOrientation(LinearLayout.HORIZONTAL);
         pickerSubRow.setGravity(Gravity.CENTER_VERTICAL);
         TextView backBtn = new TextView(activity);
-        backBtn.setText("‹ 返回");
+        backBtn.setText("< return");
         backBtn.setTextColor(0xFF8AB4FF);
         backBtn.setTextSize(13);
         backBtn.setPadding(dp(2), dp(6), dp(10), dp(6));
@@ -4666,13 +4666,13 @@ public class FriendsChatDialog {
         tabNm.setBackground(bgN);
         tabNm.setTextColor(!localSel ? 0xFFEAF2FF : 0xFF7E8CAB);
         if (!pickerNmLoaded) {
-            tabNm.setText("未萌贴纸…");
+            tabNm.setText("Uncut stickers…");
             tabNm.setAlpha(0.6f);
         } else if (!pickerNmEnabled) {
-            tabNm.setText("未萌贴纸（未启用）");
+            tabNm.setText("Uncute stickers (not enabled)");
             tabNm.setAlpha(0.45f);
         } else {
-            tabNm.setText("未萌贴纸");
+            tabNm.setText("Uncut stickers");
             tabNm.setAlpha(1f);
         }
     }
@@ -4746,8 +4746,8 @@ public class FriendsChatDialog {
                     iv.setLayoutParams(new LinearLayout.LayoutParams(-1, packCell));
                     loadEmojiInto(p.cover, iv, packCell);
                     TextView tv = new TextView(activity);
-                    String n = p.title == null || p.title.isEmpty() ? "贴纸包" : p.title;
-                    tv.setText(n + "（" + p.stickerCount + "张）");
+                    String n = p.title == null || p.title.isEmpty() ? "Sticker pack" : p.title;
+                    tv.setText(n + "（" + p.stickerCount + "Open)");
                     tv.setTextColor(0xFFDDE6FF);
                     tv.setTextSize(10);
                     tv.setGravity(Gravity.CENTER);
@@ -4764,7 +4764,7 @@ public class FriendsChatDialog {
         }
         // 包内表情
         pickerSubRow.setVisibility(View.VISIBLE);
-        pickerSubTitle.setText((pickerPack == null ? "" : pickerPack.title) + " · 来自 NextMoe·未萌");
+        pickerSubTitle.setText((pickerPack == null ? "" : pickerPack.title) + "· From NextMoe·Weimeng");
         final int stickerCols = pickerColumns(72, 4);
         pickerGrid.setNumColumns(stickerCols);
         final int stickerCell = pickerCellSize(stickerCols, 4);
@@ -4791,13 +4791,13 @@ public class FriendsChatDialog {
 
     /** 打开某个未萌贴纸包：拉包内表情，成功切到包内视图 */
     private void openNmStickerPack(SocialApiClient.StickerPack p) {
-        Toast.makeText(activity, "加载「" + (p.title == null || p.title.isEmpty() ? "贴纸包" : p.title) + "」...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Load\"" + (p.title == null || p.title.isEmpty() ? "Sticker pack" : p.title) + "」...", Toast.LENGTH_SHORT).show();
         AppExecutors.runOnIo(() -> {
             try {
                 java.util.List<String> urls = apiClient.getNextMoeStickerUrls(p.id);
                 uiHandler.post(() -> {
                     if (urls == null || urls.isEmpty()) {
-                        Toast.makeText(activity, "该包暂无可发表情", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "There are currently no emojis for this package", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     pickerPack = p;
@@ -4805,7 +4805,7 @@ public class FriendsChatDialog {
                     switchPickerTab(2);
                 });
             } catch (Throwable t) {
-                uiHandler.post(() -> Toast.makeText(activity, "加载失败: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+                uiHandler.post(() -> Toast.makeText(activity, "Loading failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -4834,7 +4834,7 @@ public class FriendsChatDialog {
                     if (sent.id > maxMessageId) maxMessageId = sent.id;
                 });
             } catch (Throwable t) {
-                uiHandler.post(() -> Toast.makeText(activity, "发送失败: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+                uiHandler.post(() -> Toast.makeText(activity, "Sending failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
                 handleApiError(t);
             }
         });
@@ -4883,7 +4883,7 @@ public class FriendsChatDialog {
                     }
                 });
             } catch (Throwable t) {
-                uiHandler.post(() -> Toast.makeText(activity, "发送失败: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+                uiHandler.post(() -> Toast.makeText(activity, "Sending failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
                 handleApiError(t);
             }
         });
@@ -4999,7 +4999,7 @@ public class FriendsChatDialog {
             chatUnreadJumpBtn.setVisibility(View.GONE);
             return;
         }
-        ((TextView) chatUnreadJumpBtn).setText(unread + " 条新消息 ↑");
+        ((TextView) chatUnreadJumpBtn).setText(unread + "New messages ↑");
         chatUnreadJumpBtn.setVisibility(View.VISIBLE);
     }
 
@@ -5010,7 +5010,7 @@ public class FriendsChatDialog {
             groupUnreadJumpBtn.setVisibility(View.GONE);
             return;
         }
-        ((TextView) groupUnreadJumpBtn).setText(unread + " 条新消息 ↑");
+        ((TextView) groupUnreadJumpBtn).setText(unread + "New messages ↑");
         groupUnreadJumpBtn.setVisibility(View.VISIBLE);
     }
 
@@ -5128,15 +5128,15 @@ public class FriendsChatDialog {
                     activity.getSystemService(Context.CLIPBOARD_SERVICE);
             if (cm == null) return;
             cm.setPrimaryClip(android.content.ClipData.newPlainText("YukiHub", text == null ? "" : text));
-            Toast.makeText(activity, "已复制", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Copied", Toast.LENGTH_SHORT).show();
         } catch (Throwable t) {
-            Toast.makeText(activity, "复制失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Copy failed", Toast.LENGTH_SHORT).show();
         }
     }
 
     /** 引用前缀：`> 昵称: 摘要\n\n`，服务端 parseQuotedReply 能解析这个格式 */
     private String buildQuotePrefix(String who, String preview) {
-        String w = (who == null || who.trim().isEmpty()) ? "对方" : who.trim();
+        String w = (who == null || who.trim().isEmpty()) ? "Other side" : who.trim();
         // 昵称里的冒号会干扰服务端解析，替换掉
         w = w.replace(":", " ").replace("：", " ");
         String p = preview == null ? "" : preview.replace("\n", " ");
@@ -5146,15 +5146,15 @@ public class FriendsChatDialog {
 
     private String previewOfChat(ChatMessage m) {
         if (m == null) return "";
-        if ("image".equals(m.msgType)) return "[图片]";
-        if ("emoji".equals(m.msgType)) return "[表情]";
+        if ("image".equals(m.msgType)) return "[picture]";
+        if ("emoji".equals(m.msgType)) return "[expression]";
         return stripQuote(m.content);
     }
 
     private String previewOfGroup(GroupMessage m) {
         if (m == null) return "";
-        if ("image".equals(m.msgType)) return "[图片]";
-        if ("emoji".equals(m.msgType)) return "[表情]";
+        if ("image".equals(m.msgType)) return "[picture]";
+        if ("emoji".equals(m.msgType)) return "[expression]";
         return stripQuote(m.content);
     }
 
@@ -5171,14 +5171,14 @@ public class FriendsChatDialog {
 
     private String getMyNicknameOrDefault() {
         String n = getMyNickname();
-        return (n == null || n.trim().isEmpty()) ? "我" : n.trim();
+        return (n == null || n.trim().isEmpty()) ? "I" : n.trim();
     }
 
     private void startReplyToChat(ChatMessage msg) {
         pendingReplyChat = msg;
         pendingReplyGroup = null;
         String who = msg.isMine ? getMyNicknameOrDefault()
-                : (chatFriend == null ? "对方" : chatFriend.nickname);
+                : (chatFriend == null ? "Other side" : chatFriend.nickname);
         showReplyBar(chatReplyBar, who, previewOfChat(msg));
         if (chatInput != null) chatInput.requestFocus();
     }
@@ -5187,7 +5187,7 @@ public class FriendsChatDialog {
         pendingReplyGroup = msg;
         pendingReplyChat = null;
         String who = (msg.senderNickname == null || msg.senderNickname.isEmpty())
-                ? "对方" : msg.senderNickname;
+                ? "Other side" : msg.senderNickname;
         showReplyBar(groupReplyBar, who, previewOfGroup(msg));
         if (groupChatInput != null) groupChatInput.requestFocus();
     }
@@ -5198,7 +5198,7 @@ public class FriendsChatDialog {
         if (tv instanceof TextView) {
             String p = preview == null ? "" : preview.replace("\n", " ");
             if (p.length() > 50) p = p.substring(0, 50) + "…";
-            ((TextView) tv).setText("回复 " + who + "：" + p);
+            ((TextView) tv).setText("Reply" + who + "：" + p);
         }
         bar.setVisibility(View.VISIBLE);
     }
@@ -5212,13 +5212,13 @@ public class FriendsChatDialog {
 
     /** 举报理由选择弹窗 */
     private void showReportReasonDialog(String scene, int messageId, int groupId) {
-        final String[] reasons = {"垃圾广告", "色情低俗", "人身攻击", "违法违规", "诈骗欺诈"};
+        final String[] reasons = {"Spam ads", "Pornographic and vulgar", "Personal attack", "Violation of laws and regulations", "Fraud fraud"};
         LinearLayout menuRoot = new LinearLayout(activity);
         menuRoot.setOrientation(LinearLayout.VERTICAL);
         menuRoot.setPadding(dp(4), dp(4), dp(4), dp(4));
 
         TextView hint = new TextView(activity);
-        hint.setText("请选择举报理由，管理员会人工审核");
+        hint.setText("Please select a reason for reporting, the administrator will review it manually");
         hint.setTextColor(0xFF9AA4BF);
         hint.setTextSize(11);
         hint.setPadding(dp(2), 0, dp(2), dp(6));
@@ -5235,14 +5235,14 @@ public class FriendsChatDialog {
         menuRoot.addView(divider());
 
         TextView customLabel = new TextView(activity);
-        customLabel.setText("其他理由（自行填写）");
+        customLabel.setText("Other reasons (fill in by yourself)");
         customLabel.setTextColor(0xFF9AA4BF);
         customLabel.setTextSize(11);
         customLabel.setPadding(dp(2), dp(4), dp(2), dp(4));
         menuRoot.addView(customLabel);
 
         final EditText customInput = new EditText(activity);
-        customInput.setHint("简要描述问题（50 字内）");
+        customInput.setHint("Briefly describe the problem (within 50 words)");
         customInput.setTextColor(0xFFF5F7FF);
         customInput.setHintTextColor(0x889AA4BF);
         customInput.setTextSize(13);
@@ -5257,18 +5257,18 @@ public class FriendsChatDialog {
         ciLp.setMargins(0, 0, 0, dp(6));
         menuRoot.addView(customInput, ciLp);
 
-        menuRoot.addView(menuButton("提交自定义理由", v -> {
+        menuRoot.addView(menuButton("Submit a custom reason", v -> {
             String custom = customInput.getText().toString().trim();
             if (custom.isEmpty()) {
-                Toast.makeText(activity, "请先填写举报理由", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Please fill in the reason for reporting first", Toast.LENGTH_SHORT).show();
                 return;
             }
             dismissOptionDialog();
             doReport(scene, messageId, groupId, custom);
         }));
 
-        menuRoot.addView(menuButton("取消", v -> dismissOptionDialog()));
-        showOptionDialog("举报消息", menuRoot);
+        menuRoot.addView(menuButton("Cancel", v -> dismissOptionDialog()));
+        showOptionDialog("Report news", menuRoot);
     }
 
     private void doReport(String scene, int messageId, int groupId, String reason) {
@@ -5278,7 +5278,7 @@ public class FriendsChatDialog {
                 uiHandler.post(() -> Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show());
             } catch (Throwable t) {
                 uiHandler.post(() -> Toast.makeText(activity,
-                        "举报失败：" + t.getMessage(), Toast.LENGTH_SHORT).show());
+                        "Report failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
                 handleApiError(t);
             }
         });
@@ -5342,7 +5342,7 @@ public class FriendsChatDialog {
 
         // 右下角「保存」按钮：长按不够直观，给一个明确入口
         TextView saveBtn = new TextView(activity);
-        saveBtn.setText("⤓ 保存");
+        saveBtn.setText("⤓ Save");
         saveBtn.setTextColor(0xFFF5F7FF);
         saveBtn.setTextSize(12);
         saveBtn.setGravity(Gravity.CENTER);
@@ -5394,14 +5394,14 @@ public class FriendsChatDialog {
                 != android.content.pm.PackageManager.PERMISSION_GRANTED) {
             activity.requestPermissions(
                     new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1002);
-            Toast.makeText(activity, "请授权存储权限后再点一次保存", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Please grant storage permission and click save again.", Toast.LENGTH_LONG).show();
             return;
         }
-        Toast.makeText(activity, "正在保存...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Saving...", Toast.LENGTH_SHORT).show();
         AppExecutors.runOnIo(() -> {
             try {
                 byte[] data = downloadRawBytes(url);
-                if (data == null || data.length == 0) throw new Exception("图片下载失败");
+                if (data == null || data.length == 0) throw new Exception("Image download failed");
                 String ext = guessImageExt(url, data);
                 String name = "YukiHub_Chat_" + new java.text.SimpleDateFormat(
                         "yyyyMMdd_HHmmss", java.util.Locale.ROOT)
@@ -5414,7 +5414,7 @@ public class FriendsChatDialog {
                 final String msg = t.getMessage() == null
                         ? t.getClass().getSimpleName() : t.getMessage();
                 uiHandler.post(() -> Toast.makeText(activity,
-                        "保存失败：" + msg, Toast.LENGTH_LONG).show());
+                        "Save failed:" + msg, Toast.LENGTH_LONG).show());
             }
         });
     }
@@ -5495,7 +5495,7 @@ public class FriendsChatDialog {
         java.io.File base = android.os.Environment.getExternalStoragePublicDirectory(
                 android.os.Environment.DIRECTORY_PICTURES);
         java.io.File dir = new java.io.File(base, "YukiHub");
-        if (!dir.exists() && !dir.mkdirs()) throw new Exception("创建相册目录失败");
+        if (!dir.exists() && !dir.mkdirs()) throw new Exception("Failed to create album directory");
         java.io.File outFile = new java.io.File(dir, displayName);
         try (java.io.FileOutputStream out = new java.io.FileOutputStream(outFile)) {
             out.write(data);
@@ -5512,12 +5512,12 @@ public class FriendsChatDialog {
     private void pickAndSendImage(boolean isGroupChat) {
         boolean ok = ChatImagePicker.pick(activity, uri -> {
             if (uri == null) return;
-            Toast.makeText(activity, "处理图片中...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Processing pictures...", Toast.LENGTH_SHORT).show();
             AppExecutors.runOnIo(() -> {
                 ChatImagePicker.Compressed c = ChatImagePicker.compress(appContext, uri);
                 if (c == null) {
                     uiHandler.post(() -> Toast.makeText(activity,
-                            "图片处理失败，请换一张（需 500KB 以内可压缩的 jpg/png/webp）",
+                            "Image processing failed, please change another one (requires compressible jpg/png/webp within 500KB)",
                             Toast.LENGTH_SHORT).show());
                     return;
                 }
@@ -5527,13 +5527,13 @@ public class FriendsChatDialog {
                     else sendImageMessage(url);
                 } catch (Throwable t) {
                     uiHandler.post(() -> Toast.makeText(activity,
-                            "上传失败：" + t.getMessage(), Toast.LENGTH_SHORT).show());
+                            "Upload failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
                     handleApiError(t);
                 }
             });
         });
         if (!ok) {
-            Toast.makeText(activity, "当前页面不支持选图，请从首页进入聊天", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "The current page does not support picture selection. Please enter the chat from the home page.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -5553,7 +5553,7 @@ public class FriendsChatDialog {
             });
         } catch (Throwable t) {
             uiHandler.post(() -> Toast.makeText(activity,
-                    "发送失败：" + t.getMessage(), Toast.LENGTH_SHORT).show());
+                    "Sending failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
             handleApiError(t);
         }
     }
@@ -5574,7 +5574,7 @@ public class FriendsChatDialog {
             });
         } catch (Throwable t) {
             uiHandler.post(() -> Toast.makeText(activity,
-                    "发送失败：" + t.getMessage(), Toast.LENGTH_SHORT).show());
+                    "Sending failed:" + t.getMessage(), Toast.LENGTH_SHORT).show());
             handleApiError(t);
         }
     }
@@ -5679,7 +5679,7 @@ public class FriendsChatDialog {
         root.addView(lv);
 
         TextView progress = new TextView(activity);
-        progress.setText(maxed ? (exp + " EXP · 已满级") : (exp + " / " + next + " EXP"));
+        progress.setText(maxed ? (exp + "EXP·Maximum level") : (exp + " / " + next + " EXP"));
         progress.setTextColor(0xFFF5F7FF);
         progress.setTextSize(13);
         progress.setPadding(0, dp(6), 0, dp(2));
@@ -5729,14 +5729,14 @@ public class FriendsChatDialog {
         barBg.post(applyFill);
 
         TextView remainView = new TextView(activity);
-        remainView.setText(maxed ? "🏆 已达满级"
-                                 : ("距 Lv." + (level + 1) + " 还需 " + remain + " EXP"));
+        remainView.setText(maxed ? "🏆 Reached the full level"
+                                 : ("Distance Lv." + (level + 1) + "Still need" + remain + " EXP"));
         remainView.setTextColor(0xFF9AA4BF);
         remainView.setTextSize(11);
         root.addView(remainView);
 
-        root.addView(menuButton("关闭", v -> dismissOptionDialog()));
-        showOptionDialog("等级详情", root);
+        root.addView(menuButton("Close", v -> dismissOptionDialog()));
+        showOptionDialog("Level details", root);
     }
 
     /**
@@ -5746,7 +5746,7 @@ public class FriendsChatDialog {
     private void mentionInGroup(GroupMessage msg) {
         if (msg == null || groupChatInput == null) return;
         if (chatGroup != null && !chatGroup.canSpeak()) {
-            Toast.makeText(activity, "公告版仅管理员可发言", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Only administrators can speak on the bulletin board", Toast.LENGTH_SHORT).show();
             return;
         }
         // @自己没意义
@@ -5754,7 +5754,7 @@ public class FriendsChatDialog {
 
         String nick = msg.senderNickname == null ? "" : msg.senderNickname.trim();
         if (nick.isEmpty()) {
-            Toast.makeText(activity, "无法获取对方昵称", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Unable to get the other party's nickname", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -5782,6 +5782,6 @@ public class FriendsChatDialog {
                     android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
         } catch (Throwable ignored) {}
 
-        Toast.makeText(activity, "已 @" + nick, Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Already @" + nick, Toast.LENGTH_SHORT).show();
     }
 }

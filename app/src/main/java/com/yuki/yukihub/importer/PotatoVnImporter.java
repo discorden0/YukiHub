@@ -42,7 +42,7 @@ public class PotatoVnImporter {
      */
     public static List<ImportGameData> parse(Context context, Uri uri) throws Exception {
         InputStream raw = context.getContentResolver().openInputStream(uri);
-        if (raw == null) throw new Exception("无法打开 ZIP 文件");
+        if (raw == null) throw new Exception("Unable to open ZIP file");
 
         File tempDir = new File(context.getCacheDir(), "potatovn_import_" + System.currentTimeMillis());
         tempDir.mkdirs();
@@ -74,7 +74,7 @@ public class PotatoVnImporter {
         }
 
         if (galgamesJson == null) {
-            throw new Exception("ZIP 中未找到 data.galgames.json");
+            throw new Exception("Data.galgames.json not found in ZIP");
         }
 
         JSONArray arr = new JSONArray(galgamesJson);

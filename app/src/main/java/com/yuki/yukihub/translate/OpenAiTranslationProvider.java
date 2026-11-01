@@ -42,16 +42,16 @@ public final class OpenAiTranslationProvider implements TranslationTextProvider 
 
     /** 默认系统提示词（与萌译一致） */
     public static final String DEFAULT_SYSTEM_PROMPT =
-            "你是一名专业翻译。你的任务是准确、自然地翻译给定的文本。\n具体规则如下： \n" +
-            "1、根据用户的要求，将文本翻译成指定的目标语言；\n" +
-            "2、保持原意和语气；\n" +
-            "3、尽可能保持格式和结构；\n" +
-            "4、直接返回翻译后的文本，不要有任何解释或附加内容；\n" +
-            "5、如果文本已经是目标语言，请按原样返回。";
+            "You are a professional translator. Your task is to translate the given text accurately and naturally.\nThe specific rules are as follows:" +
+            "1. Translate the text into the specified target language according to the user's requirements;" +
+            "2. Maintain the original intention and tone;" +
+            "3. Maintain format and structure as much as possible;" +
+            "4. Return the translated text directly without any explanation or additional content;" +
+            "5. If the text is already in the target language, return it as is.";
 
     /** 默认用户提示词（与萌译一致，使用 usefromlang/usetolang/usesourcetext 占位符） */
     public static final String DEFAULT_USER_PROMPT =
-            "请将下面的文本从usefromlang翻译为usetolang：\n\nusesourcetext";
+            "Please translate the following text from usefromlang to usetolang:\n\nusesourcetext";
 
     /** 默认温度（留空则不发送 temperature） */
     public static final String DEFAULT_TEMPERATURE = "0.2";

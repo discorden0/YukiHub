@@ -54,7 +54,7 @@ public class LunaBoxImporter {
      */
     public static List<ImportGameData> parse(Context context, Uri uri) throws Exception {
         InputStream raw = context.getContentResolver().openInputStream(uri);
-        if (raw == null) throw new Exception("无法打开 ZIP 文件");
+        if (raw == null) throw new Exception("Unable to open ZIP file");
 
         File tempDir = new File(context.getCacheDir(), "lunabox_import_" + System.currentTimeMillis());
         tempDir.mkdirs();
@@ -96,7 +96,7 @@ public class LunaBoxImporter {
         }
 
         if (gamesCsv == null) {
-            throw new Exception("ZIP 中未找到 database/games.csv");
+            throw new Exception("Database/games.csv not found in ZIP");
         }
 
         // 解析 tags CSV -> game_id -> list of tag names

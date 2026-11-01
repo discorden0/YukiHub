@@ -32,14 +32,14 @@ public class AiReviewClient {
     public String testConnection(AiReviewSettings settings) throws Exception {
         if (settings == null) settings = new AiReviewSettings();
         settings.normalize();
-        if (settings.apiKey == null || settings.apiKey.trim().isEmpty()) throw new IllegalStateException("请先配置 AI API Key");
+        if (settings.apiKey == null || settings.apiKey.trim().isEmpty()) throw new IllegalStateException("Please configure the AI ​​API Key first");
         JSONArray messages = new JSONArray();
         messages.put(new JSONObject()
                 .put("role", "system")
-                .put("content", "你是一个用于连通性测试的助手。只输出 OK。"));
+                .put("content", "You are an assistant for connectivity testing. Just output OK."));
         messages.put(new JSONObject()
                 .put("role", "user")
-                .put("content", "连接测试，请只回复 OK。"));
+                .put("content", "Connection test, please reply OK only."));
         // 连通性测试要的是「能不能通」，一次瞬时网络抖动不该判定为配置错误。
         // 只对连接层异常重试，鉴权失败、模型不存在这类业务错误立即抛出。
         Exception last = null;
@@ -56,13 +56,13 @@ public class AiReviewClient {
                 }
             }
         }
-        throw last != null ? last : new RuntimeException("AI 连接测试失败");
+        throw last != null ? last : new RuntimeException("AI connection test failed");
     }
 
     public String requestReview(AiReviewSettings settings, WeeklyPlayStats stats) throws Exception {
         if (settings == null) settings = new AiReviewSettings();
         settings.normalize();
-        if (settings.apiKey == null || settings.apiKey.trim().isEmpty()) throw new IllegalStateException("请先配置 AI API Key");
+        if (settings.apiKey == null || settings.apiKey.trim().isEmpty()) throw new IllegalStateException("Please configure the AI ​​API Key first");
 
         JSONArray messages = new JSONArray();
         messages.put(new JSONObject()
@@ -86,7 +86,7 @@ public class AiReviewClient {
                 }
             }
         }
-        throw last != null ? last : new RuntimeException("AI 点评生成失败");
+        throw last != null ? last : new RuntimeException("AI review generation failed");
     }
 
     private String requestChatCompletions(AiReviewSettings settings, JSONArray messages, float temperature, int maxTokens) throws Exception {
@@ -106,13 +106,13 @@ public class AiReviewClient {
 
         JSONObject root = text == null || text.trim().isEmpty() ? new JSONObject() : new JSONObject(text);
         JSONObject error = root.optJSONObject("error");
-        if (error != null) throw new RuntimeException("AI API 错误：" + error.optString("message", error.toString()));
+        if (error != null) throw new RuntimeException("AI API error:" + error.optString("message", error.toString()));
         JSONArray choices = root.optJSONArray("choices");
-        if (choices == null || choices.length() == 0) throw new RuntimeException("AI 未返回 choices");
+        if (choices == null || choices.length() == 0) throw new RuntimeException("AI did not return choices");
         JSONObject choice = choices.optJSONObject(0);
         JSONObject message = choice == null ? null : choice.optJSONObject("message");
         String content = message == null ? "" : message.optString("content", "");
-        if (content == null || content.trim().isEmpty()) throw new RuntimeException("AI 返回内容为空");
+        if (content == null || content.trim().isEmpty()) throw new RuntimeException("AI returns empty content");
         return content.trim();
     }
 

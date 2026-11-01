@@ -94,13 +94,13 @@ public final class NoMediaHelper {
         public String message() {
             switch (reject) {
                 case STORAGE_ROOT:
-                    return "目标是存储卡根目录（" + detail + "）。在这里创建会让相册读不到任何图片，包括你自己拍的照片。";
+                    return "The target is the memory card root directory (" + detail + "). Creating it here will prevent the album from reading any pictures, including photos you took yourself.";
                 case MEDIA_DIR_SELF:
-                    return "目标是系统媒体目录（" + detail + "）。在这里创建会让相册丢失该目录下的全部内容。";
+                    return "The target is the system media directory (" + detail + "). Creating it here will cause the album to lose all the contents in this directory.";
                 case ANDROID_DIR:
-                    return "目标位于 Android 系统数据目录内（" + detail + "），不适用且通常无写入权限。";
+                    return "The target is located within the Android system data directory (" + detail + "), not applicable and usually without write permission.";
                 case UNRESOLVED:
-                    return "无法确定该目录的真实位置" + (detail.isEmpty() ? "" : "（" + detail + "）") + "，为安全起见已阻止。";
+                    return "Unable to determine the true location of the directory" + (detail.isEmpty() ? "" : "（" + detail + "）") + ", blocked for security reasons.";
                 default:
                     return "";
             }
@@ -457,16 +457,16 @@ public final class NoMediaHelper {
                 }
                 Log.w(TAG, "File.createNewFile returned false: " + target.getAbsolutePath());
                 // 非 SAF 目录没有后备方案，给准确原因而不是笼统的「没有权限」
-                if (!isSaf) return Result.fail("创建失败，目录可能只读或空间不足");
+                if (!isSaf) return Result.fail("Creation failed, the directory may be read-only or there may be insufficient space");
             } catch (Throwable t) {
                 Log.w(TAG, "File create failed" + (isSaf ? ", fallback to SAF" : ""), t);
-                if (!isSaf) return Result.fail("创建失败：" + shortError(t));
+                if (!isSaf) return Result.fail("Creation failed:" + shortError(t));
             }
         }
 
         // 路径 2：SAF createDocument + 回读校验。
         if (ctx == null || !isSaf) {
-            return Result.fail("没有该目录的写入权限，请重新绑定扫描目录并授予写入权限");
+            return Result.fail("There is no write permission for the directory, please rebind the scan directory and grant write permission");
         }
         return createViaSaf(ctx, rootUri, safety.realPath, rescan);
     }
@@ -476,13 +476,13 @@ public final class NoMediaHelper {
         try {
             Uri tree = Uri.parse(rootUri);
             String parentDocId = selfDocumentId(tree);
-            if (isBlank(parentDocId)) return Result.fail("无法定位目录，请重新绑定扫描目录");
+            if (isBlank(parentDocId)) return Result.fail("Unable to locate the directory, please rebind the scan directory.");
             Uri parentDoc = DocumentsContract.buildDocumentUriUsingTree(tree, parentDocId);
 
             created = DocumentsContract.createDocument(
                     ctx.getContentResolver(), parentDoc, "application/octet-stream", FILE_NAME);
             if (created == null) {
-                return Result.fail("创建失败，可能没有该目录的写入权限");
+                return Result.fail("Creation failed, you may not have write permissions for the directory");
             }
 
             // 关键校验：部分 ROM 的 ExternalStorageProvider 会把 .nomedia 改名
@@ -505,8 +505,8 @@ public final class NoMediaHelper {
                     try {
                         DocumentsContract.deleteDocument(ctx.getContentResolver(), created);
                     } catch (Throwable ignored) { }
-                    return Result.fail("系统把文件名改成了「" + actual + "」且无法修正，已撤销。"
-                            + "建议在设置中授予「所有文件访问权限」后重试");
+                    return Result.fail("The system changed the file name to \"" + actual + "” cannot be corrected and has been revoked."
+                            + "It is recommended to grant \"All file access permissions\" in the settings and try again.");
                 }
             }
 
@@ -514,10 +514,10 @@ public final class NoMediaHelper {
             return Result.ok(realPath);
         } catch (SecurityException se) {
             Log.w(TAG, "SAF create denied", se);
-            return Result.fail("没有该目录的写入权限，请重新绑定扫描目录并授予写入权限");
+            return Result.fail("There is no write permission for the directory, please rebind the scan directory and grant write permission");
         } catch (Throwable t) {
             Log.w(TAG, "SAF create failed", t);
-            return Result.fail("创建失败：" + shortError(t));
+            return Result.fail("Creation failed:" + shortError(t));
         }
     }
 
@@ -541,33 +541,33 @@ public final class NoMediaHelper {
                 }
                 Log.w(TAG, "File.delete returned false: " + target.getAbsolutePath());
                 // 非 SAF 目录没有后备方案，直接给准确原因（不要落到下面报「没有权限」）
-                if (!isSaf) return Result.fail("移除失败，文件可能被占用或只读");
+                if (!isSaf) return Result.fail("Removal failed, the file may be occupied or read-only");
             } catch (Throwable t) {
                 Log.w(TAG, "File delete failed" + (isSaf ? ", fallback to SAF" : ""), t);
-                if (!isSaf) return Result.fail("移除失败：" + shortError(t));
+                if (!isSaf) return Result.fail("Removal failed:" + shortError(t));
             }
         }
 
         if (ctx == null || !isSaf) {
-            return Result.fail("没有该目录的写入权限，无法移除");
+            return Result.fail("Unable to remove without write permission to the directory");
         }
         try {
             Uri child = buildChildUri(rootUri, FILE_NAME);
-            if (child == null) return Result.fail("无法定位文件");
+            if (child == null) return Result.fail("Unable to locate file");
             if (!queryExists(ctx, child)) {
                 requestMediaRescan(ctx, normalized);
                 return Result.ok(normalized);
             }
             boolean deleted = DocumentsContract.deleteDocument(ctx.getContentResolver(), child);
-            if (!deleted) return Result.fail("移除失败，可能没有写入权限");
+            if (!deleted) return Result.fail("Removal failed, may not have write permissions");
             Log.i(TAG, "removed via SAF: " + child);
             requestMediaRescan(ctx, normalized);
             return Result.ok(normalized);
         } catch (SecurityException se) {
-            return Result.fail("没有该目录的写入权限，无法移除");
+            return Result.fail("Unable to remove without write permission to the directory");
         } catch (Throwable t) {
             Log.w(TAG, "SAF delete failed", t);
-            return Result.fail("移除失败：" + shortError(t));
+            return Result.fail("Removal failed:" + shortError(t));
         }
     }
 
@@ -664,7 +664,7 @@ public final class NoMediaHelper {
     }
 
     private static String shortError(Throwable t) {
-        if (t == null) return "未知错误";
+        if (t == null) return "Unknown error";
         String msg = t.getMessage();
         if (msg == null || msg.trim().isEmpty()) return t.getClass().getSimpleName();
         return msg.length() > 80 ? msg.substring(0, 80) : msg;

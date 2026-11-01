@@ -167,7 +167,7 @@ public final class FvpActivity extends Activity implements
         Intent intent = getIntent();
         gameRoot = intent == null ? null : trimOrNull(intent.getStringExtra(EXTRA_GAME_ROOT));
         if (gameRoot == null) {
-            Toast.makeText(this, "FVP 引擎启动失败：未获取到游戏目录", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "FVP engine failed to start: Game directory not obtained", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -190,7 +190,7 @@ public final class FvpActivity extends Activity implements
                 bufW = virtual[0];
                 bufH = virtual[1];
             } else {
-                Toast.makeText(this, "未能识别游戏脚本分辨率，铺满模式未生效", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "The resolution of the game script cannot be recognized, and the overlay mode does not take effect.", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -334,7 +334,7 @@ public final class FvpActivity extends Activity implements
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
 
         TextView label = new TextView(this);
-        label.setText("正在启动 FVP 引擎…");
+        label.setText("Starting FVP engine...");
         label.setTextColor(0xFFB0B6C4);
         label.setTextSize(14.0f);
         label.setGravity(Gravity.CENTER);
@@ -356,7 +356,7 @@ public final class FvpActivity extends Activity implements
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         // singleInstance：游戏运行中再次收到启动请求时不叠加新实例。
-        Toast.makeText(this, "已有 FVP 游戏正在运行", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "There is already an FVP game running", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -459,7 +459,7 @@ public final class FvpActivity extends Activity implements
         long created = NativeRfvp.create(holder.getSurface(), width, height, scale,
                 gameRoot, FvpLaunchPrefs.normalizeNls(nls));
         if (created == 0L) {
-            Toast.makeText(this, "FVP 引擎初始化失败：引擎库缺失或游戏目录不可读", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "FVP engine initialization failed: the engine library is missing or the game directory is unreadable", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -685,7 +685,7 @@ public final class FvpActivity extends Activity implements
         // 先让游戏自己处理（等价于按 Esc）：多数 Gal 会弹出系统菜单。
         NativeRfvp.keyEvent(handle, VK_ESCAPE, 0);
         NativeRfvp.keyEvent(handle, VK_ESCAPE, 1);
-        Toast.makeText(this, "再按一次返回键退出游戏", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Press the return key again to exit the game", Toast.LENGTH_SHORT).show();
     }
 
     // ---------- 工具 ----------

@@ -53,15 +53,15 @@ public class GalToolboxActivity extends AppCompatActivity {
         LinearLayout bar = new LinearLayout(this);
         bar.setGravity(Gravity.CENTER_VERTICAL);
         bar.setPadding(dp(4), 0, dp(4), 0);
-        TextView back = button("‹", "返回；工具箱首页时退出");
+        TextView back = button("‹", "Return; exit from the toolbox homepage");
         back.setOnClickListener(v -> navigateBack());
         bar.addView(back, new LinearLayout.LayoutParams(dp(48), dp(48)));
-        title = button("Gal工具箱", "当前页面标题");
+        title = button("Gal Toolbox", "Current page title");
         title.setTextSize(16);
         title.setSingleLine(true);
         title.setEllipsize(android.text.TextUtils.TruncateAt.END);
         bar.addView(title, new LinearLayout.LayoutParams(0, dp(48), 1f));
-        TextView menu = button("⋮", "工具箱菜单");
+        TextView menu = button("⋮", "Toolbox menu");
         menu.setOnClickListener(this::showMenu);
         bar.addView(menu, new LinearLayout.LayoutParams(dp(48), dp(48)));
         root.addView(bar);
@@ -126,7 +126,7 @@ public class GalToolboxActivity extends AppCompatActivity {
                 progress.setVisibility(value >= 100 ? View.GONE : View.VISIBLE);
             }
             @Override public void onReceivedTitle(WebView view, String value) {
-                title.setText(value == null || value.isEmpty() ? "Gal工具箱" : value);
+                title.setText(value == null || value.isEmpty() ? "Gal Toolbox" : value);
             }
         });
         webView.setDownloadListener((url, ua, disposition, mime, length) -> openExternal(Uri.parse(url)));
@@ -136,10 +136,10 @@ public class GalToolboxActivity extends AppCompatActivity {
             if (hit != null && (hit.getType() == WebView.HitTestResult.IMAGE_TYPE
                     || hit.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) && hit.getExtra() != null) {
                 PopupMenu popup = new PopupMenu(this, webView);
-                popup.getMenu().add("复制图片链接").setOnMenuItemClickListener(item -> { copy(hit.getExtra()); return true; });
+                popup.getMenu().add("Copy image link").setOnMenuItemClickListener(item -> { copy(hit.getExtra()); return true; });
                 Uri image = Uri.parse(hit.getExtra());
                 if (!isLocal(image)) {
-                    popup.getMenu().add("在浏览器打开 / 保存图片").setOnMenuItemClickListener(item -> { openExternal(image); return true; });
+                    popup.getMenu().add("Open/save image in browser").setOnMenuItemClickListener(item -> { openExternal(image); return true; });
                 }
                 popup.show();
                 return true;
@@ -166,11 +166,11 @@ public class GalToolboxActivity extends AppCompatActivity {
         if (scheme == null || "file".equalsIgnoreCase(scheme) || "content".equalsIgnoreCase(scheme)
                 || "javascript".equalsIgnoreCase(scheme) || "data".equalsIgnoreCase(scheme)
                 || "intent".equalsIgnoreCase(scheme) || HOST.equalsIgnoreCase(uri.getHost())) {
-            Toast.makeText(this, "此链接不能交给外部应用打开", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "This link cannot be opened by an external application", Toast.LENGTH_SHORT).show();
             return;
         }
         try { startActivity(new Intent(Intent.ACTION_VIEW, uri).addCategory(Intent.CATEGORY_BROWSABLE)); }
-        catch (Exception e) { Toast.makeText(this, "没有可打开此链接的应用，可在菜单中复制链接", Toast.LENGTH_LONG).show(); }
+        catch (Exception e) { Toast.makeText(this, "There is no app to open this link, copy the link in the menu", Toast.LENGTH_LONG).show(); }
     }
 
     private WebResourceResponse assetResponse(WebResourceRequest request) {
@@ -243,19 +243,19 @@ public class GalToolboxActivity extends AppCompatActivity {
 
     private void showMenu(View anchor) {
         PopupMenu popup = new PopupMenu(this, anchor);
-        popup.getMenu().add("工具箱首页").setOnMenuItemClickListener(i -> { webView.loadUrl(HOME); return true; });
-        popup.getMenu().add("刷新").setOnMenuItemClickListener(i -> { webView.reload(); return true; });
-        popup.getMenu().add("前进").setOnMenuItemClickListener(i -> { if (webView.canGoForward()) webView.goForward(); return true; });
-        popup.getMenu().add("复制当前链接").setOnMenuItemClickListener(i -> { copy(webView.getUrl()); return true; });
-        popup.getMenu().add("退出工具箱").setOnMenuItemClickListener(i -> { finish(); return true; });
+        popup.getMenu().add("Toolbox Home Page").setOnMenuItemClickListener(i -> { webView.loadUrl(HOME); return true; });
+        popup.getMenu().add("Refresh").setOnMenuItemClickListener(i -> { webView.reload(); return true; });
+        popup.getMenu().add("Go ahead").setOnMenuItemClickListener(i -> { if (webView.canGoForward()) webView.goForward(); return true; });
+        popup.getMenu().add("Copy current link").setOnMenuItemClickListener(i -> { copy(webView.getUrl()); return true; });
+        popup.getMenu().add("Exit toolbox").setOnMenuItemClickListener(i -> { finish(); return true; });
         popup.show();
     }
 
     private void copy(String value) {
         if (value == null) return;
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        if (clipboard != null) { clipboard.setPrimaryClip(ClipData.newPlainText("Gal工具箱", value)); }
-        Toast.makeText(this, "链接已复制", Toast.LENGTH_SHORT).show();
+        if (clipboard != null) { clipboard.setPrimaryClip(ClipData.newPlainText("Gal Toolbox", value)); }
+        Toast.makeText(this, "Link copied", Toast.LENGTH_SHORT).show();
     }
 
     private TextView button(String text, String description) {

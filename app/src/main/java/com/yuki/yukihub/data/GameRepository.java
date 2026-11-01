@@ -388,7 +388,7 @@ public PlayActivity findLatestOpenPlaySession() {
             a.endTime = 0L;
             a.duration = c.getLong(6);
             a.launchType = c.getString(7);
-            if (a.gameTitle == null || a.gameTitle.trim().isEmpty()) a.gameTitle = "未命名游戏";
+            if (a.gameTitle == null || a.gameTitle.trim().isEmpty()) a.gameTitle = "Unnamed game";
             return a;
         } finally {
             c.close();
@@ -414,7 +414,7 @@ public PlayActivity findLatestOpenPlaySession() {
             a.endTime = c.getLong(5);
             a.duration = c.getLong(6);
             a.launchType = c.getString(7);
-            if (a.gameTitle == null || a.gameTitle.trim().isEmpty()) a.gameTitle = "未命名游戏";
+            if (a.gameTitle == null || a.gameTitle.trim().isEmpty()) a.gameTitle = "Unnamed game";
             return a;
         } finally {
             c.close();
@@ -521,7 +521,7 @@ public PlayActivity findLatestOpenPlaySession() {
             while (c.moveToNext()) {
                 String title = c.getString(0);
                 long duration = c.getLong(1);
-                result.put(title == null || title.trim().isEmpty() ? "未命名游戏" : title, duration);
+                result.put(title == null || title.trim().isEmpty() ? "Unnamed game" : title, duration);
             }
         } finally {
             c.close();
@@ -550,7 +550,7 @@ public PlayActivity findLatestOpenPlaySession() {
                 a.duration = c.getLong(6);
                 a.launchType = c.getString(7);
                 a.playStatus = normalizePlayStatus(c.getString(8));
-                if (a.gameTitle == null || a.gameTitle.trim().isEmpty()) a.gameTitle = "未命名游戏";
+                if (a.gameTitle == null || a.gameTitle.trim().isEmpty()) a.gameTitle = "Unnamed game";
                 list.add(a);
             }
         } finally {
@@ -580,7 +580,7 @@ public PlayActivity findLatestOpenPlaySession() {
                 a.duration = c.getLong(6);
                 a.launchType = c.getString(7);
                 a.playStatus = normalizePlayStatus(c.getString(8));
-                if (a.gameTitle == null || a.gameTitle.trim().isEmpty()) a.gameTitle = "未命名游戏";
+                if (a.gameTitle == null || a.gameTitle.trim().isEmpty()) a.gameTitle = "Unnamed game";
                 list.add(a);
             }
         } finally {
@@ -684,7 +684,7 @@ o.put("description", c.getString(c.getColumnIndexOrThrow("description")));
             // updated_at comparison. The default value preserves the local title when
             // incoming is empty. This prevents auto-generated folder names from
             // overwriting proper titles during merge.
-            g.title = o.optString("title", g.title == null ? "未命名游戏" : g.title);
+            g.title = o.optString("title", g.title == null ? "Unnamed game" : g.title);
             if (applyDetails) {
                 g.originalTitle = o.optString("original_title", g.originalTitle);
                 g.engine = EngineType.fromString(o.optString("engine", g.engine == null ? EngineType.UNKNOWN.name() : g.engine.name()));
@@ -711,7 +711,7 @@ o.put("description", c.getString(c.getColumnIndexOrThrow("description")));
                     g.gamehubLocalGameId = o.optString("gamehub_local_game_id", o.optString("gaishi_local_game_id", g.gamehubLocalGameId));
                 }
             }
-            if (g.title == null || g.title.trim().isEmpty()) g.title = "未命名游戏";
+            if (g.title == null || g.title.trim().isEmpty()) g.title = "Unnamed game";
             if (g.engine == null) g.engine = EngineType.UNKNOWN;
             long incomingResetAt = Math.max(0L, o.optLong("playtime_reset_at", 0L));
             long incomingTotalPlayTime = Math.max(0L, o.optLong("total_play_time", 0L));
@@ -910,7 +910,7 @@ o.put("description", c.getString(c.getColumnIndexOrThrow("description")));
         v.put("cover_persist_uri", g.coverPersistUri);
         v.put("cover_source_type", g.coverSourceType);
         v.put("emulator_package", g.emulatorPackage);
-        v.put("launch_target", g.launchTarget == null || g.launchTarget.isEmpty() ? "[游戏目录]" : g.launchTarget);
+        v.put("launch_target", g.launchTarget == null || g.launchTarget.isEmpty() ? "[Game Catalog]" : g.launchTarget);
 v.put("winlator_launch_mode", normalizeWinlatorLaunchMode(g.winlatorLaunchMode));
 v.put("description", g.description);
         v.put("tags", g.tags);
@@ -944,7 +944,7 @@ v.put("description", g.description);
         g.coverSourceType = getIntOrDefault(c, "cover_source_type", 0);
         g.emulatorPackage = c.getString(c.getColumnIndexOrThrow("emulator_package"));
         g.launchTarget = getStringOrNull(c, "launch_target");
-if (g.launchTarget == null || g.launchTarget.isEmpty()) g.launchTarget = "[游戏目录]";
+if (g.launchTarget == null || g.launchTarget.isEmpty()) g.launchTarget = "[Game Catalog]";
 g.winlatorLaunchMode = normalizeWinlatorLaunchMode(getStringOrNull(c, "winlator_launch_mode"));
 g.description = c.getString(c.getColumnIndexOrThrow("description"));
         g.tags = c.getString(c.getColumnIndexOrThrow("tags"));

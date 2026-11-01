@@ -207,7 +207,7 @@ public class BigScreenShelfAdapter extends RecyclerView.Adapter<BigScreenShelfAd
         }
 
         h.title.setVisibility(showTitles ? View.VISIBLE : View.GONE);
-        h.title.setText(TextUtils.isEmpty(game.title) ? "未命名" : game.title);
+        h.title.setText(TextUtils.isEmpty(game.title) ? "Unnamed" : game.title);
 
         // 封面：优先 coverPersistUri（持久化授权），退回 coverUri
         String uriStr = !TextUtils.isEmpty(game.coverPersistUri) ? game.coverPersistUri : game.coverUri;

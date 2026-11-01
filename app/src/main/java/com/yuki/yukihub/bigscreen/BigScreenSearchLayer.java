@@ -305,11 +305,11 @@ public class BigScreenSearchLayer implements BigScreenShelfAdapter.Listener {
         emptyView.setVisibility(empty ? View.VISIBLE : View.GONE);
         results.setVisibility(empty ? View.GONE : View.VISIBLE);
         if (empty) {
-            emptyView.setText(query.isEmpty() ? "游戏库是空的" : "没有匹配的游戏");
+            emptyView.setText(query.isEmpty() ? "Game library is empty" : "No matching games");
         }
         countView.setText(query.isEmpty()
-                ? (filtered.size() + " 款")
-                : (filtered.size() + " 个结果"));
+                ? (filtered.size() + "Payment")
+                : (filtered.size() + "Results"));
         if (!empty) { results.scrollToPosition(0); }
     }
 
@@ -446,10 +446,10 @@ public class BigScreenSearchLayer implements BigScreenShelfAdapter.Listener {
     private void updateHint() {
         if (hintView == null) { return; }
         if (touchUi) {
-            hintView.setText("点按卡片选中（外面同步切换）　再点一次进入　✕ 关闭");
+            hintView.setText("Click the card to select (synchronous switching outside) Click again to enter ✕ Close");
         } else {
-            hintView.setText("方向键 选择　" + keys.confirm() + " 选中并返回　" + keys.fourth()
-                    + " 详情　" + keys.third() + " 收藏　" + keys.back() + " 关闭");
+            hintView.setText("Direction key selection" + keys.confirm() + "Select and return" + keys.fourth()
+                    + " 详情　" + keys.third() + "Collect" + keys.back() + "Closure");
         }
     }
 

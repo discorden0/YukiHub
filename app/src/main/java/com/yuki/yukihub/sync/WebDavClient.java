@@ -196,7 +196,7 @@ public class WebDavClient {
             while (source.read(buffer, 8192) != -1) {
                 totalRead += buffer.size();
                 if (totalRead > maxBytes) {
-                    throw new IOException("远程同步文件过大，已超过 " + (maxBytes / 1024) + "KB");
+                    throw new IOException("The remote synchronization file is too large and has exceeded" + (maxBytes / 1024) + "KB");
                 }
                 baos.write(buffer.readByteArray());
             }

@@ -183,7 +183,7 @@ public final class NextMoeClient {
                 Thread.sleep(RETRY_DELAY_MS * (attempt + 1));
             }
         }
-        throw last == null ? new IllegalStateException("NextMoe API 调用失败") : last;
+        throw last == null ? new IllegalStateException("NextMoe API call failed") : last;
     }
 
     private static JSONObject apiGetOnce(String path, String[][] params, boolean allowRefresh) throws Exception {
@@ -195,7 +195,7 @@ public final class NextMoeClient {
         // 这是异常降级（令牌刷新失败 / 瞬态故障），必须留痕并在报错时告知用户，
         // 否则会出现「以为登录了、其实在用匿名配额」而不自知。
         boolean degradeToAnonymous = !authed && NextMoeAuthStore.isConnected();
-        String tier = authed ? "用户档" : (degradeToAnonymous ? "匿名档(降级)" : "匿名档");
+        String tier = authed ? "User profile" : (degradeToAnonymous ? "Anonymous file(downgrade)" : "Anonymous file");
         throttle(authed ? MIN_INTERVAL_AUTHED_MS : MIN_INTERVAL_ANON_MS);
         StringBuilder url = new StringBuilder(API_BASE).append(path);
         if (params != null && params.length > 0) {
@@ -222,7 +222,7 @@ public final class NextMoeClient {
             // 挂在「变化才打」上，所以批量刮削（自动匹配可能上百款）也不会刷屏。
             if (!tier.equals(lastLoggedTier)) {
                 lastLoggedTier = tier;
-                String line = "配额档位=" + tier
+                String line = "Quota level =" + tier
                         + "  limit=" + c.getHeaderField("X-RateLimit-Limit")
                         + "  policy=" + c.getHeaderField("RateLimit-Policy")
                         + "  → " + path;
@@ -235,7 +235,7 @@ public final class NextMoeClient {
                 // 这是有意的优雅降级（还能继续刮削），但必须留痕，避免用户「以为登录着」。
                 String fresh = NextMoeAuth.refreshAccessToken();
                 if (fresh == null || fresh.isEmpty()) {
-                    Log.w(TAG, "令牌刷新失败，NextMoe 登录已失效；本次请求按匿名配额重放（设置页将显示未登录）");
+                    Log.w(TAG, "The token refresh failed and the NextMoe login has expired; this request is replayed according to the anonymous quota (the settings page will display Not logged in)");
                 }
                 return apiGetOnce(path, params, false);
             }
@@ -243,7 +243,7 @@ public final class NextMoeClient {
                 String errBody = readAll(c.getErrorStream());
                 if ("QUOTA_EXCEEDED".equals(problemCode(errBody))) {
                     // 日配额耗尽：文档明确不要退避重试——等待没有意义，直接给可操作提示
-                    throw new IllegalStateException("QUOTA_EXCEEDED: 今日刮削配额已用完（UTC 零点归零）。"
+                    throw new IllegalStateException("QUOTA_EXCEEDED: Today's scraping quota has been exhausted (UTC zero)."
                             + (authed ? "" : anonymousQuotaHint(degradeToAnonymous)));
                 }
                 // 分钟窗打满：按 Retry-After 等（上限 60s），文档要求先读它
@@ -267,7 +267,7 @@ public final class NextMoeClient {
                 // 带了令牌仍 401：刷新没救回来（refresh token 失效，或刷新遇到瞬态故障）。
                 // 此时绝不能无声退化成匿名——明确告诉用户去重新登录。
                 throw new IllegalStateException("HTTP 401: " + problemCode(body)
-                        + "（NextMoe 登录已失效，请在「设置 → 右侧资料源」重新登录 NextMoe 账号）");
+                        + "(NextMoe login has expired, please log in to your NextMoe account again in \"Settings → Data Source on the right\")");
             }
             if (code < 200 || code >= 300) {
                 throw new IllegalStateException("HTTP " + code + ": " + problemCode(body));
@@ -300,9 +300,9 @@ public final class NextMoeClient {
      */
     private static String anonymousQuotaHint(boolean degradeToAnonymous) {
         if (degradeToAnonymous) {
-            return "（注意：账号为登录态但访问令牌不可用，本次按匿名配额计；请在「设置 → 右侧资料源」重新登录 NextMoe 以恢复账号配额）";
+            return "(Note: The account is logged in but the access token is unavailable. This time it is calculated according to the anonymous quota; please log in to NextMoe again in \"Settings → Data Source on the right\" to restore the account quota)";
         }
-        return "（当前为匿名配额，按网络出口 IP 计；登录 NextMoe 账号可提升刮削配额）";
+        return "(The current quota is anonymous, calculated based on network egress IP; log in to your NextMoe account to increase the scraping quota)";
     }
 
     private static synchronized void throttle(long intervalMs) {
@@ -492,11 +492,11 @@ public final class NextMoeClient {
                 int votes = r.optInt("vote_count", 0);
                 if (score <= 0) continue;
                 if ("vndb".equals(src) && vndb == null) {
-                    vndb = String.format(java.util.Locale.US, "评分：%.1f/10%s", score, votes > 0 ? "（" + votes + " 票）" : "");
+                    vndb = String.format(java.util.Locale.US, "评分：%.1f/10%s", score, votes > 0 ? "（" + votes + "Ticket)" : "");
                 } else if ("bangumi".equals(src) && bgm == null) {
-                    bgm = String.format(java.util.Locale.US, "评分：%.1f/10%s", score, votes > 0 ? "（" + votes + " 票）" : "");
+                    bgm = String.format(java.util.Locale.US, "评分：%.1f/10%s", score, votes > 0 ? "（" + votes + "Ticket)" : "");
                 } else if ("erogamescape".equals(src) && egs == null) {
-                    egs = String.format(java.util.Locale.US, "评分：%.0f/100%s", score, votes > 0 ? "（" + votes + " 票）" : "");
+                    egs = String.format(java.util.Locale.US, "Rating: %.0f/100%s", score, votes > 0 ? "（" + votes + "Ticket)" : "");
                 }
             }
             m.ratingText = vndb != null ? vndb : (bgm != null ? bgm : (egs != null ? egs : ""));
@@ -522,10 +522,10 @@ public final class NextMoeClient {
                 m.lengthVotes = votes == null ? 0 : votes;
                 double hours = minutes / 60.0;
                 m.lengthText = String.format(java.util.Locale.US,
-                        "时长：约 %s%s",
-                        hours >= 10 ? String.format(java.util.Locale.US, "%.0f 小时", hours)
-                                : String.format(java.util.Locale.US, "%.1f 小时", hours),
-                        votes != null && votes > 0 ? "（" + votes + " 票）" : "");
+                        "Duration: Approx. %s%s",
+                        hours >= 10 ? String.format(java.util.Locale.US, "%.0f hours", hours)
+                                : String.format(java.util.Locale.US, "%.1f hours", hours),
+                        votes != null && votes > 0 ? "（" + votes + "Ticket)" : "");
             }
         }
 

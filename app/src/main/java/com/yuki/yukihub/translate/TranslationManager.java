@@ -74,7 +74,7 @@ public class TranslationManager {
         if (provider == null) {
             translating.set(false);
             if (callback != null) {
-                callback.onError(new IllegalStateException("翻译引擎未配置"));
+                callback.onError(new IllegalStateException("Translation engine not configured"));
             }
             return false;
         }

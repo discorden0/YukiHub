@@ -150,11 +150,11 @@ public final class NextMoeAuth {
     private static void saveTokens(JSONObject resp, long expiresIn) throws Exception {
         String access = resp.optString("access_token", "");
         String refresh = resp.optString("refresh_token", "");
-        if (access.isEmpty()) throw new IllegalStateException("token 响应缺少 access_token");
+        if (access.isEmpty()) throw new IllegalStateException("Token response is missing access_token");
         // 刷新响应不总是带新 refresh_token（部分实现只轮换时才下发）；
         // 未下发时保留旧 refresh——本轮未被服务端作废。
         String keep = refresh.isEmpty() ? NextMoeAuthStore.getRefreshToken() : refresh;
-        if (keep.isEmpty()) throw new IllegalStateException("token 响应缺少 refresh_token");
+        if (keep.isEmpty()) throw new IllegalStateException("Token response is missing refresh_token");
         NextMoeAuthStore.save(access, System.currentTimeMillis() + expiresIn * 1000L, keep, NextMoeAuthStore.getAccountLabel());
     }
 
@@ -187,7 +187,7 @@ public final class NextMoeAuth {
         try { c.disconnect(); } catch (Throwable ignored) { }
 
         // 5xx 是服务端瞬态故障（NextMoe·未萌 文档 #13：保留会话并重试），不清凭据
-        if (http >= 500) throw new OAuthException("OAuth 服务暂时不可用（HTTP " + http + "），请稍后重试", true);
+        if (http >= 500) throw new OAuthException("The OAuth service is temporarily unavailable (HTTP" + http + "), please try again later", true);
         if (http >= 400) throw parseErrorStandard(text, http);
         return unwrap(text, http);
     }
@@ -250,6 +250,6 @@ public final class NextMoeAuth {
                 if (!code.isEmpty()) return code;
             } catch (Throwable ignored) { }
         }
-        return m.isEmpty() ? "网络异常" : m;
+        return m.isEmpty() ? "Network abnormality" : m;
     }
 }

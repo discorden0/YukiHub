@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AiReviewResult {
-    public String title = "AI 周点评";
-    public String subtitle = "这周的欧尼酱也被游戏拿捏了呢";
-    public String scoreName = "沉迷指数";
+    public String title = "AI Week Review";
+    public String subtitle = "This week's Onii-chan was also manipulated by the game.";
+    public String scoreName = "Addiction index";
     public int score = 0;
     public String roast = "";
     public final List<String> highlights = new ArrayList<>();
@@ -53,12 +53,12 @@ public class AiReviewResult {
             r.sanitizeVisualNovelSemantics();
         } catch (Throwable t) {
             r.parsedJson = false;
-            r.title = "AI 周点评";
-            r.subtitle = "模型返回了自由文本，先给欧尼酱原样展示";
-            r.scoreName = "锐评指数";
+            r.title = "AI Week Review";
+            r.subtitle = "The model returned the free text and showed it to Onii-chan first.";
+            r.scoreName = "Critical rating index";
             r.score = 66;
             r.roast = r.rawText;
-            r.oneLine = "下次可以让模型严格输出 JSON，杂鱼格式也要调教呢。";
+            r.oneLine = "Next time, you can ask the model to strictly output JSON, and the format of miscellaneous fish also needs to be adjusted.";
             r.sanitizeVisualNovelSemantics();
         }
         return r;
@@ -132,12 +132,12 @@ public class AiReviewResult {
     private static String sanitizeText(String text) {
         if (text == null) return "";
         String s = text;
-        s = s.replace("重复游玩已通关游戏", "重温已通关作品");
-        s = s.replace("重复游玩已通关的游戏", "重温已通关作品");
-        s = s.replace("再通关已玩过游戏", "回味已玩过作品");
-        s = s.replace("克制已通关游戏", "整理已通关作品的感想");
-        s = s.replace("通关游戏花痴", "通关后回味");
-        s = s.replace("浪费时间", "沉浸得有点久");
+        s = s.replace("Playing a completed game repeatedly", "Revisit completed works");
+        s = s.replace("Replay a completed game", "Revisit completed works");
+        s = s.replace("Complete the game again", "Reminiscing about the works you have played");
+        s = s.replace("Restraint has been completed the game", "Compile your thoughts on completed works");
+        s = s.replace("Clear game nymphomaniac", "Aftertaste after clearing the level");
+        s = s.replace("Waste of time", "Immersed in it for a bit long");
         return s;
     }
 
@@ -147,11 +147,11 @@ public class AiReviewResult {
         if (scoreName != null && !scoreName.isEmpty()) sb.append(scoreName).append("：").append(score).append("/100\n");
         if (roast != null && !roast.isEmpty()) sb.append("\n").append(roast).append("\n");
         if (!highlights.isEmpty()) {
-            sb.append("\n亮点：\n");
+            sb.append("Highlights:");
             for (String h : highlights) sb.append("- ").append(h).append("\n");
         }
         if (!advice.isEmpty()) {
-            sb.append("\n下周处方：\n");
+            sb.append("Next week’s prescription:");
             for (String a : advice) sb.append("- ").append(a).append("\n");
         }
         if (oneLine != null && !oneLine.isEmpty()) sb.append("\n").append(oneLine);

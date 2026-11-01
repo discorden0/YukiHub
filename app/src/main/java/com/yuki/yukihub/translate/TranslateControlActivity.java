@@ -53,14 +53,14 @@ public class TranslateControlActivity extends AppCompatActivity {
         header.setBackgroundColor(0xFF1A1F2E);
 
         TextView backBtn = new TextView(this);
-        backBtn.setText("← 返回");
+        backBtn.setText("← Return");
         backBtn.setTextColor(0xFF8AB4FF);
         backBtn.setTextSize(14);
         backBtn.setOnClickListener(v -> finish());
         header.addView(backBtn);
 
         TextView title = new TextView(this);
-        title.setText("翻译设置");
+        title.setText("Translation settings");
         title.setTextColor(0xFFF5F7FF);
         title.setTextSize(16);
         title.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -112,44 +112,44 @@ public class TranslateControlActivity extends AppCompatActivity {
         root.setPadding(pad, pad, pad, pad);
 
         // === 服务状态 ===
-        addSectionTitle(root, "悬浮翻译服务");
+        addSectionTitle(root, "Suspended translation service");
         addStatusRow(root);
         addServiceButtons(root);
 
         // === 权限 ===
-        addSectionTitle(root, "权限设置");
+        addSectionTitle(root, "Permission settings");
         addPermissionRows(root);
 
         // === 语言 ===
-        addSectionTitle(root, "语言设置");
-        addLanguageSelector(root, "源语言", TranslationPreferences.KEY_SOURCE_LANG,
+        addSectionTitle(root, "Language settings");
+        addLanguageSelector(root, "Source language", TranslationPreferences.KEY_SOURCE_LANG,
                 new String[]{"zh", "en", "ja", "fr", "de", "es", "it", "pt"},
-                new String[]{"中文", "英语", "日语", "法语", "德语", "西班牙语", "意大利语", "葡萄牙语"});
-        addLanguageSelector(root, "目标语言", TranslationPreferences.KEY_TARGET_LANG,
+                new String[]{"Chinese", "English", "Japanese", "French", "German", "Spanish", "Italian", "Portuguese"});
+        addLanguageSelector(root, "Target language", TranslationPreferences.KEY_TARGET_LANG,
                 new String[]{"zh", "en", "ja", "ko"},
-                new String[]{"中文", "英语", "日语", "韩语"});
+                new String[]{"Chinese", "English", "Japanese", "Korean"});
 
         // === OCR ===
-        addSectionTitle(root, "OCR 设置");
+        addSectionTitle(root, "OCR settings");
         addOcrEngineSelector(root);
         addOcrMergeModeSelector(root);
 
         // === 翻译引擎 ===
-        addSectionTitle(root, "翻译引擎");
+        addSectionTitle(root, "Translation engine");
         addTextEngineSelector(root);
 
         // === 自动翻译 ===
-        addSectionTitle(root, "自动翻译");
+        addSectionTitle(root, "Automatic translation");
         addAutoTranslateSettings(root);
 
         // === 结果显示 ===
-        addSectionTitle(root, "结果显示");
+        addSectionTitle(root, "The results show");
         addShowSourceModeSelector(root);
         addResultFontSizeSelector(root);
         addPenetrableSwitch(root);
 
         // === 个性化 ===
-        addSectionTitle(root, "个性化");
+        addSectionTitle(root, "Personalization");
         addPersonalizationSection(root);
 
         if (scroll.getChildCount() > 0) {
@@ -180,8 +180,8 @@ public class TranslateControlActivity extends AppCompatActivity {
         boolean canOverlay = YukiTranslateService.canDrawOverlays(this);
         boolean accReady = ScreenshotServiceManager.isReady();
         StringBuilder sb = new StringBuilder();
-        sb.append("悬浮窗权限：").append(canOverlay ? "✅ 已开启" : "❌ 未开启").append("\n");
-        sb.append("无障碍截图服务：").append(accReady ? "✅ 已连接" : "❌ 未连接");
+        sb.append("Floating window permissions:").append(canOverlay ? "✅ Already turned on" : "❌ Not turned on").append("\n");
+        sb.append("Accessible screenshot service:").append(accReady ? "✅ Connected" : "❌ Not connected");
         tv.setText(sb.toString());
         tv.setTextColor(0xFFCCCCCC);
         tv.setTextSize(12);
@@ -196,26 +196,26 @@ public class TranslateControlActivity extends AppCompatActivity {
         row.setPadding(0, dp(8), 0, dp(4));
 
         Button startBtn = new Button(this);
-        startBtn.setText("启动悬浮翻译");
+        startBtn.setText("Start floating translation");
         styleButton(startBtn);
         startBtn.setOnClickListener(v -> {
             if (!YukiTranslateService.canDrawOverlays(this)) {
-                Toast.makeText(this, "请先开启悬浮窗权限", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please enable floating window permission first", Toast.LENGTH_SHORT).show();
                 return;
             }
             YukiTranslateService.start(this);
-            Toast.makeText(this, "悬浮翻译已启动", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Floating translation has been started", Toast.LENGTH_SHORT).show();
         });
         LinearLayout.LayoutParams startLp = new LinearLayout.LayoutParams(0, dp(40), 1);
         startLp.rightMargin = dp(4);
         row.addView(startBtn, startLp);
 
         Button stopBtn = new Button(this);
-        stopBtn.setText("停止");
+        stopBtn.setText("Stop");
         styleButton(stopBtn);
         stopBtn.setOnClickListener(v -> {
             YukiTranslateService.stop(this);
-            Toast.makeText(this, "悬浮翻译已停止", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Hover translation has stopped", Toast.LENGTH_SHORT).show();
         });
         LinearLayout.LayoutParams stopLp = new LinearLayout.LayoutParams(0, dp(40), 1);
         stopLp.leftMargin = dp(4);
@@ -226,7 +226,7 @@ public class TranslateControlActivity extends AppCompatActivity {
 
     private void addPermissionRows(LinearLayout root) {
         Button overlayBtn = new Button(this);
-        overlayBtn.setText("悬浮窗权限设置");
+        overlayBtn.setText("Floating window permission settings");
         styleButton(overlayBtn);
         overlayBtn.setOnClickListener(v -> {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -235,7 +235,7 @@ public class TranslateControlActivity extends AppCompatActivity {
                     intent.setData(android.net.Uri.parse("package:" + getPackageName()));
                     startActivity(intent);
                 } catch (Throwable t) {
-                    Toast.makeText(this, "无法打开设置", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Can't open settings", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -243,14 +243,14 @@ public class TranslateControlActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(40)));
 
         Button accBtn = new Button(this);
-        accBtn.setText("无障碍服务设置");
+        accBtn.setText("Accessibility service settings");
         styleButton(accBtn);
         accBtn.setOnClickListener(v -> {
             try {
                 Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
                 startActivity(intent);
             } catch (Throwable t) {
-                Toast.makeText(this, "无法打开设置", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Can't open settings", Toast.LENGTH_SHORT).show();
             }
         });
         LinearLayout.LayoutParams accLp = new LinearLayout.LayoutParams(
@@ -261,7 +261,7 @@ public class TranslateControlActivity extends AppCompatActivity {
 
     private void addModeSelector(LinearLayout root) {
         String[] values = {"OCR_TEXT", "IMAGE_TRANSLATION"};
-        String[] labels = {"OCR 文本翻译", "图片翻译"};
+        String[] labels = {"OCR text translation", "Picture translation"};
         String current = prefs.getMode();
         for (int i = 0; i < values.length; i++) {
             android.widget.RadioButton rb = new android.widget.RadioButton(this);
@@ -309,7 +309,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
     private void addOcrEngineSelector(LinearLayout root) {
         TextView tv = new TextView(this);
-        tv.setText("PaddleOCR（百度开源 PP-OCRv6，离线默认）");
+        tv.setText("PaddleOCR (Baidu open source PP-OCRv6, offline default)");
         tv.setTextColor(0xFFFFFFFF);
         tv.setTextSize(14);
         root.addView(tv);
@@ -317,12 +317,12 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
     private void addOcrMergeModeSelector(LinearLayout root) {
         TextView tv = new TextView(this);
-        tv.setText("OCR 文本合并模式");
+        tv.setText("OCR text merge mode");
         tv.setTextColor(0xFFB8C7D9);
         tv.setTextSize(12);
         root.addView(tv);
 
-        String[] labels = {"保留原始文本", "按段落换行", "直接合并（推荐）"};
+        String[] labels = {"Keep original text", "Wrap by paragraph", "Direct merge (recommended)"};
         int current = prefs.getOcrMergeMode();
         android.widget.Spinner spinner = new android.widget.Spinner(this);
         android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
@@ -343,7 +343,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
     private void addTextEngineSelector(LinearLayout root) {
         String[] values = {"BING", "NIUTRANS", "UNIAI", "VOLC", "AZURE", "DEEPL", "BAIDU", "TENCENT", "CUSTOM"};
-        String[] labels = {"Bing 翻译（免费，无需 Key）", "小牛翻译", "聚合 AI 翻译", "火山引擎", "Azure AI 翻译", "DeepL 翻译", "百度翻译", "腾讯云", "自定义 API"};
+        String[] labels = {"Bing Translate (free, no Key required)", "Mavericks translation", "Aggregated AI translation", "Volcano engine", "Azure AI Translate", "DeepL translation", "Baidu Translate", "Tencent Cloud", "Custom API"};
         String current = prefs.getTextEngine();
         android.widget.Spinner spinner = new android.widget.Spinner(this);
         android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
@@ -386,102 +386,102 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         if (engine == null) return;
         switch (engine) {
             case "BING":
-                addGuideText(container, "Bing 翻译\n\n基于必应网页版接口模拟实现，完全免费，无需申请 API Key。\n\n优点：零配置开箱即用。\n缺点：依赖网页结构提取 Token，稳定性较低，高频使用可能被限流。");
+                addGuideText(container, "Bing translation\n\nBased on the Bing web version interface simulation implementation, it is completely free and no need to apply for an API Key.\n\nPros: Zero configuration out of the box.\nDisadvantages: Relying on web page structure to extract tokens, low stability, high-frequency use may be limited.");
                 break;
             case "NIUTRANS":
-                addGuideText(container, "小牛翻译（NiuTrans）\n\n东北大学自然语言处理实验室出品，对日语翻译效果优秀。\n\n免费额度：每天 20 万字符免费调用。\n需要申请 API-KEY。");
-                addConfigButton(container, "❓ 这是什么？", () -> showApiIntroDialog(
-                        "小牛翻译",
-                        "YukiHub 可以使用小牛翻译的 API 来提供翻译服务，这意味着你需要从小牛翻译平台申请 API。\n\n小牛翻译提供免费额度，每天有 20 万字符的免费调用次数。\n\n小牛翻译由东北大学自然语言处理实验室开发，在日语翻译方面效果较好。",
+                addGuideText(container, "NiuTrans\n\nProduced by the Natural Language Processing Laboratory of Northeastern University, it has excellent Japanese translation effect.\n\nFree quota: 200,000 characters per day for free calls.\nNeed to apply for API-KEY.");
+                addConfigButton(container, "❓ What is this?", () -> showApiIntroDialog(
+                        "Mavericks translation",
+                        "YukiHub can use the API of Mavericks Translation to provide translation services, which means you need to apply for the API from the Mavericks Translation platform.\n\nMavericks Translation provides a free quota, with 200,000 characters of free calls per day.\n\nMavericks Translation was developed by the Natural Language Processing Laboratory of Northeastern University and has good results in Japanese translation.",
                         "https://niutrans.com/",
                         "https://www.moetranslate.top/docs/translationapi/niutrans/"
                 ));
                 boolean hasNiu = !prefs.raw().getString(TranslationPreferences.KEY_NIUTRANS_APIKEY, "").isEmpty();
-                addConfigButton(container, hasNiu ? "✅ 已配置 API-KEY（点击修改）" : "⚙️ 配置 API-KEY", () -> showSingleKeyDialog(
-                        "小牛翻译 API-KEY", TranslationPreferences.KEY_NIUTRANS_APIKEY, "请输入 API-KEY", "https://niutrans.com/"
+                addConfigButton(container, hasNiu ? "✅ API-KEY has been configured (click to modify)" : "⚙️ Configure API-KEY", () -> showSingleKeyDialog(
+                        "Mavericks Translation API-KEY", TranslationPreferences.KEY_NIUTRANS_APIKEY, "Please enter API-KEY", "https://niutrans.com/"
                 ));
                 break;
             case "UNIAI":
-                addGuideText(container, "聚合 AI 翻译\n\n支持所有兼容 OpenAI Chat Completions 格式的 API，包括 ChatGPT、通义千问（Qwen）、DeepSeek、Kimi 等。\n\n只要 AI 接口兼容 OpenAI 接口规范，就可以接入。翻译效果优秀，适合长文和上下文连贯场景。");
-                addConfigButton(container, "❓ 这是什么？", () -> showApiIntroDialog(
-                        "聚合 AI 翻译",
-                        "YukiHub 可以使用主流 AI 模型进行翻译（只要兼容 OpenAI API 规范），包括 ChatGPT、通义千问（Qwen）、DeepSeek 等。\n\n这些 API 大多有免费额度，具体取决于各平台的政策。\n\n相比本地翻译，使用云 AI API 的翻译效果通常更好，尤其在上下文连贯性和术语一致性方面表现突出。",
+                addGuideText(container, "Aggregated AI translation\n\nSupports all APIs compatible with the OpenAI Chat Completions format, including ChatGPT, Qwen, DeepSeek, Kimi, etc.\n\nAs long as the AI ​​interface is compatible with the OpenAI interface specification, it can be accessed. The translation effect is excellent, suitable for long texts and contextually coherent scenes.");
+                addConfigButton(container, "❓ What is this?", () -> showApiIntroDialog(
+                        "Aggregated AI translation",
+                        "YukiHub can use mainstream AI models for translation (as long as they are compatible with the OpenAI API specification), including ChatGPT, Qwen, DeepSeek, etc.\n\nMost of these APIs have free quotas, depending on the policies of each platform.\n\nTranslation results using cloud AI APIs are generally better than local translation, especially in terms of contextual coherence and terminology consistency.",
                         "https://platform.openai.com/api-keys",
                         "https://www.moetranslate.top/docs/translationapi/uniaitrans/"
                 ));
                 boolean hasAi = !prefs.raw().getString(TranslationPreferences.KEY_OPENAI_APIKEY, "").isEmpty();
-                addConfigButton(container, hasAi ? "✅ 已配置（点击修改）" : "⚙️ 配置 API", () -> showOpenAiConfigDialog());
+                addConfigButton(container, hasAi ? "✅ Already configured (click to modify)" : "⚙️Configuration API", () -> showOpenAiConfigDialog());
                 break;
             case "VOLC":
-                addGuideText(container, "火山引擎（Volc Engine）\n\n字节跳动旗下翻译 API，支持多语种。\n\n免费额度：每月 200 万字符免费调用。\n需要 Access Key ID 和 Secret Access Key。");
-                addConfigButton(container, "❓ 这是什么？", () -> showApiIntroDialog(
-                        "火山引擎",
-                        "YukiHub 可以使用火山引擎的翻译 API 来提供翻译服务，这意味着你需要从火山引擎平台申请 API。\n\n火山引擎提供免费额度，每月有 200 万字符的免费调用次数。\n\n火山引擎是字节跳动旗下的云服务平台，翻译质量稳定。",
+                addGuideText(container, "Volc Engine\n\nByteDance's translation API supports multiple languages.\n\nFree quota: 2 million characters per month for free calls.\nAccess Key ID and Secret Access Key are required.");
+                addConfigButton(container, "❓ What is this?", () -> showApiIntroDialog(
+                        "Volcano engine",
+                        "YukiHub can use the translation API of the Volcano Engine to provide translation services, which means you need to apply for the API from the Volcano Engine platform.\n\nVolcano Engine provides a free quota with 2 million characters of free calls per month.\n\nVolcano Engine is a cloud service platform owned by ByteDance, and its translation quality is stable.",
                         "https://www.volcengine.com/",
                         "https://www.moetranslate.top/docs/translationapi/volc/"
                 ));
                 boolean hasVolc = !prefs.raw().getString(TranslationPreferences.KEY_VOLC_AK, "").isEmpty();
-                addConfigButton(container, hasVolc ? "✅ 已配置（点击修改）" : "⚙️ 配置 Access Key", () -> showDualKeyDialog(
-                        "火山引擎", TranslationPreferences.KEY_VOLC_AK, TranslationPreferences.KEY_VOLC_SK,
+                addConfigButton(container, hasVolc ? "✅ Already configured (click to modify)" : "⚙️ Configure Access Key", () -> showDualKeyDialog(
+                        "Volcano engine", TranslationPreferences.KEY_VOLC_AK, TranslationPreferences.KEY_VOLC_SK,
                         "Access Key ID", "Secret Access Key", "https://www.volcengine.com/"
                 ));
                 break;
             case "AZURE":
-                addGuideText(container, "Azure AI 翻译\n\n微软 Azure AI Translator，支持 100+ 语种。\n\n免费额度：每月 200 万字符免费调用。\n需要申请 KEY。");
-                addConfigButton(container, "❓ 这是什么？", () -> showApiIntroDialog(
-                        "Azure AI 翻译",
-                        "YukiHub 可以使用微软 Azure AI Translator 的 API 来提供翻译服务，这意味着你需要从 Azure 平台申请 API。\n\nAzure AI Translator 每月有 200 万字符的免费调用额度，支持 100 多种语言。\n\nAzure 是微软旗下的云服务平台，翻译质量稳定可靠。",
+                addGuideText(container, "Azure AI Translate\n\nMicrosoft Azure AI Translator supports 100+ languages.\n\nFree quota: 2 million characters per month for free calls.\nNeed to apply for KEY.");
+                addConfigButton(container, "❓ What is this?", () -> showApiIntroDialog(
+                        "Azure AI Translate",
+                        "YukiHub can use the API of Microsoft Azure AI Translator to provide translation services, which means you need to apply for the API from the Azure platform.\n\nAzure AI Translator has a free monthly credit of 2 million characters and supports more than 100 languages.\n\nAzure is a cloud service platform owned by Microsoft, and its translation quality is stable and reliable.",
                         "https://portal.azure.com/",
                         "https://www.moetranslate.top/docs/translationapi/azure/"
                 ));
                 boolean hasAzure = !prefs.raw().getString(TranslationPreferences.KEY_AZURE_KEY, "").isEmpty();
-                addConfigButton(container, hasAzure ? "✅ 已配置 KEY（点击修改）" : "⚙️ 配置 KEY", () -> showSingleKeyDialog(
-                        "Azure AI 翻译 KEY", TranslationPreferences.KEY_AZURE_KEY, "请输入 Subscription Key", "https://portal.azure.com/"
+                addConfigButton(container, hasAzure ? "✅ KEY has been configured (click to modify)" : "⚙️ Configure KEY", () -> showSingleKeyDialog(
+                        "Azure AI Translation KEY", TranslationPreferences.KEY_AZURE_KEY, "Please enter Subscription Key", "https://portal.azure.com/"
                 ));
                 break;
             case "DEEPL":
-                addGuideText(container, "DeepL 翻译\n\nDeepL 以高翻译质量著称，尤其擅长日语、英语、德语等语种。\n\n免费套餐：每月 50 万字符免费。\n需要申请 Host 和 API Key。");
-                addConfigButton(container, "❓ 这是什么？", () -> showApiIntroDialog(
-                        "DeepL 翻译",
-                        "YukiHub 可以使用 DeepL 的 API 来提供翻译服务，这意味着你需要从 DeepL 平台申请 API Key。\n\nDeepL 提供免费套餐（Free 计划），每月有 50 万字符的免费调用额度。\n\n相比其他翻译 API，DeepL 在文学性和上下文连贯性方面表现更佳。\n\nHost 填写：免费版填 api-free.deepl.com，付费版填 api.deepl.com。",
+                addGuideText(container, "DeepL translation\n\nDeepL is known for its high translation quality, especially in Japanese, English, German and other languages.\n\nFree tier: 500,000 characters free per month.\nYou need to apply for Host and API Key.");
+                addConfigButton(container, "❓ What is this?", () -> showApiIntroDialog(
+                        "DeepL translation",
+                        "YukiHub can use DeepL's API to provide translation services, which means you need to apply for an API Key from the DeepL platform.\n\nDeepL offers a free plan (Free plan) with a free calling quota of 500,000 characters per month.\n\nCompared to other translation APIs, DeepL performs better in terms of literariness and contextual coherence.\n\nFill in the Host: api-free.deepl.com for the free version, and api.deepl.com for the paid version.",
                         "https://www.deepl.com/pro-api",
                         "https://www.moetranslate.top/docs/translationapi/deepl/"
                 ));
                 boolean hasDeepl = !prefs.raw().getString(TranslationPreferences.KEY_DEEPL_APIKEY, "").isEmpty();
-                addConfigButton(container, hasDeepl ? "✅ 已配置（点击修改）" : "⚙️ 配置 Host 和 API Key", () -> showDeepLConfigDialog());
+                addConfigButton(container, hasDeepl ? "✅ Already configured (click to modify)" : "⚙️ Configure Host and API Key", () -> showDeepLConfigDialog());
                 break;
             case "BAIDU":
-                addGuideText(container, "百度翻译 API\n\n标准版免费，QPS=1，每月 100 万字符免费调用额度。\n需要 APP ID 和密钥。");
-                addConfigButton(container, "❓ 这是什么？", () -> showApiIntroDialog(
-                        "百度翻译 API",
-                        "YukiHub 可以使用百度翻译的 API 来提供翻译服务，这意味着你需要从百度翻译开放平台申请 API。\n\n百度翻译标准版免费，QPS 限制为 1 次/秒，每月有 100 万字符的免费调用额度。\n\n对于中文相关的翻译，百度翻译通常表现不错。",
+                addGuideText(container, "Baidu Translation API\n\nThe standard version is free, QPS=1, and has a free calling quota of 1 million characters per month.\nAPP ID and key required.");
+                addConfigButton(container, "❓ What is this?", () -> showApiIntroDialog(
+                        "Baidu Translation API",
+                        "YukiHub can use Baidu Translation's API to provide translation services, which means you need to apply for an API from the Baidu Translation Open Platform.\n\nBaidu Translate Standard Edition is free, with a QPS limit of 1 time/second and a free calling quota of 1 million characters per month.\n\nFor Chinese-related translations, Baidu Translate generally performs well.",
                         "https://fanyi-api.baidu.com/",
                         "https://www.moetranslate.top/docs/translationapi/baidu/"
                 ));
                 boolean hasBaidu = !prefs.raw().getString(TranslationPreferences.KEY_BAIDU_APPID, "").isEmpty();
-                addConfigButton(container, hasBaidu ? "✅ 已配置（点击修改）" : "⚙️ 配置 APP ID 和密钥", () -> showDualKeyDialog(
-                        "百度翻译", TranslationPreferences.KEY_BAIDU_APPID, TranslationPreferences.KEY_BAIDU_SECRETKEY,
-                        "APP ID", "密钥", "https://fanyi-api.baidu.com/"
+                addConfigButton(container, hasBaidu ? "✅ Already configured (click to modify)" : "⚙️ Configure APP ID and key", () -> showDualKeyDialog(
+                        "Baidu Translate", TranslationPreferences.KEY_BAIDU_APPID, TranslationPreferences.KEY_BAIDU_SECRETKEY,
+                        "APP ID", "Key", "https://fanyi-api.baidu.com/"
                 ));
                 break;
             case "TENCENT":
-                addGuideText(container, "腾讯云翻译 API\n\n腾讯云 TMT 服务，支持多语种。\n\n免费额度：每月 500 万字符免费调用。\n需要 SecretId 和 SecretKey。");
-                addConfigButton(container, "❓ 这是什么？", () -> showApiIntroDialog(
-                        "腾讯云翻译 API",
-                        "YukiHub 可以使用腾讯云的翻译 API 来提供翻译服务，这意味着你需要从腾讯云平台申请 API。\n\n腾讯云翻译每月有 500 万字符的免费调用额度，是所有云翻译中免费额度最大的之一。\n\n腾讯云是腾讯旗下的云服务平台，翻译质量稳定。",
+                addGuideText(container, "Tencent Cloud Translation API\n\nTencent Cloud TMT service supports multiple languages.\n\nFree quota: 5 million characters per month for free calls.\nRequires SecretId and SecretKey.");
+                addConfigButton(container, "❓ What is this?", () -> showApiIntroDialog(
+                        "Tencent Cloud Translation API",
+                        "YukiHub can use Tencent Cloud's translation API to provide translation services, which means you need to apply for the API from the Tencent Cloud platform.\n\nTencent Cloud Translation has a free calling quota of 5 million characters per month, which is one of the largest free quotas among all cloud translations.\n\nTencent Cloud is a cloud service platform owned by Tencent, with stable translation quality.",
                         "https://cloud.tencent.com/",
                         "https://www.moetranslate.top/docs/translationapi/tencent/"
                 ));
                 boolean hasTencent = !prefs.raw().getString(TranslationPreferences.KEY_TENCENT_SECRETID, "").isEmpty();
-                addConfigButton(container, hasTencent ? "✅ 已配置（点击修改）" : "⚙️ 配置 SecretId 和 SecretKey", () -> showDualKeyDialog(
-                        "腾讯云", TranslationPreferences.KEY_TENCENT_SECRETID, TranslationPreferences.KEY_TENCENT_SECRETKEY,
+                addConfigButton(container, hasTencent ? "✅ Already configured (click to modify)" : "⚙️ Configure SecretId and SecretKey", () -> showDualKeyDialog(
+                        "Tencent Cloud", TranslationPreferences.KEY_TENCENT_SECRETID, TranslationPreferences.KEY_TENCENT_SECRETKEY,
                         "SecretId", "SecretKey", "https://cloud.tencent.com/"
                 ));
                 break;
             case "CUSTOM":
-                addGuideText(container, "自定义翻译 API\n\n⚠️ 这是高级功能，需要你具备基本的 API 调用知识。\n\n支持 GET / POST 请求方法，可自定义 URL、请求头、请求体和响应解析路径。所有 API 响应必须是 JSON 格式。");
-                addConfigButton(container, "📖 查看详细说明", () -> showCustomApiIntroDialog());
-                addConfigButton(container, "配置自定义 API", () -> {
+                addGuideText(container, "Custom translation API\n\n⚠️ This is an advanced feature and requires you to have basic knowledge of API calls.\n\nSupports GET / POST request methods, and can customize URL, request header, request body and response parsing path. All API responses must be in JSON format.");
+                addConfigButton(container, "📖 View detailed instructions", () -> showCustomApiIntroDialog());
+                addConfigButton(container, "Configure custom APIs", () -> {
                     showCustomApiConfigDialog();
                 });
                 break;
@@ -505,20 +505,20 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle(title)
                 .setView(edit)
-                .setPositiveButton("保存", (d, w) -> {
+                .setPositiveButton("Save", (d, w) -> {
                     String value = edit.getText().toString().trim();
                     prefs.putString(prefKey, value);
-                    Toast.makeText(this, value.isEmpty() ? "已清除" : "已保存", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, value.isEmpty() ? "Cleared" : "Saved", Toast.LENGTH_SHORT).show();
                     recreate();
                 })
-                .setNeutralButton("前往申请", (d, w) -> {
+                .setNeutralButton("Go to apply", (d, w) -> {
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(applyUrl)));
                     } catch (Throwable t) {
-                        Toast.makeText(this, "无法打开浏览器", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Can't open browser", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -558,20 +558,20 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle(title)
                 .setView(root)
-                .setPositiveButton("保存", (d, w) -> {
+                .setPositiveButton("Save", (d, w) -> {
                     prefs.putString(key1Pref, edit1.getText().toString().trim());
                     prefs.putString(key2Pref, edit2.getText().toString().trim());
-                    Toast.makeText(this, "已保存", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
                     recreate();
                 })
-                .setNeutralButton("前往申请", (d, w) -> {
+                .setNeutralButton("Go to apply", (d, w) -> {
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(applyUrl)));
                     } catch (Throwable t) {
-                        Toast.makeText(this, "无法打开浏览器", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Can't open browser", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -584,7 +584,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         root.setPadding(pad, pad, pad, pad);
 
         android.widget.EditText editHost = new android.widget.EditText(this);
-        editHost.setHint("Host（免费版: api-free.deepl.com）");
+        editHost.setHint("Host (free version: api-free.deepl.com)");
         editHost.setTextColor(0xFFE8F0F8);
         editHost.setHintTextColor(0x66FFFFFF);
         editHost.setTextSize(13);
@@ -608,22 +608,22 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         root.addView(editKey, lp2);
 
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("DeepL 配置")
+                .setTitle("DeepL configuration")
                 .setView(root)
-                .setPositiveButton("保存", (d, w) -> {
+                .setPositiveButton("Save", (d, w) -> {
                     prefs.putString(TranslationPreferences.KEY_DEEPL_HOST, editHost.getText().toString().trim());
                     prefs.putString(TranslationPreferences.KEY_DEEPL_APIKEY, editKey.getText().toString().trim());
-                    Toast.makeText(this, "已保存", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
                     recreate();
                 })
-                .setNeutralButton("前往申请", (d, w) -> {
+                .setNeutralButton("Go to apply", (d, w) -> {
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://www.deepl.com/pro-api")));
                     } catch (Throwable t) {
-                        Toast.makeText(this, "无法打开浏览器", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Can't open browser", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -646,13 +646,13 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         root.addView(editKey, lpFull(dp(8)));
 
         // --- 模型名 ---
-        android.widget.EditText editModel = styledEditText("模型名（如 gpt-4o、qwen-plus、deepseek-chat）");
+        android.widget.EditText editModel = styledEditText("Model name (such as gpt-4o, qwen-plus, deepseek-chat)");
         editModel.setText(prefs.raw().getString(TranslationPreferences.KEY_OPENAI_MODEL, ""));
         root.addView(editModel, lpFull(dp(8)));
 
         // 获取模型列表按钮
         android.widget.Button btnFetchModels = new android.widget.Button(this);
-        btnFetchModels.setText("📋 获取模型列表");
+        btnFetchModels.setText("📋 Get model list");
         btnFetchModels.setTextColor(0xFFE8F0F8);
         btnFetchModels.setBackgroundColor(0xFF1A4A3A);
         btnFetchModels.setTextSize(11);
@@ -660,19 +660,19 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             String currentKey = editKey.getText().toString().trim();
             String currentUrl = editUrl.getText().toString().trim();
             if (currentKey.isEmpty()) {
-                Toast.makeText(this, "请先填写 API Key", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please fill in the API Key first", Toast.LENGTH_SHORT).show();
                 return;
             }
             btnFetchModels.setEnabled(false);
-            btnFetchModels.setText("获取中...");
+            btnFetchModels.setText("Getting...");
             new Thread(() -> {
                 try {
                     java.util.List<String> models = OpenAiTranslationProvider.fetchModels(currentKey, currentUrl);
                     runOnUiThread(() -> {
                         btnFetchModels.setEnabled(true);
-                        btnFetchModels.setText("📋 获取模型列表");
+                        btnFetchModels.setText("📋 Get model list");
                         if (models.isEmpty()) {
-                            Toast.makeText(this, "未获取到模型列表", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Model list not obtained", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         showModelPickerDialog(models, editModel);
@@ -680,8 +680,8 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
                 } catch (Exception e) {
                     runOnUiThread(() -> {
                         btnFetchModels.setEnabled(true);
-                        btnFetchModels.setText("📋 获取模型列表");
-                        Toast.makeText(this, "获取失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        btnFetchModels.setText("📋 Get model list");
+                        Toast.makeText(this, "Failed to get:" + e.getMessage(), Toast.LENGTH_LONG).show();
                     });
                 }
             }).start();
@@ -689,9 +689,9 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         root.addView(btnFetchModels, lpFull(dp(4)));
 
         // --- 系统提示词 ---
-        android.widget.TextView tvSys = styledLabel("系统提示词（留空使用默认，下方默认值可参考修改）");
+        android.widget.TextView tvSys = styledLabel("System prompt word (leave it blank to use the default, the default value below can be modified for reference)");
         root.addView(tvSys, lpFull(dp(12)));
-        android.widget.EditText editSysPrompt = styledEditText("留空使用默认专业翻译提示词");
+        android.widget.EditText editSysPrompt = styledEditText("Leave blank to use the default professional translation prompt word");
         editSysPrompt.setSingleLine(false);
         editSysPrompt.setMinLines(3);
         String currentSys = prefs.raw().getString(TranslationPreferences.KEY_OPENAI_SYSTEM_PROMPT, "");
@@ -699,9 +699,9 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         root.addView(editSysPrompt, lpFull(dp(4)));
 
         // --- 用户提示词 ---
-        android.widget.TextView tvUser = styledLabel("用户提示词（留空使用默认，占位符：usefromlang / usetolang / usesourcetext）");
+        android.widget.TextView tvUser = styledLabel("User prompt word (leave blank to use default, placeholder: usefromlang / usetolang / usesourcetext)");
         root.addView(tvUser, lpFull(dp(12)));
-        android.widget.EditText editUserPrompt = styledEditText("留空使用默认");
+        android.widget.EditText editUserPrompt = styledEditText("Leave blank to use default");
         editUserPrompt.setSingleLine(false);
         editUserPrompt.setMinLines(2);
         String currentUser = prefs.raw().getString(TranslationPreferences.KEY_OPENAI_USER_PROMPT, "");
@@ -709,7 +709,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         root.addView(editUserPrompt, lpFull(dp(4)));
 
         // --- 温度 ---
-        android.widget.EditText editTemp = styledEditText("温度（0.0~2.0，留空表示不发送 temperature）");
+        android.widget.EditText editTemp = styledEditText("Temperature (0.0~2.0, leave blank to not send temperature)");
         editTemp.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
         String currentTemp = prefs.raw().getString(TranslationPreferences.KEY_OPENAI_TEMPERATURE, "");
         editTemp.setText(currentTemp.isEmpty() ? OpenAiTranslationProvider.DEFAULT_TEMPERATURE : currentTemp);
@@ -717,8 +717,8 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // --- 自定义请求参数 ---
         android.widget.TextView tvExtra = styledLabel(
-                "自定义请求参数（高级，可覆盖模型参数）\n" +
-                "例如：key=enable_thinking value=false\n" +
+                "Custom request parameters (advanced, can override model parameters)" +
+                "For example: key=enable_thinking value=false" +
                 "     key=chat_template_kwargs value={\"enable_thinking\":false}");
         root.addView(tvExtra, lpFull(dp(12)));
 
@@ -731,7 +731,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // 「添加参数」按钮
         android.widget.Button btnAddParam = new android.widget.Button(this);
-        btnAddParam.setText("+ 添加参数");
+        btnAddParam.setText("+ add parameters");
         btnAddParam.setTextColor(0xFFE8F0F8);
         btnAddParam.setBackgroundColor(0xFF1A4A3A);
         btnAddParam.setTextSize(12);
@@ -755,7 +755,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // --- 重置默认按钮 ---
         android.widget.Button btnReset = new android.widget.Button(this);
-        btnReset.setText("↻ 重置为默认提示词");
+        btnReset.setText("↻ Reset to default prompt words");
         btnReset.setTextColor(0xFFE8F0F8);
         btnReset.setBackgroundColor(0xFF333740);
         btnReset.setTextSize(12);
@@ -763,15 +763,15 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             editSysPrompt.setText(OpenAiTranslationProvider.DEFAULT_SYSTEM_PROMPT);
             editUserPrompt.setText(OpenAiTranslationProvider.DEFAULT_USER_PROMPT);
             editTemp.setText(OpenAiTranslationProvider.DEFAULT_TEMPERATURE);
-            Toast.makeText(this, "已重置为默认值", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Reset to default", Toast.LENGTH_SHORT).show();
         });
         root.addView(btnReset, lpFull(dp(8)));
 
         // --- 对话框 ---
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("聚合 AI 翻译配置")
+                .setTitle("Aggregated AI translation configuration")
                 .setView(root)
-                .setPositiveButton("保存", (d, w) -> {
+                .setPositiveButton("Save", (d, w) -> {
                     prefs.putString(TranslationPreferences.KEY_OPENAI_BASEURL, editUrl.getText().toString().trim());
                     prefs.putString(TranslationPreferences.KEY_OPENAI_APIKEY, editKey.getText().toString().trim());
                     prefs.putString(TranslationPreferences.KEY_OPENAI_MODEL, editModel.getText().toString().trim());
@@ -791,17 +791,17 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
                     prefs.putString(TranslationPreferences.KEY_OPENAI_EXTRA_PARAMS,
                             OpenAiTranslationProvider.encodeExtraParams(pairs));
 
-                    Toast.makeText(this, "已保存", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
                     recreate();
                 })
-                .setNeutralButton("前往申请", (d, w) -> {
+                .setNeutralButton("Go to apply", (d, w) -> {
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://platform.openai.com/api-keys")));
                     } catch (Throwable t) {
-                        Toast.makeText(this, "无法打开浏览器", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Can't open browser", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -812,7 +812,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
 
-        android.widget.EditText editK = styledEditText("参数名");
+        android.widget.EditText editK = styledEditText("Parameter name");
         editK.setText(key);
         LinearLayout.LayoutParams lpK = new LinearLayout.LayoutParams(
                 0, dp(44), 1f);
@@ -889,74 +889,74 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
     private void showModelPickerDialog(java.util.List<String> models, android.widget.EditText targetEdit) {
         String[] items = models.toArray(new String[0]);
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("选择模型（共 " + models.size() + " 个）")
+                .setTitle("Select model (total" + models.size() + "Indivual)")
                 .setItems(items, (d, which) -> {
                     targetEdit.setText(items[which]);
-                    Toast.makeText(this, "已选择：" + items[which], Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Selected:" + items[which], Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
     private void showApiIntroDialog(String apiName, String content, String goUrl, String tutorialUrl) {
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("什么是 " + apiName + "？")
+                .setTitle("What is" + apiName + "？")
                 .setMessage(content)
                 .setCancelable(false)
-                .setNeutralButton("查看教程", (d, w) -> {
+                .setNeutralButton("View tutorial", (d, w) -> {
                     try {
                         Intent intent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(tutorialUrl));
                         startActivity(intent);
                     } catch (Throwable t) {
-                        Toast.makeText(this, "无法打开浏览器", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Can't open browser", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setPositiveButton("前往申请", (d, w) -> {
+                .setPositiveButton("Go to apply", (d, w) -> {
                     try {
                         Intent intent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(goUrl));
                         startActivity(intent);
                     } catch (Throwable t) {
-                        Toast.makeText(this, "无法打开浏览器", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Can't open browser", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
     private void showCustomApiIntroDialog() {
-        String content = "⚠️ 注意：这是高级功能，需要你具备基本的 API 调用知识。\n\n"
-                + "1. 基本说明\n"
-                + "此功能允许你配置自己的文本翻译 API，支持 GET 和 POST 请求方法。"
-                + "（POST 的 Content-Type 为 application/json; charset=utf-8，无需在请求头中显式添加。）所有 API 响应必须为 JSON 格式。\n\n"
-                + "2. 使用场景\n"
-                + "通常，大型翻译 API 服务商实现了自己的签名算法，无法通过简单的 GET/POST 请求直接调用。"
-                + "因此，自定义文本翻译 API 的实际使用场景是连接你自己搭建的翻译 API 接口。\n\n"
-                + "3. 参数说明\n"
-                + "① 请求方式：GET 或 POST\n"
-                + "② API 地址：可指定 http 或 https\n"
-                + "③ 请求头：随请求发送的 Headers\n"
-                + "④ 请求体（POST）：JSON 请求内容\n"
-                + "⑤ 响应路径：从 API 响应 JSON 中提取翻译结果的路径\n\n"
-                + "注意：\n"
-                + "① 在请求头和请求体中，使用 \"usesourcetext\" 代表待翻译文本\n"
-                + "② 确保在请求体中包含源语言和目标语言代码\n\n"
-                + "4. 请求示例\n"
-                + "【GET 请求】\n"
+        String content = "⚠️ Note: This is an advanced feature and requires you to have basic knowledge of API calls."
+                + "1. Basic instructions"
+                + "This feature allows you to configure your own text translation API, supporting GET and POST request methods."
+                + "(The Content-Type of POST is application/json; charset=utf-8, no need to add it explicitly in the request header.) All API responses must be in JSON format."
+                + "2. Usage scenarios"
+                + "Often, large translation API providers implement their own signature algorithms that cannot be called directly via simple GET/POST requests."
+                + "Therefore, the actual usage scenario of the custom text translation API is to connect the translation API interface you built yourself."
+                + "3. Parameter description"
+                + "① Request method: GET or POST"
+                + "② API address: http or https can be specified"
+                + "③ Request headers: Headers sent with the request"
+                + "④ Request body (POST): JSON request content"
+                + "⑤ Response path: The path to extract the translation results from the API response JSON"
+                + "Notice:"
+                + "① In the request header and request body, use \"usesourcetext\" to represent the text to be translated"
+                + "② Ensure that the source language and target language codes are included in the request body"
+                + "4. Request Example"
+                + "【GET request】"
                 + "URL: https://api.example.com/translate\n"
                 + "Query: text=usesourcetext&source=ja&target=zh\n"
                 + "Headers: Authorization=my_custom_token\n\n"
-                + "【POST 请求】\n"
+                + "[POST request]"
                 + "URL: https://api.example.com/translate\n"
                 + "Headers: Authorization=my_custom_token\n"
                 + "Body: text=usesourcetext, source=ja, target=zh\n\n"
-                + "5. 响应路径示例\n"
-                + "示例1: {\"code\":0, \"data\":{\"translation\":\"你好\"}} → 路径: data.translation\n"
-                + "示例2: {\"code\":0, \"result\":\"你好\"} → 路径: result\n"
-                + "示例3: {\"data\":{\"translations\":[{\"text\":\"你好\"}]}} → 路径: data.translations[0].text\n\n"
-                + "语法：用 \".\" 分隔对象属性，用 \"[n]\" 访问数组第 n 个元素（从 0 开始）。"
-                + "可自由组合，如 data.list[0].items[2].text\n\n"
-                + "6. 使用前建议\n"
-                + "可以先使用 Postman 或 Reqable 等工具测试 API 响应，测试成功后再将参数填入此功能。";
+                + "5. Response path example"
+                + "Example 1: {\"code\":0, \"data\":{\"translation\":\"你好\"}} → path: data.translation"
+                + "Example 2: {\"code\":0, \"result\":\"你好\"} → path: result"
+                + "Example 3: {\"data\":{\"translations\":[{\"text\":\"你好\"}]}} → Path: data.translations[0].text"
+                + "Syntax: Use \".\" to separate object properties, use \"[n]\" to access the nth element of the array (starting from 0)."
+                + "Can be combined freely, such as data.list[0].items[2].text"
+                + "6. Recommendations before use"
+                + "You can first use tools such as Postman or Reqable to test the API response, and then fill in the parameters into this function after the test is successful.";
 
         ScrollView scroll = new ScrollView(this);
         TextView tv = new TextView(this);
@@ -970,9 +970,9 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         scroll.addView(tv);
 
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("自定义文本翻译 API 功能说明")
+                .setTitle("Custom text translation API function description")
                 .setView(scroll)
-                .setPositiveButton("知道了", null)
+                .setPositiveButton("Knew", null)
                 .show();
     }
 
@@ -1009,7 +1009,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // Method 选择
         TextView methodLabel = new TextView(this);
-        methodLabel.setText("请求方式");
+        methodLabel.setText("Request method");
         methodLabel.setTextColor(0xFFB8C7D9);
         methodLabel.setTextSize(12);
         root.addView(methodLabel);
@@ -1022,7 +1022,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // URL
         TextView urlLabel = new TextView(this);
-        urlLabel.setText("API 地址");
+        urlLabel.setText("API address");
         urlLabel.setTextColor(0xFFB8C7D9);
         urlLabel.setTextSize(12);
         urlLabel.setPadding(0, dp(8), 0, 0);
@@ -1040,7 +1040,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // Headers
         TextView headersLabel = new TextView(this);
-        headersLabel.setText("请求头（每行 key=value）");
+        headersLabel.setText("Request header (key=value per line)");
         headersLabel.setTextColor(0xFFB8C7D9);
         headersLabel.setTextSize(12);
         headersLabel.setPadding(0, dp(8), 0, 0);
@@ -1060,7 +1060,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // Body（POST 时使用）
         TextView bodyLabel = new TextView(this);
-        bodyLabel.setText("请求体（POST，每行 key=value，usesourcetext 会被替换为待翻译文本）");
+        bodyLabel.setText("Request body (POST, each line key=value, usesourcetext will be replaced with the text to be translated)");
         bodyLabel.setTextColor(0xFFB8C7D9);
         bodyLabel.setTextSize(12);
         bodyLabel.setPadding(0, dp(8), 0, 0);
@@ -1080,7 +1080,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // JSON Path
         TextView pathLabel = new TextView(this);
-        pathLabel.setText("响应 JSON 路径（如 choices[0].message.content）");
+        pathLabel.setText("Response JSON path (e.g. choices[0].message.content)");
         pathLabel.setTextColor(0xFFB8C7D9);
         pathLabel.setTextSize(12);
         pathLabel.setPadding(0, dp(8), 0, 0);
@@ -1123,18 +1123,18 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("自定义翻译 API 配置")
+                .setTitle("Custom translation API configuration")
                 .setView(scroll)
-                .setPositiveButton("保存", (d, w) -> {
+                .setPositiveButton("Save", (d, w) -> {
                     String method = (String) methodSpinner.getSelectedItem();
                     String url = editUrl.getText().toString().trim();
                     String path = editPath.getText().toString().trim();
                     if (url.isEmpty()) {
-                        Toast.makeText(this, "请填写 API 地址", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Please fill in the API address", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (path.isEmpty()) {
-                        Toast.makeText(this, "请填写响应路径", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Please fill in the response path", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     List<CustomApiConfig.KeyValuePair> headers = parsePairs(editHeaders.getText().toString());
@@ -1142,9 +1142,9 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
                     CustomApiConfig.TextConfig config = new CustomApiConfig.TextConfig(
                             method, url, new ArrayList<>(), headers, body, path);
                     CustomApiConfig.saveTextConfig(prefs.raw(), config, slot);
-                    Toast.makeText(this, "已保存", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -1167,7 +1167,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
     private void addPicEngineSelector(LinearLayout root) {
         String[] values = {"CUSTOM", "BAIDU", "TENCENT"};
-        String[] labels = {"自定义 API", "百度图片翻译", "腾讯图片翻译"};
+        String[] labels = {"Custom API", "Baidu image translation", "Tencent Image Translation"};
         String current = prefs.getPicEngine();
         android.widget.Spinner spinner = new android.widget.Spinner(this);
         android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
@@ -1191,7 +1191,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(40)));
 
         TextView hint = new TextView(this);
-        hint.setText("图片翻译模式直接上传截图给翻译 API，跳过 OCR 步骤。具体引擎实现待后续接入。");
+        hint.setText("Image translation mode directly uploads screenshots to the translation API, skipping the OCR step. The specific engine implementation will be added later.");
         hint.setTextColor(0x88FFFFFF);
         hint.setTextSize(10);
         root.addView(hint);
@@ -1200,7 +1200,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
     private void addAutoTranslateSettings(LinearLayout root) {
         // 自动翻译开关
         Switch autoSwitch = new Switch(this);
-        autoSwitch.setText("开启自动翻译");
+        autoSwitch.setText("Turn on automatic translation");
         autoSwitch.setTextColor(0xFFFFFFFF);
         autoSwitch.setChecked(prefs.isAutoEnabled());
         autoSwitch.setOnCheckedChangeListener((button, checked) ->
@@ -1210,7 +1210,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         // 间隔
         TextView intervalLabel = new TextView(this);
         long interval = prefs.getAutoInterval();
-        intervalLabel.setText("截图间隔：" + interval + "ms");
+        intervalLabel.setText("Screenshot interval:" + interval + "ms");
         intervalLabel.setTextColor(0xFFCCCCCC);
         intervalLabel.setTextSize(12);
         intervalLabel.setPadding(0, dp(8), 0, dp(4));
@@ -1223,7 +1223,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 long val = 1500 + progress * 500L;
-                intervalLabel.setText("截图间隔：" + val + "ms");
+                intervalLabel.setText("Screenshot interval:" + val + "ms");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -1238,7 +1238,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         // 短文本阈值
         TextView lengthLabel = new TextView(this);
         int lengthThreshold = prefs.getAutoLengthThreshold();
-        lengthLabel.setText("短文本阈值：" + lengthThreshold + " 字符（低于此值直接翻译）");
+        lengthLabel.setText("Short text threshold:" + lengthThreshold + "Characters (below this value is translated directly)");
         lengthLabel.setTextColor(0xFFCCCCCC);
         lengthLabel.setTextSize(12);
         lengthLabel.setPadding(0, dp(8), 0, dp(4));
@@ -1250,7 +1250,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         lengthSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                lengthLabel.setText("短文本阈值：" + progress + " 字符（低于此值直接翻译）");
+                lengthLabel.setText("Short text threshold:" + progress + "Characters (below this value is translated directly)");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -1264,7 +1264,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         // 相似度
         TextView simLabel = new TextView(this);
         float sim = prefs.getAutoSimilarityThreshold();
-        simLabel.setText("相似度阈值：" + String.format("%.1f", sim) + "（高于此值不翻译）");
+        simLabel.setText("Similarity threshold:" + String.format("%.1f", sim) + "(Values ​​above this are not translated)");
         simLabel.setTextColor(0xFFCCCCCC);
         simLabel.setTextSize(12);
         simLabel.setPadding(0, dp(8), 0, dp(4));
@@ -1277,7 +1277,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float val = progress / 20f;
-                simLabel.setText("相似度阈值：" + String.format("%.2f", val) + "（高于此值不翻译）");
+                simLabel.setText("Similarity threshold:" + String.format("%.2f", val) + "(Values ​​above this are not translated)");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -1292,12 +1292,12 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
     private void addShowSourceModeSelector(LinearLayout root) {
         TextView tv = new TextView(this);
-        tv.setText("显示模式");
+        tv.setText("Display mode");
         tv.setTextColor(0xFFCCCCCC);
         tv.setTextSize(12);
         root.addView(tv);
 
-        String[] labels = {"仅译文", "原文 + 译文", "译文 + 原文"};
+        String[] labels = {"Translation only", "Original text + translation", "Translation + original text"};
         int current = prefs.getShowSourceMode();
         android.widget.Spinner spinner = new android.widget.Spinner(this);
         android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
@@ -1319,7 +1319,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
     private void addResultFontSizeSelector(LinearLayout root) {
         TextView label = new TextView(this);
         float size = prefs.getResultFontSize();
-        label.setText("结果字体大小：" + String.format("%.0f", size) + "sp");
+        label.setText("Result font size:" + String.format("%.0f", size) + "sp");
         label.setTextColor(0xFFCCCCCC);
         label.setTextSize(12);
         label.setPadding(0, dp(8), 0, dp(4));
@@ -1332,7 +1332,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float val = 8 + progress;
-                label.setText("结果字体大小：" + String.format("%.0f", val) + "sp");
+                label.setText("Result font size:" + String.format("%.0f", val) + "sp");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -1346,7 +1346,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
     private void addPenetrableSwitch(LinearLayout root) {
         Switch sw = new Switch(this);
-        sw.setText("结果层点击穿透");
+        sw.setText("Result layer click through");
         sw.setTextColor(0xFFFFFFFF);
         sw.setChecked(prefs.isResultPenetrable());
         sw.setOnCheckedChangeListener((button, checked) ->
@@ -1399,7 +1399,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
     private void addPersonalizationSection(LinearLayout root) {
         // --- 悬浮球设置 ---
         TextView ballTitle = new TextView(this);
-        ballTitle.setText("悬浮球");
+        ballTitle.setText("Suspended ball");
         ballTitle.setTextColor(0xFFB8C7D9);
         ballTitle.setTextSize(13);
         ballTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -1408,7 +1408,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // 悬浮球图片更换
         String customIcon = prefs.raw().getString(TranslationPreferences.KEY_CUSTOM_BALL_ICON, "");
-        addConfigButton(root, customIcon.isEmpty() ? "🖼️ 悬浮球图标（当前：默认）" : "🖼️ 悬浮球图标（当前：" + customIcon + "）",
+        addConfigButton(root, customIcon.isEmpty() ? "🖼️ Floating ball icon (current: default)" : "🖼️ Floating ball icon (currently:" + customIcon + "）",
                 () -> showBallIconDialog());
 
         // 悬浮球大小
@@ -1422,7 +1422,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // --- 翻译结果框设置 ---
         TextView resultTitle = new TextView(this);
-        resultTitle.setText("翻译结果框");
+        resultTitle.setText("Translation results box");
         resultTitle.setTextColor(0xFFB8C7D9);
         resultTitle.setTextSize(13);
         resultTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -1434,15 +1434,15 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         // 结果文字颜色
         int currentFontColor = prefs.raw().getInt(TranslationPreferences.KEY_RESULT_FONT_COLOR,
                 TranslationPreferences.DEFAULT_FONT_COLOR);
-        addConfigButton(root, "✏️ 结果文字颜色（当前：" + String.format("#%08X", currentFontColor) + "）",
-                () -> showColorPickerDialog("结果文字颜色", TranslationPreferences.KEY_RESULT_FONT_COLOR,
+        addConfigButton(root, "✏️ Result text color (currently:" + String.format("#%08X", currentFontColor) + "）",
+                () -> showColorPickerDialog("Result text color", TranslationPreferences.KEY_RESULT_FONT_COLOR,
                         TranslationPreferences.DEFAULT_FONT_COLOR));
 
         // 结果背景颜色
         int currentBgColor = prefs.raw().getInt(TranslationPreferences.KEY_RESULT_BG_COLOR,
                 TranslationPreferences.DEFAULT_BG_COLOR);
-        addConfigButton(root, "🎨 结果背景颜色（当前：" + String.format("#%08X", currentBgColor) + "）",
-                () -> showColorPickerDialog("结果背景颜色", TranslationPreferences.KEY_RESULT_BG_COLOR,
+        addConfigButton(root, "🎨 Result background color (currently:" + String.format("#%08X", currentBgColor) + "）",
+                () -> showColorPickerDialog("Result background color", TranslationPreferences.KEY_RESULT_BG_COLOR,
                         TranslationPreferences.DEFAULT_BG_COLOR));
 
         // 结果内边距
@@ -1450,7 +1450,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
         // 操作提示 Toast 开关
         Switch notToastSwitch = new Switch(this);
-        notToastSwitch.setText("隐藏操作提示 Toast（框选完成、移动结果层等）");
+        notToastSwitch.setText("Hide operation prompt Toast (frame selection completed, moving result layer, etc.)");
         notToastSwitch.setTextColor(0xFFFFFFFF);
         notToastSwitch.setChecked(prefs.raw().getBoolean(TranslationPreferences.KEY_ADJUST_NOT_TOAST,
                 TranslationPreferences.DEFAULT_ADJUST_NOT_TOAST));
@@ -1464,9 +1464,9 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
 
     /** 悬浮球图标选择对话框 */
     private void showBallIconDialog() {
-        String[] options = {"使用默认图标", "从图片选择"};
+        String[] options = {"Use default icon", "Select from pictures"};
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("悬浮球图标")
+                .setTitle("Suspended ball icon")
                 .setItems(options, (d, which) -> {
                     if (which == 0) {
                         // 恢复默认
@@ -1482,7 +1482,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
                             }
                         } catch (Throwable ignored) {
                         }
-                        Toast.makeText(this, "已恢复默认图标", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Default icon restored", Toast.LENGTH_SHORT).show();
                         recreate();
                     } else if (which == 1) {
                         // 打开文件选择器
@@ -1492,11 +1492,11 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
                             intent.addCategory(Intent.CATEGORY_OPENABLE);
                             ballIconPickerLauncher.launch(intent);
                         } catch (Throwable t) {
-                            Toast.makeText(this, "无法打开文件选择器", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Unable to open file chooser", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -1529,7 +1529,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             try (java.io.InputStream is = getContentResolver().openInputStream(uri);
                  java.io.FileOutputStream fos = new java.io.FileOutputStream(destFile)) {
                 if (is == null) {
-                    Toast.makeText(this, "无法读取图片", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Unable to read image", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 byte[] buf = new byte[8192];
@@ -1539,10 +1539,10 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
                 }
             }
             prefs.putString(TranslationPreferences.KEY_CUSTOM_BALL_ICON, displayName);
-            Toast.makeText(this, "图标已更换：" + displayName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The icon has been changed:" + displayName, Toast.LENGTH_SHORT).show();
             recreate();
         } catch (Exception e) {
-            Toast.makeText(this, "图片加载失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Image loading failed:" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -1551,7 +1551,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         TextView label = new TextView(this);
         int currentSize = prefs.raw().getInt(TranslationPreferences.KEY_BALL_SIZE,
                 TranslationPreferences.DEFAULT_BALL_SIZE);
-        label.setText("悬浮球大小：" + currentSize + "dp");
+        label.setText("Suspension ball size:" + currentSize + "dp");
         label.setTextColor(0xFFCCCCCC);
         label.setTextSize(12);
         root.addView(label);
@@ -1563,7 +1563,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int size = progress + 20;
-                label.setText("悬浮球大小：" + size + "dp");
+                label.setText("Suspension ball size:" + size + "dp");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -1584,7 +1584,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         TextView label = new TextView(this);
         float currentOpacity = prefs.raw().getFloat(TranslationPreferences.KEY_BALL_OPACITY,
                 TranslationPreferences.DEFAULT_BALL_OPACITY);
-        label.setText("悬浮球透明度：" + Math.round(currentOpacity * 100) + "%");
+        label.setText("Transparency of floating ball:" + Math.round(currentOpacity * 100) + "%");
         label.setTextColor(0xFFCCCCCC);
         label.setTextSize(12);
         LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(
@@ -1599,7 +1599,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float opacity = progress / 100f;
-                label.setText("悬浮球透明度：" + progress + "%");
+                label.setText("Transparency of floating ball:" + progress + "%");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -1620,7 +1620,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         TextView label = new TextView(this);
         long currentDelay = prefs.raw().getLong(TranslationPreferences.KEY_LONG_PRESS_DELAY,
                 TranslationPreferences.DEFAULT_LONG_PRESS_DELAY);
-        label.setText("长按延迟：" + currentDelay + "ms");
+        label.setText("Long press delay:" + currentDelay + "ms");
         label.setTextColor(0xFFCCCCCC);
         label.setTextSize(12);
         LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(
@@ -1635,7 +1635,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 long delay = progress + 200;
-                label.setText("长按延迟：" + delay + "ms");
+                label.setText("Long press delay:" + delay + "ms");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -1656,7 +1656,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         TextView label = new TextView(this);
         int currentPad = prefs.raw().getInt(TranslationPreferences.KEY_RESULT_PADDING,
                 TranslationPreferences.DEFAULT_PADDING);
-        label.setText("结果框内边距：" + currentPad + "dp");
+        label.setText("Result box padding:" + currentPad + "dp");
         label.setTextColor(0xFFCCCCCC);
         label.setTextSize(12);
         LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(
@@ -1670,7 +1670,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                label.setText("结果框内边距：" + progress + "dp");
+                label.setText("Result box padding:" + progress + "dp");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -1697,7 +1697,7 @@ android.widget.ArrayAdapter<String> adapter = themedAdapter(labels);
             @Override
             public void onColorSelected(int dialogId, int color) {
                 prefs.raw().edit().putInt(prefKey, color).apply();
-                Toast.makeText(TranslateControlActivity.this, "已保存", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TranslateControlActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                 recreate();
             }
 

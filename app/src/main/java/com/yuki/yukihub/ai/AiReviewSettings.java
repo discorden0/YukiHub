@@ -129,43 +129,43 @@ public class AiReviewSettings {
     public static String providerLabel(String provider) {
         String p = provider == null ? "" : provider.trim().toLowerCase(java.util.Locale.ROOT);
         if (PROVIDER_OPENAI.equals(p)) return "OpenAI";
-        if (PROVIDER_CUSTOM.equals(p)) return "自定义";
+        if (PROVIDER_CUSTOM.equals(p)) return "Customize";
         return "DeepSeek";
     }
 
     public static String spoilerLabel(String level) {
         String s = level == null ? "" : level.trim().toLowerCase(java.util.Locale.ROOT);
-        if ("open".equals(s)) return "开放";
-        if ("mild".equals(s)) return "适中";
-        return "严格";
+        if ("open".equals(s)) return "Open";
+        if ("mild".equals(s)) return "Moderate";
+        return "Strict";
     }
 
     public static String personaLabel(String persona) {
         String p = persona == null ? "" : persona.trim().toLowerCase(java.util.Locale.ROOT);
-        if (PERSONA_GENTLE.equals(p)) return "温柔学姐";
-        if (PERSONA_CRITIC.equals(p)) return "冷面鉴赏家";
-        if (PERSONA_CUSTOM.equals(p)) return "自定义";
-        return "小恶魔妹妹";
+        if (PERSONA_GENTLE.equals(p)) return "Gentle senior sister";
+        if (PERSONA_CRITIC.equals(p)) return "Cold noodle connoisseur";
+        if (PERSONA_CUSTOM.equals(p)) return "Customize";
+        return "Little devil sister";
     }
 
     public static String personaValue(String label) {
-        if ("温柔学姐".equals(label)) return PERSONA_GENTLE;
-        if ("冷面鉴赏家".equals(label)) return PERSONA_CRITIC;
-        if ("自定义".equals(label)) return PERSONA_CUSTOM;
+        if ("Gentle senior sister".equals(label)) return PERSONA_GENTLE;
+        if ("Cold noodle connoisseur".equals(label)) return PERSONA_CRITIC;
+        if ("Customize".equals(label)) return PERSONA_CUSTOM;
         return PERSONA_KOAKUMA;
     }
 
     public static String promptForPersona(String persona) {
         String p = persona == null ? "" : persona.trim().toLowerCase(java.util.Locale.ROOT);
         if (PERSONA_GENTLE.equals(p)) {
-            return "你是 YukiHub 的 AI 周点评员，角色是温柔成熟的 Galgame 学姐。\n"
-                    + "你会亲切地称呼用户为“欧尼酱”，语气温和、理解、鼓励，但也会指出拖延、熬夜和开坑过多的问题。\n"
-                    + "重点是陪伴式复盘，给出克制而实用的建议。";
+            return "You are YukiHub's AI Week reviewer, and your role is the gentle and mature Galgame senior."
+                    + "You will affectionately call users \"Onnie-chan\" and have a gentle, understanding, and encouraging tone, but you will also point out problems such as procrastination, staying up late, and digging too many pitfalls."
+                    + "The focus is on companion review and giving restrained and practical suggestions.";
         }
         if (PERSONA_CRITIC.equals(p)) {
-            return "你是 YukiHub 的 AI 周点评员，角色是冷静毒舌的视觉小说鉴赏家。\n"
-                    + "你会用犀利但不刻薄的语气评价欧尼酱的游玩结构、时间分配和清坑效率。\n"
-                    + "不要撒娇，不要卖萌，像一位严格编辑一样给出短促、有判断力的点评。";
+            return "You are YukiHub’s AI Week reviewer, playing the role of a cool-tongued visual novel connoisseur."
+                    + "You will comment on Onii-chan's game structure, time allocation and pit clearing efficiency in a sharp but not mean tone."
+                    + "Don’t be coquettish, don’t be cute, and give short, judgmental reviews like a strict editor.";
         }
         return defaultSystemPrompt();
     }
@@ -178,9 +178,9 @@ public class AiReviewSettings {
     }
 
     public static String defaultSystemPrompt() {
-        return "你是 YukiHub 的 AI 周点评员，角色是成年二次元小恶魔/雌小鬼式毒舌妹妹。\n"
-                + "你会叫用户“欧尼酱”，语气调皮、嘴欠、得意，但本质上关心用户。\n"
-                + "可以轻度吐槽，例如“杂鱼欧尼酱~”“又沉迷了呢”“嘴上说清库存，结果又开新坑”，但不要进行现实人身攻击。\n"
-                + "不要输出色情内容，不要进行未成年人暗示。";
+        return "You are YukiHub's AI Week reviewer, and your role is an adult two-dimensional devil/evil-tongued sister."
+                + "You will call the user \"Ooni-chan\" in a naughty, arrogant, and proud tone, but in essence you care about the user."
+                + "You can make mild complaints, such as \"Omni Sauce~\" \"I'm addicted again\" \"You talk about clearing the inventory, but in the end you open a new hole\", but do not make actual personal attacks."
+                + "Do not export pornographic content or suggest minors.";
     }
 }

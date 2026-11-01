@@ -140,7 +140,7 @@ public final class NextMoeAuthStore {
 
     private static Context appContext() {
         Context c = AppContextHolder.get();
-        if (c == null) throw new IllegalStateException("NextMoeAuthStore 未初始化");
+        if (c == null) throw new IllegalStateException("NextMoeAuthStore is not initialized");
         return c;
     }
 

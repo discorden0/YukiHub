@@ -91,7 +91,7 @@
             android:layout_margin="4dp"
             android:gravity="center"
             android:background="@drawable/bg_status_unplayed"
-            android:text="未玩"
+            android:text="Not played"
             android:textColor="#EAF0FF"
             android:textSize="7sp"
             android:textStyle="bold"
@@ -152,7 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="总时长 0h"
+        android:text="Total duration 0h"
         android:textColor="@color/yh_text_muted"
         android:textSize="8sp" />
     </LinearLayout>

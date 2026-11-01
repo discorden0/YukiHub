@@ -148,7 +148,7 @@ public class MusicSafHelper {
     public static ScanResult scanAudioFolder(Context context, Uri treeUri) {
         ScanResult r = new ScanResult();
         if (context == null || treeUri == null) {
-            r.error = "无效的目录";
+            r.error = "Invalid directory";
             return r;
         }
         r.folderUri = treeUri.toString();
@@ -159,7 +159,7 @@ public class MusicSafHelper {
 
             // 先取"文件夹自身的名字"当专辑默认标题
             r.folderName = queryDisplayName(cr, DocumentsContract.buildDocumentUriUsingTree(treeUri, treeDocId));
-            if (r.folderName == null || r.folderName.trim().isEmpty()) r.folderName = "未命名专辑";
+            if (r.folderName == null || r.folderName.trim().isEmpty()) r.folderName = "Untitled album";
 
             Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, treeDocId);
             // ⚠️ projection 传 null（= SELECT *）而不是写死列名：
@@ -169,7 +169,7 @@ public class MusicSafHelper {
             Cursor c = cr.query(childrenUri, null, null, null, null);
 
             if (c == null) {
-                r.error = "无法读取该目录（授权可能已失效）";
+                r.error = "The directory cannot be read (authorization may have expired)";
                 return r;
             }
             try {
@@ -178,7 +178,7 @@ public class MusicSafHelper {
                 int iMime = c.getColumnIndex(DocumentsContract.Document.COLUMN_MIME_TYPE);
                 int iSize = c.getColumnIndex(DocumentsContract.Document.COLUMN_SIZE);
                 if (iDocId < 0 || iName < 0) {
-                    r.error = "该目录不支持浏览（provider 未返回必要字段）";
+                    r.error = "This directory does not support browsing (provider did not return necessary fields)";
                     return r;
                 }
                 while (c.moveToNext()) {
@@ -216,7 +216,7 @@ public class MusicSafHelper {
             }
         } catch (Throwable t) {
             Log.w(TAG, "scanAudioFolder failed", t);
-            r.error = "扫描失败：" + t.getMessage();
+            r.error = "Scan failed:" + t.getMessage();
         }
 
         // 排序：先按序号（>0 的排前面），再按文件名的自然顺序

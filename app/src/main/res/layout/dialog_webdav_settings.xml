@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="☁ WebDAV 云同步"
+            android:text="☁ WebDAV cloud sync"
             android:textColor="#EAF7FF"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="支持坚果云、OneDrive、NextCloud 等任意 WebDAV 服务器"
+            android:text="Supports any WebDAV server such as Nut Cloud, OneDrive, NextCloud, etc."
             android:textColor="#8E9AB5"
             android:textSize="13sp"
             android:layout_marginBottom="20dp" />
@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="服务器地址"
+            android:text="Server address"
             android:textColor="#8E9AB5"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/bg_auth_input"
-            android:hint="应用专用密码"
+            android:hint="Application specific password"
             android:inputType="textPassword"
             android:paddingHorizontal="14dp"
             android:textColor="#EAF7FF"
@@ -112,7 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:background="@drawable/bg_auth_tab_active"
-            android:text="测试连接"
+            android:text="test connection"
             android:textColor="#EAF7FF"
             android:textSize="14sp"
             android:layout_marginBottom="8dp" />
@@ -148,7 +148,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="启动时自动同步"
+                android:text="Automatically sync on startup"
                 android:textColor="#8E9AB5"
                 android:textSize="13sp"
                 android:layout_marginBottom="10dp" />
@@ -180,7 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@drawable/bg_auth_button_primary"
-                android:text="立即同步"
+                android:text="Sync now"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:enabled="false"
@@ -202,7 +202,7 @@
                 android:layout_height="44dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_auth_tab_active"
-                android:text="本地备份"
+                android:text="local backup"
                 android:textColor="#EAF7FF"
                 android:textSize="14sp" />
 
@@ -213,7 +213,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/bg_auth_tab_active"
-                android:text="本地导入"
+                android:text="Local import"
                 android:textColor="#EAF7FF"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -224,7 +224,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/bg_auth_button_primary"
-            android:text="保存配置"
+            android:text="Save configuration"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold"

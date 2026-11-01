@@ -60,21 +60,21 @@ public class EngineDetector {
         boolean artemisRuntime = (s.hasSystemIni && s.hasFirstIet) || s.hasRootPfs || s.hasAnyPfsFile;
 
         if (s.hasIndex && tyranoRuntime) {
-            score(r, EngineType.TYRANO, 96, "[游戏目录]");
+            score(r, EngineType.TYRANO, 96, "[Game Catalog]");
         } else if (s.hasAppAsar && (s.hasPackageJson || electronWrapper)) {
-            score(r, EngineType.TYRANO, 72, "[游戏目录]");
+            score(r, EngineType.TYRANO, 72, "[Game Catalog]");
         } else if (s.hasIndex && !electronWrapper) {
-            score(r, EngineType.TYRANO, 70, "[游戏目录]");
+            score(r, EngineType.TYRANO, 70, "[Game Catalog]");
         } else if (artemisRuntime) {
-            score(r, EngineType.ARTEMIS, (s.hasSystemIni && s.hasFirstIet) || s.hasRootPfs ? 95 : 90, "[游戏目录]");
+            score(r, EngineType.ARTEMIS, (s.hasSystemIni && s.hasFirstIet) || s.hasRootPfs ? 95 : 90, "[Game Catalog]");
         } else if (s.firstXp3 != null || s.hasStartupTjs || s.hasConfigTjs) {
-            score(r, EngineType.KIRIKIRI, s.firstXp3 != null ? 95 : 80, s.firstXp3 != null ? s.firstXp3 : "[游戏目录]");
+            score(r, EngineType.KIRIKIRI, s.firstXp3 != null ? 95 : 80, s.firstXp3 != null ? s.firstXp3 : "[Game Catalog]");
         } else if (s.hasOnsScript || s.hasOnsArchive) {
-            score(r, EngineType.ONS, s.hasOnsScript ? 90 : 70, "[游戏目录]");
+            score(r, EngineType.ONS, s.hasOnsScript ? 90 : 70, "[Game Catalog]");
         } else if (s.hasFvpScript && s.hasFvpPack) {
-            score(r, EngineType.FVP, 96, "[游戏目录]");
+            score(r, EngineType.FVP, 96, "[Game Catalog]");
         } else if (s.hasFvpScript) {
-            score(r, EngineType.FVP, 88, "[游戏目录]");
+            score(r, EngineType.FVP, 88, "[Game Catalog]");
         } else if (s.firstDesktop != null) {
             score(r, EngineType.WINLATOR, 90, s.firstDesktop);
         } else if (s.firstPspFile != null) {
@@ -128,21 +128,21 @@ public class EngineDetector {
         boolean artemisRuntime = (s.hasSystemIni && s.hasFirstIet) || s.hasRootPfs || s.hasAnyPfsFile;
 
         if (s.hasIndex && tyranoRuntime) {
-            score(r, EngineType.TYRANO, 96, "[游戏目录]");
+            score(r, EngineType.TYRANO, 96, "[Game Catalog]");
         } else if (s.hasAppAsar && (s.hasPackageJson || electronWrapper)) {
-            score(r, EngineType.TYRANO, 72, "[游戏目录]");
+            score(r, EngineType.TYRANO, 72, "[Game Catalog]");
         } else if (s.hasIndex && !electronWrapper) {
-            score(r, EngineType.TYRANO, 70, "[游戏目录]");
+            score(r, EngineType.TYRANO, 70, "[Game Catalog]");
         } else if (artemisRuntime) {
-            score(r, EngineType.ARTEMIS, (s.hasSystemIni && s.hasFirstIet) || s.hasRootPfs ? 95 : 90, "[游戏目录]");
+            score(r, EngineType.ARTEMIS, (s.hasSystemIni && s.hasFirstIet) || s.hasRootPfs ? 95 : 90, "[Game Catalog]");
         } else if (s.firstXp3 != null || s.hasStartupTjs || s.hasConfigTjs) {
-            score(r, EngineType.KIRIKIRI, s.firstXp3 != null ? 95 : 80, s.firstXp3 != null ? s.firstXp3 : "[游戏目录]");
+            score(r, EngineType.KIRIKIRI, s.firstXp3 != null ? 95 : 80, s.firstXp3 != null ? s.firstXp3 : "[Game Catalog]");
         } else if (s.hasOnsScript || s.hasOnsArchive) {
-            score(r, EngineType.ONS, s.hasOnsScript ? 90 : 70, "[游戏目录]");
+            score(r, EngineType.ONS, s.hasOnsScript ? 90 : 70, "[Game Catalog]");
         } else if (s.hasFvpScript && s.hasFvpPack) {
-            score(r, EngineType.FVP, 96, "[游戏目录]");
+            score(r, EngineType.FVP, 96, "[Game Catalog]");
         } else if (s.hasFvpScript) {
-            score(r, EngineType.FVP, 88, "[游戏目录]");
+            score(r, EngineType.FVP, 88, "[Game Catalog]");
         } else if (s.firstDesktop != null) {
             score(r, EngineType.WINLATOR, 90, s.firstDesktop);
         } else if (s.firstPspFile != null) {

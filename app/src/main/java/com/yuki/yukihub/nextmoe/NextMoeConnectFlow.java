@@ -40,16 +40,16 @@ public final class NextMoeConnectFlow {
             handle.close();
             handle = null;
 
-            if ("timeout".equals(result.error)) return "授权超时（5 分钟未完成）";
-            if ("io".equals(result.error)) return "本地回调监听失败";
-            if (result.error != null && !result.error.isEmpty()) return "授权被取消或失败：" + result.error;
-            if (result.state == null || !state.equals(result.state)) return "状态校验失败，请重试";
-            if (result.code == null || result.code.trim().isEmpty()) return "回调缺少授权码";
+            if ("timeout".equals(result.error)) return "Authorization timeout (5 minutes not completed)";
+            if ("io".equals(result.error)) return "Local callback monitoring failed";
+            if (result.error != null && !result.error.isEmpty()) return "Authorization canceled or failed:" + result.error;
+            if (result.state == null || !state.equals(result.state)) return "Status verification failed, please try again";
+            if (result.code == null || result.code.trim().isEmpty()) return "The callback is missing the authorization code";
 
             return NextMoeAuth.exchangeCode(result.code.trim(), verifier, redirect);
         } catch (Throwable t) {
             Log.w(TAG, "connect flow failed", t);
-            return t.getMessage() == null ? "授权流程异常" : t.getMessage();
+            return t.getMessage() == null ? "Abnormal authorization process" : t.getMessage();
         } finally {
             if (handle != null) handle.close();
         }

@@ -106,7 +106,7 @@ public class YukiTranslateService extends Service {
         if (context == null) return;
         Context app = context.getApplicationContext();
         if (!canDrawOverlays(app)) {
-            Toast.makeText(app, "请先允许 YukiHub 在其他应用上层显示", Toast.LENGTH_SHORT).show();
+            Toast.makeText(app, "Please allow YukiHub to be displayed on top of other applications first", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -119,7 +119,7 @@ public class YukiTranslateService extends Service {
             }
         } catch (Throwable t) {
             Log.w(TAG, "start failed", t);
-            Toast.makeText(app, "无法启动翻译悬浮服务", Toast.LENGTH_SHORT).show();
+            Toast.makeText(app, "Unable to start translation suspension service", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -170,7 +170,7 @@ public class YukiTranslateService extends Service {
             return START_NOT_STICKY;
         }
         if (!canDrawOverlays(this)) {
-            Toast.makeText(this, "悬浮窗权限未开启，翻译服务未启动", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The floating window permission is not enabled and the translation service is not started.", Toast.LENGTH_SHORT).show();
             stopSelf();
             return START_NOT_STICKY;
         }
@@ -223,7 +223,7 @@ public class YukiTranslateService extends Service {
         floatingBall.setTextColor(Color.WHITE);
         floatingBall.setTextSize(20);
         floatingBall.setGravity(Gravity.CENTER);
-        floatingBall.setContentDescription("YukiHub 翻译悬浮球");
+        floatingBall.setContentDescription("YukiHub translation floating ball");
         floatingBall.setBackground(createBallBackground(ballOpacity));
 
         // 悬浮球图标：自定义优先
@@ -334,7 +334,7 @@ public class YukiTranslateService extends Service {
         switch (ballStatus) {
             case NORMAL:
                 if (!ScreenshotServiceManager.isReady()) {
-                    Toast.makeText(this, "请先在系统设置中开启 YukiHub 无障碍截图服务", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Please enable YukiHub accessibility screenshot service in system settings first.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (selectedRect == null) {
@@ -345,7 +345,7 @@ public class YukiTranslateService extends Service {
                 // 确保结果层已显示
                 ensureResultOverlay();
                 if (translationManager.isTranslating()) {
-                    Toast.makeText(this, "翻译中，请稍候", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Translating, please wait.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 requestScreenshot(selectedRect, selectedOffset == null ? new Point(0, 0) : selectedOffset);
@@ -358,7 +358,7 @@ public class YukiTranslateService extends Service {
                 }
                 removeCropOverlay();
                 ballStatus = BallStatus.NORMAL;
-                if (!hideAdjustToast()) Toast.makeText(this, "框选完成", Toast.LENGTH_SHORT).show();
+                if (!hideAdjustToast()) Toast.makeText(this, "Frame selection completed", Toast.LENGTH_SHORT).show();
                 break;
             case MOVING_RESULT:
                 // 结果移动状态下点击悬浮球：关闭触摸
@@ -375,16 +375,16 @@ public class YukiTranslateService extends Service {
         }
         try {
             AlertDialog d = new AlertDialog.Builder(this)
-                    .setTitle("欢迎使用 YukiHub 翻译")
-                    .setMessage("看起来你是第一次使用翻译功能～\n\n"
-                            + "点击「开始框选」后，屏幕会进入区域选择模式：\n"
-                            + "• 拖动四个角调整框选范围\n"
-                            + "• 拖动中间移动整个选框\n"
-                            + "• 再次点击悬浮球确认选区\n\n"
-                            + "之后每次点击悬浮球，都会自动翻译框选区域内的文字。\n"
-                            + "长按悬浮球可以打开菜单，进行重新框选、移动结果层等操作。")
-                    .setPositiveButton("开始框选", (d2, w) -> showCropOverlay())
-                    .setNegativeButton("稍后再说", null)
+                    .setTitle("Welcome to YukiHub Translation")
+                    .setMessage("It looks like this is your first time using the translation function~"
+                            + "After clicking \"Start Frame Selection\", the screen will enter the area selection mode:"
+                            + "• Drag the four corners to adjust the selection range"
+                            + "• Drag the middle to move the entire selection"
+                            + "• Click the floating ball again to confirm the selection"
+                            + "Every time you click on the floating ball, the text in the selected area will be automatically translated."
+                            + "Long press the floating ball to open the menu and perform operations such as reselecting the frame and moving the result layer.")
+                    .setPositiveButton("Start frame selection", (d2, w) -> showCropOverlay())
+                    .setNegativeButton("Talk to you later", null)
                     .setCancelable(true)
                     .create();
             Window window = d.getWindow();
@@ -415,7 +415,7 @@ public class YukiTranslateService extends Service {
         } catch (Throwable t) {
             Log.w(TAG, "add crop overlay failed", t);
             cropView = null;
-            Toast.makeText(this, "无法打开区域选择层", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to open region selection layer", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -425,7 +425,7 @@ public class YukiTranslateService extends Service {
                     @Override
                     public void onSuccess(android.graphics.Bitmap bitmap) {
                         if (bitmap == null) {
-                            Toast.makeText(YukiTranslateService.this, "截图数据为空", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(YukiTranslateService.this, "Screenshot data is empty", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         processOcrTranslation(bitmap);
@@ -445,7 +445,7 @@ public class YukiTranslateService extends Service {
         if (ocrProvider == null) {
             ScreenshotServiceManager.recycle(bitmap);
             if (!autoTranslating && resultOverlay != null) {
-                resultOverlay.setText("OCR 引擎未初始化");
+                resultOverlay.setText("OCR engine not initialized");
             }
             return;
         }
@@ -456,7 +456,7 @@ public class YukiTranslateService extends Service {
                         ScreenshotServiceManager.recycle(bitmap);
                         if (text == null || text.trim().isEmpty()) {
                             if (!autoTranslating && resultOverlay != null) {
-                                resultOverlay.setText("未识别到文字");
+                                resultOverlay.setText("Text not recognized");
                             }
                             return;
                         }
@@ -483,7 +483,7 @@ public class YukiTranslateService extends Service {
                                     public void onError(Throwable error) {
                                         stopBallSpinAnimation();
                                         if (resultOverlay != null) {
-                                            resultOverlay.setText("翻译失败：" + (error == null ? "未知错误" : error.getMessage()));
+                                            resultOverlay.setText("Translation failed:" + (error == null ? "Unknown error" : error.getMessage()));
                                         }
                                     }
                                 });
@@ -493,7 +493,7 @@ public class YukiTranslateService extends Service {
                     public void onFailure(Exception error) {
                         ScreenshotServiceManager.recycle(bitmap);
                         if (!autoTranslating && resultOverlay != null) {
-                            resultOverlay.setText("OCR 失败：" + (error == null ? "未知错误" : error.getMessage()));
+                            resultOverlay.setText("OCR failed:" + (error == null ? "Unknown error" : error.getMessage()));
                         }
                     }
                 });
@@ -682,15 +682,15 @@ public class YukiTranslateService extends Service {
      */
     private void startAutoTranslate() {
         if (!ScreenshotServiceManager.isReady()) {
-            Toast.makeText(this, "请先开启无障碍截图服务", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enable barrier-free screenshot service first", Toast.LENGTH_SHORT).show();
             return;
         }
         if (ballStatus != BallStatus.NORMAL) {
-            Toast.makeText(this, "请先完成当前操作", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please complete the current operation first", Toast.LENGTH_SHORT).show();
             return;
         }
         if (selectedRect == null) {
-            Toast.makeText(this, "请先框选翻译区域", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please select the translation area first", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -701,7 +701,7 @@ public class YukiTranslateService extends Service {
         lastOcrResult = "";
         savedOrientation = getResources().getConfiguration().orientation;
         autoTranslateHandler.post(autoTranslateRunnable);
-        Toast.makeText(this, "自动翻译已开启", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Automatic translation is on", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -711,7 +711,7 @@ public class YukiTranslateService extends Service {
         if (!autoTranslating) return;
         autoTranslating = false;
         autoTranslateHandler.removeCallbacks(autoTranslateRunnable);
-        Toast.makeText(this, "自动翻译已关闭", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Automatic translation is turned off", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -720,7 +720,7 @@ public class YukiTranslateService extends Service {
     private void performAutoTranslate() {
         // 屏幕方向变化时停止
         if (savedOrientation != getResources().getConfiguration().orientation) {
-            Toast.makeText(this, "屏幕方向已变化，自动翻译已停止", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Screen orientation has changed and automatic translation has stopped", Toast.LENGTH_SHORT).show();
             stopAutoTranslate();
             return;
         }
@@ -770,10 +770,10 @@ public class YukiTranslateService extends Service {
         if (isFinishingDialogContextUnavailable()) return;
         try {
             String[] menuItems = autoTranslating
-                    ? new String[]{"重新框选区域", "移动结果层", "隐藏/显示结果层", "关闭自动翻译", "停止悬浮翻译"}
-                    : new String[]{"重新框选区域", "移动结果层", "隐藏/显示结果层", "开启自动翻译", "停止悬浮翻译"};
+                    ? new String[]{"Re-select the area", "Move results layer", "隐藏/显示结果层", "Turn off automatic translation", "Stop hover translation"}
+                    : new String[]{"Re-select the area", "Move results layer", "隐藏/显示结果层", "Turn on automatic translation", "Stop hover translation"};
             AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle("YukiHub 翻译")
+                    .setTitle("YukiHub Translation")
                     .setItems(menuItems,
                             (d, which) -> {
                                 if (which == 0) {
@@ -784,18 +784,18 @@ public class YukiTranslateService extends Service {
                                     if (resultOverlay != null && resultOverlay.isAdded()) {
                                         resultOverlay.setTouchable(true);
                                         ballStatus = BallStatus.MOVING_RESULT;
-                                        if (!hideAdjustToast()) Toast.makeText(this, "拖动结果层后点击悬浮球确认", Toast.LENGTH_SHORT).show();
+                                        if (!hideAdjustToast()) Toast.makeText(this, "After dragging the result layer, click the floating ball to confirm.", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(this, "结果层未显示", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, "Results layer not shown", Toast.LENGTH_SHORT).show();
                                     }
                                 } else if (which == 2) {
                                     // 隐藏/显示结果层
                                     if (resultOverlay != null && resultOverlay.isAdded()) {
                                         resultOverlay.hide();
-                                        Toast.makeText(this, "结果层已隐藏", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, "Results layer is hidden", Toast.LENGTH_SHORT).show();
                                     } else if (resultOverlay != null) {
                                         ensureResultOverlay();
-                                        Toast.makeText(this, "结果层已显示", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, "Results layer is shown", Toast.LENGTH_SHORT).show();
                                     }
                                 } else if (which == 3) {
                                     // 自动翻译开关
@@ -804,14 +804,14 @@ public class YukiTranslateService extends Service {
                                     stopSelf();
                                 }
                             })
-                    .setNegativeButton("取消", null)
+                    .setNegativeButton("Cancel", null)
                     .create();
             Window window = dialog.getWindow();
             if (window != null) window.setType(overlayWindowType());
             dialog.show();
         } catch (Throwable t) {
             Log.w(TAG, "show menu failed", t);
-            Toast.makeText(this, "无法打开翻译菜单", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to open translation menu", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -918,8 +918,8 @@ public class YukiTranslateService extends Service {
             builder.setPriority(Notification.PRIORITY_LOW);
         }
         return builder.setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("YukiHub 翻译")
-                .setContentText("翻译悬浮球运行中")
+                .setContentTitle("YukiHub Translation")
+                .setContentText("The translation floating ball is running")
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
@@ -932,8 +932,8 @@ public class YukiTranslateService extends Service {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (manager == null) return;
         NotificationChannel channel = new NotificationChannel(
-                CHANNEL_ID, "翻译悬浮窗", NotificationManager.IMPORTANCE_LOW);
-        channel.setDescription("YukiHub 游戏悬浮翻译服务");
+                CHANNEL_ID, "Translation floating window", NotificationManager.IMPORTANCE_LOW);
+        channel.setDescription("YukiHub game floating translation service");
         channel.setShowBadge(false);
         channel.enableVibration(false);
         channel.setSound(null, null);

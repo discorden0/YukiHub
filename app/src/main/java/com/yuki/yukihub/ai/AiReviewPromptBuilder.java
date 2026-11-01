@@ -16,91 +16,91 @@ public final class AiReviewPromptBuilder {
         s.normalize();
         StringBuilder sb = new StringBuilder();
         sb.append(s.systemPrompt).append("\n\n");
-        sb.append("[角色执行优先级 - MUST FOLLOW]\n");
-        sb.append("- 你首先是上方定义的人设，不是中立助手、新闻编辑或统计播报员。\n");
-        sb.append("- 先按人设开口，再用数据做支撑；所有评论都应像在直接点评玩家本人。\n");
-        sb.append("- 允许有鲜明态度，但判断必须能从给定数据中找到依据。\n");
-        sb.append("- 不要编造不存在的游戏、时长、通关、开坑或作息情况。\n");
-        sb.append("- 如果数据量少，请聚焦最明显的一两个特征，不要为了凑结构硬写。\n\n");
+        sb.append("[Role execution priority - MUST FOLLOW]");
+        sb.append("- You are first and foremost the persona defined above, not a neutral assistant, news editor or statistics broadcaster.");
+        sb.append("- Start by character, then use data as support; all comments should be as if they are directly commenting on the player himself.");
+        sb.append("- Distinct attitudes are allowed, but judgments must be based on the given data.");
+        sb.append("- Do not make up non-existent games, durations, levels, pits, or daily routines.");
+        sb.append("- If the amount of data is small, please focus on the most obvious one or two features, and do not write hard to make up the structure.");
 
-        sb.append("[隐私与环境说明]\n");
-        sb.append("- 用户使用的是本地游戏管理和启动器软件。不要在点评里强调软件名。\n");
-        sb.append("- 只根据提供的统计点评，不要要求用户上传路径、存档、账号或 API Key。\n");
-        sb.append("- 不要提及本地路径、SD 卡路径、存档路径、rootUri 或任何账号信息。\n\n");
+        sb.append("[Privacy and Environmental Statement]");
+        sb.append("- The user is using local game management and launcher software. Don’t emphasize the name of the software in your reviews.");
+        sb.append("- Only base your reviews on the provided statistics and do not require users to upload paths, archives, accounts or API Keys.");
+        sb.append("- Do not mention local path, SD card path, archive path, rootUri or any account information.");
 
-        sb.append("[剧透控制 - MUST FOLLOW]\n");
+        sb.append("[Spoiler Control - MUST FOLLOW]");
         if ("open".equals(s.spoilerLevel)) {
-            sb.append("- 可泛泛结合游戏类型、题材氛围做评论，但不要主动写关键结局、角色命运或大转折。\n");
+            sb.append("- You can generally make comments based on the game type, theme and atmosphere, but do not take the initiative to write about key endings, character fates or major turning points.");
         } else if ("mild".equals(s.spoilerLevel)) {
-            sb.append("- 可以讨论游戏类型、氛围和非关键设定，但避免具体剧情、结局、角色关系发展。\n");
+            sb.append("- You can discuss game type, atmosphere, and non-critical settings, but avoid specific plots, endings, and character relationship development.");
         } else {
-            sb.append("- 严禁提及任何具体剧情、结局、角色关系、角色命运或路线发展。\n");
-            sb.append("- 仅允许讨论游玩习惯、时长分布、游戏类型倾向和清坑状态。\n");
+            sb.append("- Any mention of specific plots, endings, character relationships, character fates or development is strictly prohibited.");
+            sb.append("- Only discussion of playing habits, time distribution, game type tendencies and clearing status is allowed.");
         }
-        sb.append("\n[输出约束]\n");
-        sb.append("- 必须输出中文 JSON，不要包裹 Markdown 代码块。\n");
-        sb.append("- 字段必须完整：title, subtitle, scoreName, score, roast, highlights, topGamesComment, advice, oneLine。\n");
-        sb.append("- score 必须是 0 到 100 的整数。\n");
-        sb.append("- roast 控制在 180 字以内，可以比短评更丰满，但不要写成长文。\n");
-        sb.append("- highlights 和 advice 各 2-4 条即可，建议要具体，不要只写空话。\n");
-        sb.append("- topGamesComment 只点评数据中出现的游戏；每条可以写 1-2 句，结合时长、状态和作品资料。\n");
+        sb.append("[Output constraints]");
+        sb.append("- Chinese JSON must be output, do not wrap Markdown code blocks.");
+        sb.append("- Fields must be complete: title, subtitle, scoreName, score, roast, highlights, topGamesComment, advice, oneLine.");
+        sb.append("- score must be an integer from 0 to 100.");
+        sb.append("- Roast should be limited to 180 words. It can be more substantial than a short review, but do not write it into a long article.");
+        sb.append("- 2-4 highlights and advice each are enough. The advice should be specific, don’t just write empty words.");
+        sb.append("- topGamesComment only comments on games that appear in the data; each entry can contain 1-2 sentences, combined with duration, status, and work information.");
 
-        sb.append("\n[数据字段解读规则 - MUST FOLLOW]\n");
-        sb.append("- 「当前库状态」是生成这份点评时的即时快照，不带时间信息。\n");
-        sb.append("- 严禁把库状态与本周期时长做因果、反差、对比或「言行不一」式解读。\n");
-        sb.append("  例如不得写「嘴上说抛弃，手却很诚实」「明明标了搁置还在玩」这类句子。\n");
-        sb.append("  状态可能是很久以前标的，也可能是刚刚才改的，你无从判断，因此不许推测。\n");
-        sb.append("- 「未玩」款数指的是本周期有游玩时长、但库状态仍标着未玩的游戏数。\n");
-        sb.append("  这通常只说明玩家没有手动更新状态，不等于「新开了坑」或「三分钟热度」。\n");
-        sb.append("  不要把这个数字解读成开坑数量，也不要据此批评玩家乱开新游戏。\n");
-        sb.append("- 时段分布、工作日/周末次数只是启动次数的归类统计。\n");
-        sb.append("  只允许陈述次数或倾向，严禁引申出数据中不存在的具体行为。\n");
-        sb.append("  例如不得写「深夜快进了 N 次」「反复读档 N 次」——快进、读档、跳过、刷 CG\n");
-        sb.append("  这类动作从未被记录，写出来就是编造。\n");
-        sb.append("- 游玩次数已做过噪声清理（过短记录被剔除，中途切出再回来的记录已合并），\n");
-        sb.append("  可以直接采信，但不要拿它反推玩家是否专注或是否频繁退出。\n");
-        sb.append("- 数据里没有的维度（成就、存档数、剧情进度、章节、好感度、结局数）一律不许提及。\n");
+        sb.append("[Data field interpretation rules - MUST FOLLOW]");
+        sb.append("- \"Current library status\" is an instant snapshot when this review was generated, without time information.");
+        sb.append("- It is strictly prohibited to interpret the status of the library as cause and effect, contrast, comparison, or \"inconsistency between words and deeds\" with the duration of this cycle.");
+        sb.append("For example, you are not allowed to write sentences such as \"You say abandonment, but your hands are honest\" and \"You are still playing even though you have clearly marked it aside.\"");
+        sb.append("The status may have been marked a long time ago, or it may have been changed just now. You have no way of judging, so you are not allowed to speculate.");
+        sb.append("- The number of \"unplayed\" games refers to the number of games that have been played for a certain period of time but are still marked as unplayed in the library status.");
+        sb.append("This usually only means that the player has not manually updated the status, which does not mean \"a new pit has been opened\" or \"three minutes of popularity\".");
+        sb.append("Don’t interpret this number as the number of pits opened, and don’t criticize players for opening new games indiscriminately.");
+        sb.append("- Time period distribution and number of weekdays/weekends are just classified statistics of the number of starts.");
+        sb.append("Only the number of times or tendencies are allowed to be stated, and it is strictly prohibited to deduce specific behaviors that do not exist in the data.");
+        sb.append("For example, you are not allowed to write \"Fast forward N times late at night\" or \"Read files repeatedly N times\" - fast forward, load files, skip, and refresh CG.");
+        sb.append("Such actions were never recorded, and to be written down would be to make them up.");
+        sb.append("- The number of games played has been noise-cleaned (records that were too short have been removed, and records that were cut out and returned midway have been merged),");
+        sb.append("You can accept it directly, but don't use it to predict whether the player is focused or whether he quits frequently.");
+        sb.append("- Dimensions that are not included in the data (achievements, number of archives, plot progress, chapters, favorability, number of endings) are not allowed to be mentioned.");
 
-        sb.append("\n[库状态语义 - MUST FOLLOW]\n");
-        sb.append("- 必须尊重游戏当前库状态：状态为“🏆 玩过（等同通关/已完成）”的游戏已经通关，不要建议用户下周再通关它。\n");
-        sb.append("- 已通关后本周仍有时长时，应优先理解为重温、回味、补后日谈/FD/CG/BGM、截图留念或写感想，不要默认判定为负面行为。\n");
-        sb.append("- 禁止使用或变体表达：重复游玩已通关游戏、再通关已玩过游戏、克制已通关游戏、通关游戏花痴/浪费时间。\n");
-        sb.append("- 状态为“🎮 在玩（尚未通关）”的游戏才可以建议继续推进；状态为“☆ 未玩（未开始/未通关）”的游戏可以建议少开坑或先尝试。\n");
-        sb.append("- 状态为“⏸ 搁置（开过但暂时停下，之后还想继续）”的游戏：可以温和地提醒它还在等待，\n");
-        sb.append("  或建议挑一部捡回来。不要说成失败、烂尾、半途而废，也不要催促必须马上通关。\n");
-        sb.append("- 状态为“🗑 抛弃（明确不再继续）”的游戏：这是玩家有意识做出的取舍，应当尊重。\n");
-        sb.append("  不要劝玩家重新玩它，不要质疑这个决定，也不要写成浪费、可惜、遗憾或半途而废。\n");
-        sb.append("  抛弃后本周仍有时长，只允许理解为收尾确认、导出存档、告别或删除前最后一看。\n");
-        sb.append("- 输出前自检 advice 和 roast：如果某游戏是玩过/已完成，不得把继续打开它说成错误；可以建议“写感想/整理截图/换一部在玩作品推进”。\n");
-        sb.append("- 如果上下文包含作品资料增强，只能用来判断类型、风格、长度、标签倾向；不要把简介摘要扩写成剧情介绍，不要泄露关键情节。\n");
+        sb.append("[Library state semantics - MUST FOLLOW]");
+        sb.append("- The current library status of the game must be respected: a game with a status of \"🏆 Played (equivalent to clearance/completed)\" has been completed, and users should not be advised to complete it next week.");
+        sb.append("- If there is still time in the week after clearing the level, priority should be given to reviewing, reminiscing, catching up on day talks/FD/CG/BGM, taking screenshots or writing thoughts. Do not judge it as a negative behavior by default.");
+        sb.append("- Use or variant expressions are prohibited: replaying a completed game, replaying a completed game, restraining a completed game, being a nymphomaniac/wasting time in completing a game.");
+        sb.append("- Only games with a status of \"🎮 Playing (not yet cleared)\" can be recommended to continue; games with a status of \"☆ Not Played (Not Started/Not Cleared)\" can be recommended to play less pits or try first.");
+        sb.append("- For games with status \"⏸ On hold (played but stopped temporarily, want to continue later)\": you can gently remind it that it is still waiting,");
+        sb.append("Or suggest picking one up and picking it up. Don't call it a failure, a mess, or give up halfway, and don't urge that you must complete the level immediately.");
+        sb.append("- Games with a status of \"🗑 Abandoned (definitely not continuing)\": This is a conscious choice made by the player and should be respected.");
+        sb.append("Don't urge players to replay it, don't question the decision, and don't write it off as a waste, a pity, a regret, or a half-measure.");
+        sb.append("There is still a period of time in the week after abandonment, and it can only be understood as the last look before final confirmation, export of archives, farewell or deletion.");
+        sb.append("- Pre-output self-check advice and roast: If a game has been played/completed, it is not allowed to say that continuing to open it is an error; you can suggest \"write your thoughts/organize screenshots/change a game you are playing to advance\".");
+        sb.append("- If the context contains enhanced work information, it can only be used to judge the type, style, length, and labeling tendency; do not expand the summary into a plot introduction, and do not reveal key plot points.");
         return sb.toString();
     }
 
     public static String buildContextPrompt(WeeklyPlayStats stats) {
         WeeklyPlayStats s = stats == null ? new WeeklyPlayStats() : stats;
         StringBuilder sb = new StringBuilder();
-        sb.append("=== 最近 7 天游玩数据快照 ===\n\n");
-        sb.append("统计口径说明：\n");
-        sb.append("- 下列次数与时长已剔除短于 1 分钟的记录，并把同一游戏内间隔 5 分钟以内的\n");
-        sb.append("  相邻记录合并为一次连续游玩，因此可以直接采信。\n");
-        sb.append("- 「当前库状态」是此刻的快照，不代表统计周期内的状态，不可用于反差解读。\n\n");
-        sb.append("统计周期：\n");
+        sb.append("=== Snapshot of game data in the last 7 days ===");
+        sb.append("Description of statistical caliber:");
+        sb.append("- The following times and durations have been removed from records shorter than 1 minute, and those within the same game that are within 5 minutes of each other have been deleted.");
+        sb.append("Adjacent records are merged into one consecutive play and therefore can be relied upon directly.");
+        sb.append("- \"Current library status\" is a snapshot at this moment. It does not represent the status within the statistical period and cannot be used for contrast interpretation.");
+        sb.append("Statistical period:");
         sb.append(dateOnly(s.startTime)).append(" ~ ").append(dateOnly(s.endTime)).append("\n\n");
-        sb.append("总体：\n");
-        sb.append("- 总游玩时长：").append(TimeFormatUtil.playTime(s.totalDuration)).append("\n");
-        sb.append("- 活跃天数：").append(s.activeDays).append(" 天\n");
-        sb.append("- 游玩游戏数：").append(s.gameCount()).append(" 款\n");
-        sb.append("- 本周涉及游戏的当前库状态分布：玩过/已完成 ").append(s.completedGameCount).append(" 款，在玩 ").append(s.playingGameCount).append(" 款，搁置 ").append(s.onHoldGameCount).append(" 款，抛弃 ").append(s.droppedGameCount).append(" 款，仍标着未玩 ").append(s.unplayedGameCount).append(" 款（有时长但状态未更新，不等于新开坑）\n");
-        sb.append("- 游玩次数：").append(s.sessionCount).append(" 次\n");
-        sb.append("- 平均单次时长：").append(TimeFormatUtil.playTime(s.averageSessionDuration)).append("\n");
-        sb.append("- 最长单次：").append(TimeFormatUtil.playTime(s.longestSessionDuration));
+        sb.append("Overall:");
+        sb.append("- Total play time:").append(TimeFormatUtil.playTime(s.totalDuration)).append("\n");
+        sb.append("- Active days:").append(s.activeDays).append("Sky");
+        sb.append("- Number of games played:").append(s.gameCount()).append("Payment");
+        sb.append("- 本周涉及游戏的当前库状态分布：玩过/已完成 ").append(s.completedGameCount).append("Money, playing").append(s.playingGameCount).append("Payment, put aside").append(s.onHoldGameCount).append("Money, throw away").append(s.droppedGameCount).append("Model, still marked Not Played").append(s.unplayedGameCount).append("Payment (time is long but the status has not been updated, it does not mean that a new pit has been opened)");
+        sb.append("-Number of games played:").append(s.sessionCount).append("Second-rate");
+        sb.append("-Average single duration:").append(TimeFormatUtil.playTime(s.averageSessionDuration)).append("\n");
+        sb.append("- Longest single time:").append(TimeFormatUtil.playTime(s.longestSessionDuration));
         if (s.longestSessionGame != null && !s.longestSessionGame.trim().isEmpty()) sb.append("（《").append(s.longestSessionGame).append("》）");
         sb.append("\n\n");
 
         if (s.topGames.isEmpty()) {
-            sb.append("游玩排行：无\n\n");
+            sb.append("Play ranking: None");
         } else {
-            sb.append("游玩排行（Top 5）：\n");
+            sb.append("Play ranking (Top 5):");
             int i = 0;
             for (Map.Entry<String, Long> e : s.topGames.entrySet()) {
                 if (i >= 5) break;
@@ -109,9 +109,9 @@ public final class AiReviewPromptBuilder {
                 Integer count = s.gameSessionCounts.get(e.getKey());
                 String status = s.gameStatuses.get(e.getKey());
                 sb.append(i + 1).append(". 《").append(e.getKey()).append("》 ")
-                        .append(TimeFormatUtil.playTime(duration)).append("，占比 ").append(percent).append("%");
-                if (status != null && !status.trim().isEmpty()) sb.append("，当前库状态：").append(status);
-                if (count != null && count > 0) sb.append("，启动 ").append(count).append(" 次");
+                        .append(TimeFormatUtil.playTime(duration)).append(", accounting for").append(percent).append("%");
+                if (status != null && !status.trim().isEmpty()) sb.append(", current library status:").append(status);
+                if (count != null && count > 0) sb.append(",start up").append(count).append(" 次");
                 sb.append("\n");
                 i++;
             }
@@ -119,7 +119,7 @@ public final class AiReviewPromptBuilder {
         }
 
         if (!s.gameMetadata.isEmpty()) {
-            sb.append("作品资料增强（来自本地已缓存的 VNDB/Bangumi/本地资料；只能作为风格和类型参考，不可编造剧情）：\n");
+            sb.append("Enhanced work data (from locally cached VNDB/Bangumi/local data; can only be used as a reference for style and genre, and cannot be used to make up plots):");
             int metaCount = 0;
             for (Map.Entry<String, String> e : s.gameMetadata.entrySet()) {
                 if (metaCount >= 5) break;
@@ -130,28 +130,28 @@ public final class AiReviewPromptBuilder {
             sb.append("\n");
         }
 
-        sb.append("游玩时段分布：\n");
-        sb.append("- 深夜 22-4 时：").append(s.nightCount).append(" 次\n");
-        sb.append("- 上午 8-12 时：").append(s.morningCount).append(" 次\n");
-        sb.append("- 下午 13-19 时：").append(s.afternoonCount).append(" 次\n");
-        sb.append("- 其他时段：").append(s.otherTimeCount).append(" 次\n");
-        sb.append("- 工作日：").append(s.weekdayCount).append(" 次\n");
-        sb.append("- 周末：").append(s.weekendCount).append(" 次\n\n");
+        sb.append("Distribution of play periods:");
+        sb.append("- Late night 22-4 hours:").append(s.nightCount).append("Second-rate");
+        sb.append("- 8-12 a.m.:").append(s.morningCount).append("Second-rate");
+        sb.append("- 13-19 pm:").append(s.afternoonCount).append("Second-rate");
+        sb.append("- Other times:").append(s.otherTimeCount).append("Second-rate");
+        sb.append("- Working days:").append(s.weekdayCount).append("Second-rate");
+        sb.append("- weekend:").append(s.weekendCount).append("Second-rate");
 
-        sb.append("最近动态：\n");
+        sb.append("Recent news:");
         if (s.recentSessions.isEmpty()) {
-            sb.append("- 无\n");
+            sb.append("- none");
         } else {
             int count = 0;
             for (PlayActivity a : s.recentSessions) {
                 if (a == null || count >= 8) break;
-                String title = a.gameTitle == null || a.gameTitle.trim().isEmpty() ? "未命名游戏" : a.gameTitle;
+                String title = a.gameTitle == null || a.gameTitle.trim().isEmpty() ? "Unnamed game" : a.gameTitle;
                 String status = s.gameStatuses.get(title);
-                sb.append("- ").append(shortDate(a.endTime)).append(" 玩了《")
+                sb.append("- ").append(shortDate(a.endTime)).append("Played \"")
                         .append(title)
                         .append("》 ").append(TimeFormatUtil.playTime(a.duration))
                         .append("，").append(launchTypeLabel(a.launchType));
-                if (status != null && !status.trim().isEmpty()) sb.append("，当前库状态：").append(status);
+                if (status != null && !status.trim().isEmpty()) sb.append(", current library status:").append(status);
                 sb.append("\n");
                 count++;
             }
@@ -160,48 +160,48 @@ public final class AiReviewPromptBuilder {
     }
 
     public static String buildTaskPrompt() {
-        return "=== 任务指令 ===\n\n"
-                + "请基于以上数据，以你的人设，对欧尼酱最近 7 天的游玩表现写一份 AI 周点评。\n"
-                + "优先抓住最鲜明的一两个特征，例如沉迷一款游戏、开坑太多、深夜游玩、清坑效率高、游玩量过低等。\n"
-                + "不要写成统计报告，不要自称 AI，不要解释你如何分析。\n"
-                + "建议必须结合当前库状态：已标为玩过的游戏等同通关/已完成，不要建议再通关；在玩游戏可建议继续推进；未玩游戏可建议少开坑或先试试。\n"
-                + "如果已通关游戏本周仍有时长，请按“重温/回味/补内容/整理感想”处理，不要把它批评成重复游玩、浪费时间或需要克制的坏习惯。\n"
-                + "搁置和抛弃是玩家自己的取舍：搁置可温和提醒，抛弃要尊重决定，都不要写成失败或可惜。\n"
-                + "严禁给数据中不存在的行为编造动作（快进、读档、跳过、刷 CG、查攻略等一律没有记录）。\n"
-                + "严禁把库状态和本周时长拼成「言行不一」式反差段子。\n"
-                + "如果数据很少，就轻度吐槽并鼓励继续记录。\n\n"
-                + "请严格输出以下 JSON（highlights 与 advice 各写 3 条）：\n"
+        return "=== Task Instructions ==="
+                + "Based on the above data, please write an AI Week review of Onii-chan’s gaming performance in the last 7 days based on your character design."
+                + "Prioritize the one or two most distinctive characteristics, such as being addicted to a game, opening too many pits, playing late at night, high efficiency in clearing pits, and low play volume, etc."
+                + "Don’t write statistical reports, don’t call yourself AI, don’t explain how you analyzed it."
+                + "Suggestions must be combined with the current library status: games that have been marked as played are equivalent to clearance/completed, and it is not recommended to clear the level again; if you are playing the game, you can recommend continuing to advance; if you have not played the game, it is recommended to play less pits or try it first."
+                + "If you have finished the game and still have time this week, please process it by \"Revisiting/Reminiscing/Supplementing Content/Organizing Thoughts\". Do not criticize it as repeated play, a waste of time, or a bad habit that needs to be restrained."
+                + "Shelving and abandoning is the player's own choice: shelving can be a gentle reminder, and abandoning should respect the decision. Do not write it as a failure or a pity."
+                + "It is strictly prohibited to make up actions for behaviors that do not exist in the data (fast forwarding, loading files, skipping, brushing CG, checking guides, etc. will not be recorded)."
+                + "It is strictly forbidden to combine the library status and the duration of the week into a \"words and deeds are inconsistent\" style contrasting jokes."
+                + "If there is little data, complain slightly and encourage continued recording."
+                + "Please strictly output the following JSON (write 3 items each for highlights and advice):"
                 + "{\n"
-                + "  \"title\": \"短标题\",\n"
-                + "  \"subtitle\": \"一句话总结\",\n"
-                + "  \"scoreName\": \"指数名\",\n"
+                + "\"title\": \"Short title\","
+                + "\"subtitle\": \"One sentence summary\","
+                + "\"scoreName\": \"index name\","
                 + "  \"score\": 0,\n"
-                + "  \"roast\": \"180字以内主要点评，要叫用户欧尼酱\",\n"
-                + "  \"highlights\": [\"亮点1\", \"亮点2\", \"亮点3\"],\n"
-                + "  \"topGamesComment\": [{\"game\": \"游戏名\", \"comment\": \"1到2句点评，可结合类型/标签但不剧透\"}],\n"
-                + "  \"advice\": [\"建议1\", \"建议2\", \"建议3\"],\n"
-                + "  \"oneLine\": \"底部一句话\"\n"
+                + "\"roast\": \"For main comments within 180 words, please call user Ounijiang\","
+                + "\"highlights\": [\"highlights 1\", \"highlights 2\", \"highlights 3\"],"
+                + "\"topGamesComment\": [{\"game\": \"游戏名\", \"comment\": \"1到2句点评，可结合类型/标签但不剧透\"}],"
+                + "\"advice\": [\"Advice 1\", \"Advice 2\", \"Advice 3\"],"
+                + "\"oneLine\": \"One sentence at the bottom\""
                 + "}";
     }
 
     private static String dateOnly(long t) {
-        if (t <= 0) return "未知";
+        if (t <= 0) return "Unknown";
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date(t));
     }
 
     private static String shortDate(long t) {
-        if (t <= 0) return "未知时间";
+        if (t <= 0) return "Unknown time";
         return new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(new Date(t));
     }
 
     private static String launchTypeLabel(String launchType) {
         String t = launchType == null ? "" : launchType;
-        if (t.startsWith("internal.krkr")) return "内置 KRKR";
-        if (t.startsWith("internal.ons")) return "内置 ONS";
-        if (t.startsWith("internal.tyrano")) return "内置 Tyrano";
-        if (t.startsWith("internal.artemis")) return "内置 Artemis";
-        if (t.startsWith("internal.fvp")) return "内置 FVP";
-        if ("manual".equals(t)) return "手动补记";
-        return "外部模拟器";
+        if (t.startsWith("internal.krkr")) return "Built-in KRKR";
+        if (t.startsWith("internal.ons")) return "Built-in ONS";
+        if (t.startsWith("internal.tyrano")) return "Built-in Tyrano";
+        if (t.startsWith("internal.artemis")) return "Built-in Artemis";
+        if (t.startsWith("internal.fvp")) return "Built-in FVP";
+        if ("manual".equals(t)) return "Manual make-up";
+        return "External emulator";
     }
 }

@@ -34,22 +34,22 @@ import java.util.Map;
 public final class CursorSchemeScanner {
     /** Windows 光标角色 → 中文显示名。顺序即推荐展示顺序。 */
     private static final String[][] ROLE_NAMES = {
-            {"pointer", "普通选择"},
-            {"link", "链接选择"},
-            {"text", "文本选择"},
-            {"help", "帮助选择"},
-            {"work", "后台运行"},
-            {"busy", "忙"},
-            {"cross", "精确选择"},
-            {"hand", "手写"},
-            {"unavailiable", "不可用"},
-            {"unavailable", "不可用"},
-            {"vert", "垂直调整"},
-            {"horz", "水平调整"},
-            {"dgn1", "对角调整1"},
-            {"dgn2", "对角调整2"},
-            {"move", "移动"},
-            {"alternate", "候选"},
+            {"pointer", "Normal choice"},
+            {"link", "Link selection"},
+            {"text", "Text selection"},
+            {"help", "Help choose"},
+            {"work", "Running in the background"},
+            {"busy", "Busy"},
+            {"cross", "Precise selection"},
+            {"hand", "Handwriting"},
+            {"unavailiable", "Not available"},
+            {"unavailable", "Not available"},
+            {"vert", "Vertical adjustment"},
+            {"horz", "Horizontal adjustment"},
+            {"dgn1", "Diagonal adjustment 1"},
+            {"dgn2", "Diagonal adjustment 2"},
+            {"move", "Move"},
+            {"alternate", "Candidate"},
     };
 
     /** 扫描结果里的一项。 */
@@ -75,7 +75,7 @@ public final class CursorSchemeScanner {
         /** 列表里显示的标签。 */
         public String label() {
             if (roleName != null && !roleName.isEmpty()) {
-                return isNormal ? roleName + "（正常状态）" : roleName;
+                return isNormal ? roleName + "(normal state)" : roleName;
             }
             return fileName;
         }
@@ -110,7 +110,7 @@ public final class CursorSchemeScanner {
         try {
             DocumentFile dir = DocumentFile.fromTreeUri(ctx, treeUri);
             if (dir == null || !dir.isDirectory()) return s;
-            s.name = dir.getName() != null ? dir.getName() : "光标方案";
+            s.name = dir.getName() != null ? dir.getName() : "Cursor scheme";
 
             DocumentFile[] files = dir.listFiles();
             if (files == null) return s;
@@ -221,20 +221,20 @@ public final class CursorSchemeScanner {
 
     /** 没有 inf 时按文件名关键词猜角色，猜不到返回空串。 */
     private static String guessRole(String lowerName) {
-        if (isNormalByName(lowerName)) return "普通选择";
-        if (contains(lowerName, "链接", "link", "hand")) return "链接选择";
-        if (contains(lowerName, "文本", "text", "ibeam", "beam")) return "文本选择";
-        if (contains(lowerName, "忙", "busy", "wait")) return "忙";
-        if (contains(lowerName, "后台", "work", "appstarting")) return "后台运行";
-        if (contains(lowerName, "精确", "cross", "precision")) return "精确选择";
-        if (contains(lowerName, "帮助", "help")) return "帮助选择";
-        if (contains(lowerName, "移动", "move", "sizeall")) return "移动";
-        if (contains(lowerName, "不可用", "unavail", "no")) return "不可用";
+        if (isNormalByName(lowerName)) return "Normal choice";
+        if (contains(lowerName, "Link", "link", "hand")) return "Link selection";
+        if (contains(lowerName, "Text", "text", "ibeam", "beam")) return "Text selection";
+        if (contains(lowerName, "Busy", "busy", "wait")) return "Busy";
+        if (contains(lowerName, "Backstage", "work", "appstarting")) return "Running in the background";
+        if (contains(lowerName, "Accurate", "cross", "precision")) return "Precise selection";
+        if (contains(lowerName, "Help", "help")) return "Help choose";
+        if (contains(lowerName, "Move", "move", "sizeall")) return "Move";
+        if (contains(lowerName, "Not available", "unavail", "no")) return "Not available";
         return "";
     }
 
     private static boolean isNormalByName(String lowerName) {
-        return contains(lowerName, "普通", "正常", "normal", "arrow", "pointer", "default");
+        return contains(lowerName, "Ordinary", "Normal", "normal", "arrow", "pointer", "default");
     }
 
     private static boolean contains(String s, String... keys) {

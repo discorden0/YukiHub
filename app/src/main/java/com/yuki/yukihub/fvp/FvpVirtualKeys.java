@@ -119,7 +119,7 @@ public final class FvpVirtualKeys {
         bar.setGravity(Gravity.CENTER_VERTICAL);
 
         escButton = makeButton("ESC");
-        historyButton = makeButton("历史");
+        historyButton = makeButton("History");
         ctrlButton = makeButton("Ctrl");
 
         int bw = Math.round(BTN_WIDTH_DP * d);
@@ -168,7 +168,7 @@ public final class FvpVirtualKeys {
         bar.setElevation(2000f);
         parent.addView(bar, lp);
         bar.bringToFront();
-        android.util.Log.i(TAG, "virtual keys attached (ESC / 历史 / Ctrl)");
+        android.util.Log.i(TAG, "Virtual keys attached (ESC / History / Ctrl)");
     }
 
     public void detach() {

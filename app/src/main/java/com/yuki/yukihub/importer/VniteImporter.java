@@ -86,7 +86,7 @@ public class VniteImporter {
         }
 
         if (gameDocsJson == null) {
-            throw new Exception("未找到 Vnite 游戏数据文件（gameDocs.json）");
+            throw new Exception("Vnite game data file (gameDocs.json) not found");
         }
 
         // 尝试查找 covers 子目录
@@ -304,7 +304,7 @@ public class VniteImporter {
 
     private static String readUriToString(Context context, Uri uri) throws Exception {
         InputStream in = context.getContentResolver().openInputStream(uri);
-        if (in == null) throw new Exception("无法读取文件: " + uri);
+        if (in == null) throw new Exception("Unable to read file:" + uri);
         try {
             java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
             byte[] tmp = new byte[8192];

@@ -340,7 +340,7 @@ public final class OnsVideoOverlay {
 
     private TextView buildSkipHint() {
         TextView tv = new TextView(host);
-        tv.setText("长按跳过");
+        tv.setText("Long press to skip");
         tv.setTextColor(Color.argb(200, 255, 255, 255));
         tv.setTextSize(13);
         int padH = dp(12), padV = dp(6);

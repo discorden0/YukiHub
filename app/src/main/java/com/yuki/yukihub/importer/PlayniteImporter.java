@@ -28,7 +28,7 @@ public class PlayniteImporter {
      */
     public static List<ImportGameData> parse(Context context, Uri uri) throws Exception {
         InputStream in = context.getContentResolver().openInputStream(uri);
-        if (in == null) throw new Exception("无法打开文件");
+        if (in == null) throw new Exception("Unable to open file");
         byte[] buf;
         try {
             java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();

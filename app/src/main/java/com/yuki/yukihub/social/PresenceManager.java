@@ -201,15 +201,15 @@ public class PresenceManager {
         String title = gameTitle == null ? "" : gameTitle.trim();
         if (title.isEmpty()) return "";
         if (title.length() > 80) title = title.substring(0, 80) + "…";
-        return "正在玩：" + title;
+        return "Now playing:" + title;
     }
 
     /** 从 "正在玩：xxx" 里提取游戏名。 */
     public static String extractGameTitle(String activity) {
         if (activity == null) return "";
         String s = activity.trim();
-        if (s.startsWith("正在玩：")) return s.substring("正在玩：".length()).trim();
-        if (s.startsWith("正在玩:")) return s.substring("正在玩:".length()).trim();
+        if (s.startsWith("Now playing:")) return s.substring("Now playing:".length()).trim();
+        if (s.startsWith("Now playing:")) return s.substring("Now playing:".length()).trim();
         return s;
     }
 

@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="10dp"
-            android:text="内部存储管理"
+            android:text="Internal storage management"
             android:textColor="@color/yh_text"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -60,7 +60,7 @@
             android:id="@+id/tvKrMgrSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="正在统计…"
+            android:text="Counting..."
             android:textColor="@color/yh_text"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -112,7 +112,7 @@
             android:layout_height="44dp"
             android:layout_weight="1"
             android:background="@drawable/bg_action_tool"
-            android:text="全部清理"
+            android:text="clean all"
             android:textColor="@color/yh_text"
             android:textSize="14sp" />
 
@@ -123,7 +123,7 @@
             android:layout_weight="1"
             android:layout_marginStart="10dp"
             android:background="@drawable/bg_action_primary"
-            android:text="完成"
+            android:text="Finish"
             android:textColor="#F5F4FF"
             android:textSize="14sp"
             android:textStyle="bold" />

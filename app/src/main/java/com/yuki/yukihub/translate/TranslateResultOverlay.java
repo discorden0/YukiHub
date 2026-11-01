@@ -78,7 +78,7 @@ public class TranslateResultOverlay {
         textView = new TextView(context);
         updateAppearance();
         textView.setShadowLayer(2f, 1f, 1f, Color.BLACK);
-        textView.setText("等待翻译…");
+        textView.setText("Waiting for translation…");
         textView.setOnTouchListener(this::onTouch);
     }
 

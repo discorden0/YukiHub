@@ -92,8 +92,8 @@ public class ChatNotifier {
                 .build();
 
         NotificationChannel chat = new NotificationChannel(
-                CHANNEL_CHAT, "私聊消息", NotificationManager.IMPORTANCE_HIGH);
-        chat.setDescription("好友发来私聊消息时弹出通知");
+                CHANNEL_CHAT, "Private message", NotificationManager.IMPORTANCE_HIGH);
+        chat.setDescription("Notification pops up when a friend sends a private message");
         chat.setShowBadge(true);
         chat.enableVibration(true);
         chat.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
@@ -101,8 +101,8 @@ public class ChatNotifier {
         nm.createNotificationChannel(chat);
 
         NotificationChannel reply = new NotificationChannel(
-                CHANNEL_GROUP_REPLY, "群聊回复提醒", NotificationManager.IMPORTANCE_HIGH);
-        reply.setDescription("群聊中有人回复你的消息时弹出通知");
+                CHANNEL_GROUP_REPLY, "Group chat reply reminder", NotificationManager.IMPORTANCE_HIGH);
+        reply.setDescription("A notification pops up when someone in the group chat replies to your message");
         reply.setShowBadge(true);
         reply.enableVibration(true);
         reply.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
@@ -177,7 +177,7 @@ public class ChatNotifier {
                 if (friendKey(senderId).equals(activeConversation)) continue;  // 正在看这个会话
                 ChatMessage m = e.getValue();
                 String nick = nickById.get(senderId);
-                if (nick == null || nick.trim().isEmpty()) nick = "好友";
+                if (nick == null || nick.trim().isEmpty()) nick = "Friends";
                 notifyPrivateMessage(senderId, nick, previewOf(m));
             }
         } catch (Throwable t) {
@@ -212,11 +212,11 @@ public class ChatNotifier {
                 if (groupKey(a.groupId).equals(activeConversation)) continue;
 
                 String who = (a.actorNickname == null || a.actorNickname.trim().isEmpty())
-                        ? "有人" : a.actorNickname.trim();
-                String group = (a.groupName == null || a.groupName.isEmpty()) ? "群聊" : a.groupName;
+                        ? "Someone" : a.actorNickname.trim();
+                String group = (a.groupName == null || a.groupName.isEmpty()) ? "Group chat" : a.groupName;
                 String icon = (a.groupIcon == null || a.groupIcon.isEmpty()) ? "" : a.groupIcon + " ";
                 boolean isMention = "mention".equals(a.kind);
-                String title = who + (isMention ? " 在群里 @ 了你" : " 回复了你");
+                String title = who + (isMention ? "@ you in the group" : "Replied you");
                 String text = icon + group + "：" + (a.summary == null ? "" : a.summary);
 
                 Notification n = buildNotification(CHANNEL_GROUP_REPLY, title, text, "friends", null, a.groupId);
@@ -240,14 +240,14 @@ public class ChatNotifier {
     private String previewOf(ChatMessage m) {
         if (m == null) return "";
         String type = m.msgType == null ? "text" : m.msgType;
-        if ("image".equals(type)) return "[图片]";
-        if ("emoji".equals(type)) return "[表情]";
+        if ("image".equals(type)) return "[picture]";
+        if ("emoji".equals(type)) return "[expression]";
         String c = m.content == null ? "" : m.content.trim();
         // 引用回复的首行是 "> 昵称: 原文"，通知里只展示实际回复内容更清楚
         int nl = c.indexOf('\n');
         if (c.startsWith(">") && nl > 0) {
             String rest = c.substring(nl).trim();
-            if (!rest.isEmpty()) c = "[回复] " + rest;
+            if (!rest.isEmpty()) c = "[reply]" + rest;
         }
         return c.length() > 80 ? c.substring(0, 80) + "…" : c;
     }

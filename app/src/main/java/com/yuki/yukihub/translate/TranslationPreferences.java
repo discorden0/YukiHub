@@ -52,7 +52,7 @@ public final class TranslationPreferences {
     public static final int DEFAULT_OCR_MERGE_MODE = 2;
     public static final String DEFAULT_PIC_ENGINE = "CUSTOM";
     public static final boolean DEFAULT_HISTORY_ENABLED = false;
-    public static final String DEFAULT_HISTORY_PROMPT = "以下是供参考的翻译记录：";
+    public static final String DEFAULT_HISTORY_PROMPT = "The following is the translation record for reference:";
     public static final int DEFAULT_HISTORY_COUNT = 5;
     public static final int DEFAULT_CUSTOM_TEXT_API_SLOT = 0;
     public static final int DEFAULT_CUSTOM_PIC_API_SLOT = 0;

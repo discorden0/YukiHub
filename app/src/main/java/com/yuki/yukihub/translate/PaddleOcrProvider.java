@@ -24,11 +24,11 @@ public final class PaddleOcrProvider implements OcrProvider {
     @Override
     public void recognize(Bitmap bitmap, String sourceLanguage, int mergeMode, Callback callback) {
         if (released) {
-            if (callback != null) callback.onFailure(new IllegalStateException("PaddleOCR 已释放"));
+            if (callback != null) callback.onFailure(new IllegalStateException("PaddleOCR released"));
             return;
         }
         if (bitmap == null || bitmap.isRecycled()) {
-            if (callback != null) callback.onFailure(new IllegalArgumentException("Bitmap 无效"));
+            if (callback != null) callback.onFailure(new IllegalArgumentException("Bitmap is invalid"));
             return;
         }
         executor.execute(() -> {

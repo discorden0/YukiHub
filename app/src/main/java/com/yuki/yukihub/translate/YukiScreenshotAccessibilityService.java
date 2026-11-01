@@ -31,7 +31,7 @@ public class YukiScreenshotAccessibilityService extends AccessibilityService {
 
     public void takeScreenshot(RectF cropRect, Point offset, Callback callback) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            fail(callback, "屏幕翻译需要 Android 11 或更高版本");
+            fail(callback, "Screen translation requires Android 11 or higher");
             return;
         }
         try {
@@ -51,7 +51,7 @@ public class YukiScreenshotAccessibilityService extends AccessibilityService {
                     });
         } catch (Throwable t) {
             Log.e(TAG, "takeScreenshot failed", t);
-            fail(callback, "系统截图失败：" + safeMessage(t));
+            fail(callback, "System screenshot failed:" + safeMessage(t));
         }
     }
 
@@ -61,25 +61,25 @@ public class YukiScreenshotAccessibilityService extends AccessibilityService {
         Bitmap bitmap = null;
         try {
             if (hardwareBuffer == null) {
-                fail(callback, "系统没有返回截图缓冲区");
+                fail(callback, "The system did not return the screenshot buffer");
                 return;
             }
             Bitmap hardwareBitmap = Bitmap.wrapHardwareBuffer(
                     hardwareBuffer, result.getColorSpace());
             if (hardwareBitmap == null) {
-                fail(callback, "无法读取系统截图");
+                fail(callback, "Unable to read system screenshot");
                 return;
             }
             bitmap = hardwareBitmap.copy(Bitmap.Config.ARGB_8888, true);
             if (bitmap == null) {
-                fail(callback, "无法转换截图格式");
+                fail(callback, "Unable to convert screenshot format");
                 return;
             }
             if (cropRect != null) {
                 Point safeOffset = offset == null ? new Point(0, 0) : offset;
                 Bitmap cropped = cropBitmap(bitmap, cropRect, safeOffset);
                 if (cropped == null) {
-                    fail(callback, "截图区域无效或超出屏幕范围");
+                    fail(callback, "The screenshot area is invalid or exceeds the screen range");
                     return;
                 }
                 if (cropped != bitmap) {
@@ -92,7 +92,7 @@ public class YukiScreenshotAccessibilityService extends AccessibilityService {
             if (callback != null) callback.onSuccess(deliver);
         } catch (Throwable t) {
             Log.e(TAG, "process screenshot failed", t);
-            fail(callback, "截图处理失败：" + safeMessage(t));
+            fail(callback, "Screenshot processing failed:" + safeMessage(t));
         } finally {
             if (bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
             if (hardwareBuffer != null) hardwareBuffer.close();
@@ -114,7 +114,7 @@ public class YukiScreenshotAccessibilityService extends AccessibilityService {
     }
 
     private void fail(Callback callback, String message) {
-        String text = message == null || message.trim().isEmpty() ? "截图失败" : message;
+        String text = message == null || message.trim().isEmpty() ? "Screenshot failed" : message;
         if (callback != null) callback.onFailure(text);
         try {
             Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
@@ -123,18 +123,18 @@ public class YukiScreenshotAccessibilityService extends AccessibilityService {
     }
 
     private String screenshotError(int errorCode) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return "屏幕翻译需要 Android 11 或更高版本";
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return "Screen translation requires Android 11 or higher";
         switch (errorCode) {
             case AccessibilityService.ERROR_TAKE_SCREENSHOT_INTERNAL_ERROR:
-                return "截图失败：系统内部错误";
+                return "Screenshot failed: internal system error";
             case AccessibilityService.ERROR_TAKE_SCREENSHOT_NO_ACCESSIBILITY_ACCESS:
-                return "截图失败：无障碍权限不可用";
+                return "Screenshot failed: Accessibility permission not available";
             case AccessibilityService.ERROR_TAKE_SCREENSHOT_INTERVAL_TIME_SHORT:
-                return "截图过于频繁，请稍后再试";
+                return "Screenshots taken too frequently, please try again later";
             case AccessibilityService.ERROR_TAKE_SCREENSHOT_INVALID_DISPLAY:
-                return "截图失败：无效屏幕";
+                return "Screenshot failed: Invalid screen";
             default:
-                return "截图失败，错误码：" + errorCode;
+                return "Screenshot failed, error code:" + errorCode;
         }
     }
 

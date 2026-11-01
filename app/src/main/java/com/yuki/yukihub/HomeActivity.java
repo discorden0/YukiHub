@@ -243,7 +243,7 @@ public class HomeActivity extends AppCompatActivity {
             heroActionView.setBackgroundResource(R.drawable.bg_home_action_glass);
             heroActionView.setTextColor(Color.WHITE);
             com.yuki.yukihub.util.IconedText.set(heroActionView,
-                    R.drawable.ic_btn_play, " 继续游戏", 10f, Color.WHITE);
+                    R.drawable.ic_btn_play, "Continue game", 10f, Color.WHITE);
         }
 
         // 题图区四角圆角裁切（画框式）。遮罩用无圆角版 bg_home_news_overlay：
@@ -307,7 +307,7 @@ public class HomeActivity extends AppCompatActivity {
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://yukihub.zh.kg/community")));
             } catch (Throwable t) {
-                Toast.makeText(this, "无法打开社区，请检查网络", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Unable to open the community, please check the network", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -323,8 +323,8 @@ public class HomeActivity extends AppCompatActivity {
         // 不受 styleDialogDark 控制，在深色主题下会变成黑字看不清（实测）。
         final androidx.appcompat.app.AlertDialog[] holder = new androidx.appcompat.app.AlertDialog[1];
 
-        root.addView(buildExhibitionOption("离线个人展厅",
-                "本地库存 · 无需联网 · 可离线逛",
+        root.addView(buildExhibitionOption("Offline personal exhibition hall",
+                "Local inventory · No internet connection required · Can be browsed offline",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     openExhibition(com.yuki.yukihub.exhibition.ExhibitionActivity.MODE_LOCAL);
@@ -335,8 +335,8 @@ public class HomeActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT, dp(8)));
         root.addView(gap);
 
-        root.addView(buildExhibitionOption("在线多人展厅",
-                "全站博物馆 · 需联网 · 玩家交流广场",
+        root.addView(buildExhibitionOption("Online multi-person exhibition hall",
+                "Site-wide museum · Internet connection required · Player communication square",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     openExhibition(com.yuki.yukihub.exhibition.ExhibitionActivity.MODE_ONLINE);
@@ -345,7 +345,7 @@ public class HomeActivity extends AppCompatActivity {
         gap2.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dp(8)));
         root.addView(gap2);
-        root.addView(buildExhibitionOption("🎵 音乐库",
+        root.addView(buildExhibitionOption("🎵 Music library",
                 "管理展厅音乐与 PV · 加专辑/单曲、绑 PV",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
@@ -353,9 +353,9 @@ public class HomeActivity extends AppCompatActivity {
                 }));
 
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("3D 展厅")
+                .setTitle("3D exhibition hall")
                 .setView(root)
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
         holder[0] = dialog;
         styleDialogDark(dialog);
@@ -402,7 +402,7 @@ public class HomeActivity extends AppCompatActivity {
             intent.putExtra(com.yuki.yukihub.exhibition.ExhibitionActivity.EXTRA_MODE, mode);
             startActivity(intent);
         } catch (Throwable t) {
-            Toast.makeText(this, "无法打开展厅：" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to open showroom:" + t.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -412,7 +412,7 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(new Intent(this, com.yuki.yukihub.music.MusicLibraryActivity.class));
             overridePendingTransition(0, 0);
         } catch (Throwable t) {
-            Toast.makeText(this, "无法打开音乐库：" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to open music library:" + t.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -428,7 +428,7 @@ public class HomeActivity extends AppCompatActivity {
         root.setPadding(pad, dp(14), pad, dp(10));
 
         TextView nameLabel = new TextView(this);
-        nameLabel.setText("昵称");
+        nameLabel.setText("Nick name");
         nameLabel.setTextColor(0xFFFFFFFF);
         nameLabel.setTextSize(14);
         nameLabel.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -436,7 +436,7 @@ public class HomeActivity extends AppCompatActivity {
 
         EditText nameInput = new EditText(this);
         nameInput.setText(localName);
-        nameInput.setHint("输入昵称");
+        nameInput.setHint("Enter nickname");
         nameInput.setTextColor(0xFFFFFFFF);
         nameInput.setHintTextColor(0x88FFFFFF);
         nameInput.setBackgroundResource(R.drawable.bg_input);
@@ -459,7 +459,7 @@ public class HomeActivity extends AppCompatActivity {
         root.addView(uidValue, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(36)));
 
         TextView signLabel = new TextView(this);
-        signLabel.setText("个人签名");
+        signLabel.setText("Personal signature");
         signLabel.setTextColor(0xFFFFFFFF);
         signLabel.setTextSize(14);
         signLabel.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -468,7 +468,7 @@ public class HomeActivity extends AppCompatActivity {
 
         EditText signatureInput = new EditText(this);
         signatureInput.setText(currentSignature);
-        signatureInput.setHint("写点什么，比如：今天也要认真补完一部作品");
+        signatureInput.setHint("Write something, for example: I have to finish a work seriously today.");
         signatureInput.setSingleLine(false);
         signatureInput.setMinLines(2);
         signatureInput.setTextColor(0xFFFFFFFF);
@@ -479,7 +479,7 @@ public class HomeActivity extends AppCompatActivity {
         root.addView(signatureInput, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(62)));
 
         TextView hint = new TextView(this);
-        hint.setText("头像和昵称也显示在首页左侧。\n完整资料显示、云同步、账号管理等请进入游戏库设置。");
+        hint.setText("The avatar and nickname are also displayed on the left side of the homepage. \\n Please enter the game library settings for complete information display, cloud synchronization, account management, etc.");
         hint.setTextColor(0xAAFFFFFF);
         hint.setTextSize(10);
         hint.setPadding(0, dp(8), 0, 0);
@@ -490,10 +490,10 @@ public class HomeActivity extends AppCompatActivity {
         scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("个人资料")
+                .setTitle("Personal data")
                 .setView(scroll)
-                .setPositiveButton("保存", null)
-                .setNegativeButton("关闭", null)
+                .setPositiveButton("save", null)
+                .setNegativeButton("closure", null)
                 .show();
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_dialog);
@@ -505,14 +505,14 @@ public class HomeActivity extends AppCompatActivity {
             String name = nameInput.getText() == null ? "" : nameInput.getText().toString().trim();
             String sign = signatureInput.getText() == null ? "" : signatureInput.getText().toString().trim();
             if (name.isEmpty()) {
-                Toast.makeText(this, "昵称不能为空", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Nickname cannot be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (prefs != null) {
                 prefs.edit().putString(KEY_PROFILE_NAME, name).putString("profile_signature", sign).apply();
             }
             refreshProfileHeader();
-            Toast.makeText(this, "个人资料已保存", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Profile saved", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
     }
@@ -526,7 +526,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 字体大小
         TextView fontTitle = new TextView(this);
-        fontTitle.setText("整体字体大小");
+        fontTitle.setText("Overall font size");
         fontTitle.setTextColor(0xFFFFFFFF);
         fontTitle.setTextSize(14);
         fontTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -534,7 +534,7 @@ public class HomeActivity extends AppCompatActivity {
 
         float savedFontScale = prefs == null ? 1.0f : prefs.getFloat("ui_font_scale", 1.0f);
         TextView fontInfo = new TextView(this);
-        fontInfo.setText("当前：" + Math.round(savedFontScale * 100) + "%（默认 100%）");
+        fontInfo.setText("Current:" + Math.round(savedFontScale * 100) + "% (default 100%)");
         fontInfo.setTextColor(0xAAFFFFFF);
         fontInfo.setTextSize(11);
         fontInfo.setPadding(0, dp(4), 0, dp(6));
@@ -549,7 +549,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float scale = 0.7f + progress / 100f;
                 fontScaleValue[0] = scale;
-                fontInfo.setText("当前：" + Math.round(scale * 100) + "%（默认 100%）");
+                fontInfo.setText("Current:" + Math.round(scale * 100) + "% (default 100%)");
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override public void onStopTrackingTouch(SeekBar seekBar) { }
@@ -557,7 +557,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 界面缩放
         TextView scaleTitle = new TextView(this);
-        scaleTitle.setText("\n界面整体缩放");
+        scaleTitle.setText("\\n Overall scaling of the interface");
         scaleTitle.setTextColor(0xFFFFFFFF);
         scaleTitle.setTextSize(14);
         scaleTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -565,7 +565,7 @@ public class HomeActivity extends AppCompatActivity {
 
         float savedUiScale = prefs == null ? 1.0f : prefs.getFloat("ui_scale", 1.0f);
         TextView scaleInfo = new TextView(this);
-        scaleInfo.setText("当前：" + Math.round(savedUiScale * 100) + "%（默认 100%）· 平板建议 120-150%");
+        scaleInfo.setText("Current:" + Math.round(savedUiScale * 100) + "% (default 100%) · Tablet recommended 120-150%");
         scaleInfo.setTextColor(0xAAFFFFFF);
         scaleInfo.setTextSize(11);
         scaleInfo.setPadding(0, dp(4), 0, dp(6));
@@ -580,7 +580,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float scale = 0.7f + progress / 100f;
                 uiScaleValue[0] = scale;
-                scaleInfo.setText("当前：" + Math.round(scale * 100) + "%（默认 100%）· 平板建议 120-150%");
+                scaleInfo.setText("Current:" + Math.round(scale * 100) + "% (default 100%) · Tablet recommended 120-150%");
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override public void onStopTrackingTouch(SeekBar seekBar) { }
@@ -588,7 +588,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 刘海/挖孔区域（主界面可选，默认开启）
         TextView cutoutTitle = new TextView(this);
-        cutoutTitle.setText("\n刘海/挖孔区域");
+        cutoutTitle.setText("Bangs/cutout area");
         cutoutTitle.setTextColor(0xFFFFFFFF);
         cutoutTitle.setTextSize(14);
         cutoutTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -603,7 +603,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // NSFW 封面模糊
         android.widget.CheckBox nsfwBlurCheck = new android.widget.CheckBox(this);
-        nsfwBlurCheck.setText("🔞 NSFW 封面模糊（识别为 R18 的游戏封面自动模糊）");
+        nsfwBlurCheck.setText("🔞 NSFW cover blur (game covers identified as R18 are automatically blurred)");
         nsfwBlurCheck.setTextColor(0xFFFFFFFF);
         nsfwBlurCheck.setTextSize(13);
         nsfwBlurCheck.setPadding(dp(4), dp(4), 0, dp(4));
@@ -612,7 +612,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 启动页选择
         TextView startupTitle = new TextView(this);
-        startupTitle.setText("\n启动页");
+        startupTitle.setText("\\nStart page");
         startupTitle.setTextColor(0xFFFFFFFF);
         startupTitle.setTextSize(14);
         startupTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -620,7 +620,7 @@ public class HomeActivity extends AppCompatActivity {
 
         String savedStartup = prefs == null ? "home" : prefs.getString("startup_page", "home");
         final String[] startupOptions = {"home", "library", "bigscreen"};
-        String[] startupLabels = {"首页（默认）", "游戏库", "大屏模式"};
+        String[] startupLabels = {"Home page (default)", "game library", "Large screen mode"};
         final int[] startupChoice = {0};
         for (int i = 0; i < startupOptions.length; i++) {
             if (startupOptions[i].equals(savedStartup)) { startupChoice[0] = i; break; }
@@ -650,7 +650,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 应用图标选择
         TextView appIconTitle = new TextView(this);
-        appIconTitle.setText("\n应用图标");
+        appIconTitle.setText("\\n application icon");
         appIconTitle.setTextColor(0xFFFFFFFF);
         appIconTitle.setTextSize(14);
         appIconTitle.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -668,7 +668,7 @@ public class HomeActivity extends AppCompatActivity {
 
         String savedIcon = prefs == null ? APP_ICON_NEW : prefs.getString(KEY_APP_ICON, APP_ICON_NEW);
         TextView appIconLabel = new TextView(this);
-        appIconLabel.setText("当前：" + (APP_ICON_NEW.equals(savedIcon) ? "新图标" : "经典图标"));
+        appIconLabel.setText("Current:" + (APP_ICON_NEW.equals(savedIcon) ? "New icon" : "Classic icon"));
         appIconLabel.setTextColor(0xAAFFFFFF);
         appIconLabel.setTextSize(13);
         appIconLabel.setGravity(android.view.Gravity.CENTER_VERTICAL);
@@ -677,7 +677,7 @@ public class HomeActivity extends AppCompatActivity {
         appIconRow.addView(appIconLabel, labelLp);
 
         Button appIconBtn = new Button(this);
-        appIconBtn.setText("更改");
+        appIconBtn.setText("Change");
         appIconBtn.setTextColor(0xFFFFFFFF);
         appIconBtn.setTextSize(12);
         android.graphics.drawable.GradientDrawable iconBtnBg = new android.graphics.drawable.GradientDrawable();
@@ -691,7 +691,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 高级设置入口
         TextView advancedHint = new TextView(this);
-        advancedHint.setText("\n扫描目录、引擎配置、背景、WebDAV 同步、账号管理等高级设置请进入游戏库设置页面。");
+        advancedHint.setText("\\n For advanced settings such as scanning directory, engine configuration, background, WebDAV synchronization, account management, etc., please enter the game library settings page.");
         advancedHint.setTextColor(0xAAFFFFFF);
         advancedHint.setTextSize(10);
         advancedHint.setLineSpacing(dp(2), 1.0f);
@@ -699,7 +699,7 @@ public class HomeActivity extends AppCompatActivity {
         root.addView(advancedHint);
 
         Button openFullSettings = new Button(this);
-        openFullSettings.setText("打开完整设置 →");
+        openFullSettings.setText("Open full settings →");
         openFullSettings.setTextColor(0xFFFFFFFF);
         openFullSettings.setBackgroundResource(R.drawable.bg_home_glass);
         openFullSettings.setOnClickListener(v -> {
@@ -712,10 +712,10 @@ public class HomeActivity extends AppCompatActivity {
         scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("设置")
+                .setTitle("set up")
                 .setView(scroll)
-                .setPositiveButton("保存", null)
-                .setNegativeButton("关闭", null)
+                .setPositiveButton("save", null)
+                .setNegativeButton("closure", null)
                 .show();
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_dialog);
@@ -735,7 +735,7 @@ public class HomeActivity extends AppCompatActivity {
                         .putBoolean(MainActivity.KEY_NSFW_BLUR, nsfwBlurCheck.isChecked())
                         .apply();
             }
-            Toast.makeText(this, "设置已保存", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Settings saved", Toast.LENGTH_SHORT).show();
             // M18：NSFW 模糊开关变了要**立刻重刷**首页封面（不然要回主库再进来才生效）
             refreshNsfwCovers();
             dialog.dismiss();
@@ -758,13 +758,13 @@ public class HomeActivity extends AppCompatActivity {
         list.setPadding(dp(16), dp(8), dp(16), dp(8));
 
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("选择应用图标")
+                .setTitle("Select app icon")
                 .setView(list)
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .create();
 
-        addAppIconOption(list, "新图标", R.mipmap.ic_launcher_new, APP_ICON_NEW, current, dialog);
-        addAppIconOption(list, "经典图标", R.mipmap.ic_launcher, APP_ICON_CLASSIC, current, dialog);
+        addAppIconOption(list, "New icon", R.mipmap.ic_launcher_new, APP_ICON_NEW, current, dialog);
+        addAppIconOption(list, "Classic icon", R.mipmap.ic_launcher, APP_ICON_CLASSIC, current, dialog);
 
         dialog.show();
         // 窗口背景统一为深色，避免标题栏/按钮栏露出系统浅色
@@ -800,7 +800,7 @@ public class HomeActivity extends AppCompatActivity {
         row.addView(iv, new LinearLayout.LayoutParams(dp(48), dp(48)));
 
         TextView tv = new TextView(this);
-        tv.setText(selected ? "✓ " + name + "（当前）" : name);
+        tv.setText(selected ? "✓ " + name + "(current)" : name);
         tv.setTextColor(selected ? 0xFFFFFFFF : 0xBFFFFFFF);
         tv.setTextSize(15);
         LinearLayout.LayoutParams tvLp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
@@ -810,7 +810,7 @@ public class HomeActivity extends AppCompatActivity {
         row.setOnClickListener(v -> {
             prefs.edit().putString(KEY_APP_ICON, id).apply();
             switchAppIcon(id);
-            Toast.makeText(this, "图标已切换，桌面图标可能需要稍后刷新", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The icon has been switched. Desktop icons may need to be refreshed later.", Toast.LENGTH_SHORT).show();
             if (dialog != null) dialog.dismiss();
         });
     }
@@ -829,7 +829,7 @@ public class HomeActivity extends AppCompatActivity {
                     PackageManager.DONT_KILL_APP);
         } catch (Throwable t) {
             Log.w("YukiHub", "switch app icon failed", t);
-            Toast.makeText(this, "图标切换失败：" + (t.getMessage() == null ? "请稍后重试" : t.getMessage()), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Icon switching failed:" + (t.getMessage() == null ? "Please try again later" : t.getMessage()), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -860,7 +860,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void launchCurrentCarouselGame() {
         if (carouselIndex < 0 || carouselIndex >= carouselGames.size()) {
-            Toast.makeText(this, "当前没有可启动的游戏", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "There are currently no games to launch", Toast.LENGTH_SHORT).show();
             return;
         }
         launchGameFromHome(carouselGames.get(carouselIndex));
@@ -868,7 +868,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void launchGameFromHome(Game game) {
         if (game == null || game.id <= 0L) {
-            Toast.makeText(this, "无法识别要启动的游戏", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The game to launch cannot be recognized", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent(this, MainActivity.class);
@@ -996,7 +996,7 @@ public class HomeActivity extends AppCompatActivity {
     private void refreshProfileHeader() {
         String name = displayProfileName();
         int hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
-        String period = hour < 5 ? "夜深了" : hour < 11 ? "早上好" : hour < 14 ? "中午好" : hour < 18 ? "下午好" : "晚上好";
+        String period = hour < 5 ? "It's late at night" : hour < 11 ? "Good morning" : hour < 14 ? "Good afternoon" : hour < 18 ? "Good afternoon" : "Good evening";
         String tip = greetingTip(hour);
         if (homeGreeting != null) homeGreeting.setText(period + "，" + name + "  ›  " + tip);
 
@@ -1068,13 +1068,13 @@ public class HomeActivity extends AppCompatActivity {
     private String greetingTip(int hour) {
         String[] tips;
         if (hour < 5) {
-            tips = new String[]{"别忘了保存进度", "夜深了，也要注意休息", "这一章结束就休息吧"};
+            tips = new String[]{"Don't forget to save your progress", "It's late at night, so you should also pay attention to rest", "Let's rest after this chapter is over"};
         } else if (hour < 11) {
-            tips = new String[]{"新的一天，从喜欢的故事开始", "今天也整理一下游戏库吧", "愿今天遇见好故事"};
+            tips = new String[]{"A new day starts with your favorite story", "Let’s sort out the game library today too.", "Hope to meet a good story today"};
         } else if (hour < 18) {
-            tips = new String[]{"要继续上次的故事吗？", "游戏库已经准备好了", "给自己留一点游玩时间吧"};
+            tips = new String[]{"Do you want to continue the story from last time?", "Game library is ready", "Leave yourself some time to play"};
         } else {
-            tips = new String[]{"今晚想继续哪段故事？", "欢迎回来，存档还在等你", "挑一款喜欢的游戏放松一下吧"};
+            tips = new String[]{"Which story do you want to continue tonight?", "Welcome back, the archive is still waiting for you", "Pick a game you like and relax"};
         }
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         int stableIndex = Math.abs(calendar.get(java.util.Calendar.DAY_OF_YEAR) + hour / 5) % tips.length;
@@ -1141,7 +1141,7 @@ public class HomeActivity extends AppCompatActivity {
         try {
             games = repository.getAll();
         } catch (Throwable t) {
-            Toast.makeText(this, "首页数据读取失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to read homepage data", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -1153,9 +1153,9 @@ public class HomeActivity extends AppCompatActivity {
             else if ("playing".equals(game.playStatus)) playing++;
         }
         bindTodayPlayTime();
-        com.yuki.yukihub.util.IconedText.set(gameCount, R.drawable.ic_nav_library, " 游戏库\n" + games.size() + " 款", 10f, 0xFFFFFFFF);
-        com.yuki.yukihub.util.IconedText.set(completedCount, R.drawable.ic_st_trophy, " 已玩过\n" + completed + " 个", 10f, 0xFFFFFFFF);
-        com.yuki.yukihub.util.IconedText.set(playingCount, R.drawable.ic_st_heart, " 正在玩\n" + playing + " 个", 10f, 0xFFFFFFFF);
+        com.yuki.yukihub.util.IconedText.set(gameCount, R.drawable.ic_nav_library, "Game Library\\n" + games.size() + "Payment", 10f, 0xFFFFFFFF);
+        com.yuki.yukihub.util.IconedText.set(completedCount, R.drawable.ic_st_trophy, "Played \\n" + completed + " 个", 10f, 0xFFFFFFFF);
+        com.yuki.yukihub.util.IconedText.set(playingCount, R.drawable.ic_st_heart, "Playing\\n" + playing + " 个", 10f, 0xFFFFFFFF);
 
         setupCarousel(games);
         bindQuickGames(games);
@@ -1195,30 +1195,30 @@ public class HomeActivity extends AppCompatActivity {
         long now = System.currentTimeMillis();
         long rawDuration = Math.max(0L, now - open.startTime);
         long duration = Math.min(rawDuration, MAX_PLAY_SESSION_MS);
-        String message = "检测到最近一次游玩未正常结束。\n\n"
-                + "游戏：" + empty(open.gameTitle, "未命名游戏") + "\n"
-                + "开始时间：" + new SimpleDateFormat("MM月dd日 HH:mm", Locale.getDefault()).format(new Date(open.startTime)) + "\n"
-                + "可补记时长：" + formatPlayDuration(duration) + "\n\n"
+        String message = "It was detected that the latest play session did not end normally. \\n\\n"
+                + "Game:" + empty(open.gameTitle, "Unnamed game") + "\n"
+                + "Start time:" + new SimpleDateFormat("MM month dd day HH:mm", Locale.getDefault()).format(new Date(open.startTime)) + "\n"
+                + "The amount of time that can be added to the record:" + formatPlayDuration(duration) + "\n\n"
                 + (total > 1
-                    ? "另有 " + (total - 1) + " 条更早的未完成记录，将一并处理。\n\n"
+                    ? "Also" + (total - 1) + "Earlier unfinished records will be processed together. \\n\\n"
                     : "")
-                + "如果这段时间确实在游玩，可选择补记；如果只是测试启动、闪退或误操作，请选择忽略。";
+                + "If you are really playing during this period, you can choose to make a supplementary note; if it is just a test startup, crash or misoperation, please choose to ignore.";
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("发现未完成的游玩记录")
+                .setTitle("Found unfinished game history")
                 .setMessage(message)
-                .setPositiveButton("补记", (d, w) -> {
+                .setPositiveButton("Supplementary note", (d, w) -> {
                     // 一次性结算全部未完成记录，避免下次进来又弹
                     repository.finishUnfinishedPlaySessions(
                             System.currentTimeMillis(), MIN_PLAY_SESSION_MS, MAX_PLAY_SESSION_MS);
                     refreshHome();
-                    Toast.makeText(this, "已补记上次游玩时长", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Last play time has been recorded", Toast.LENGTH_SHORT).show();
                     staleSessionDialogShowing = false;
                 })
-                .setNegativeButton("忽略", (d, w) -> {
+                .setNegativeButton("Neglect", (d, w) -> {
                     // 同样一次性清掉全部，而非只删这一条
                     repository.deleteOpenPlaySessions();
                     refreshHome();
-                    Toast.makeText(this, "已忽略未完成记录", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Incomplete records ignored", Toast.LENGTH_SHORT).show();
                     staleSessionDialogShowing = false;
                 })
                 .setCancelable(false)
@@ -1316,13 +1316,13 @@ public class HomeActivity extends AppCompatActivity {
     /** 弹窗用的正式时长格式：<1分钟显示秒，>=1分钟显示X小时Y分钟 */
     private String formatPlayDuration(long millis) {
         long totalSeconds = Math.max(0L, millis) / 1000L;
-        if (totalSeconds < 60L) return totalSeconds + "秒";
+        if (totalSeconds < 60L) return totalSeconds + "Second";
         long totalMinutes = totalSeconds / 60L;
         long hours = totalMinutes / 60L;
         long minutes = totalMinutes % 60L;
         StringBuilder sb = new StringBuilder();
-        if (hours > 0L) sb.append(hours).append("小时");
-        sb.append(minutes).append("分钟");
+        if (hours > 0L) sb.append(hours).append("Hour");
+        sb.append(minutes).append("Minute");
         return sb.toString();
     }
 
@@ -1348,15 +1348,15 @@ public class HomeActivity extends AppCompatActivity {
 long difference = today - yesterday;
             // 图标 + 文字用 SpannableStringBuilder 拼，保留趋势着色
             CharSequence head = com.yuki.yukihub.util.IconedText.build(
-                    this, R.drawable.ic_nav_clock, " 今日游玩\n", 10f, 0xFFFFFFFF);
+                    this, R.drawable.ic_nav_clock, "Today’s play\\n", 10f, 0xFFFFFFFF);
             android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder(head);
             if (today <= 0L && yesterday <= 0L) {
-                sb.append("0m\n今天还没开始玩哦");
+                sb.append("0m\\n I haven’t started playing today yet");
             } else if (yesterday <= 0L) {
-                sb.append(formatDuration(today)).append("\n昨日 0m · 开始积累吧");
+                sb.append(formatDuration(today)).append("\\n Yesterday 0m · Start accumulating");
             } else {
                 String icon = difference > 0 ? "▲" : difference < 0 ? "▼" : "—";
-                String trend = icon + " " + formatCompactDuration(Math.abs(difference)) + " 较昨日";
+                String trend = icon + " " + formatCompactDuration(Math.abs(difference)) + "Than yesterday";
                 sb.append(formatDuration(today)).append("\n");
                 int start = sb.length();
                 sb.append(trend);
@@ -1366,7 +1366,7 @@ long difference = today - yesterday;
             playTime.setText(sb);
         } catch (Throwable ignored) {
             com.yuki.yukihub.util.IconedText.set(playTime, R.drawable.ic_nav_clock,
-                    " 今日游玩\n0m\n— 暂无对比", 10f, 0xFFFFFFFF);
+                    "Today’s play\\n0m\\n— No comparison yet", 10f, 0xFFFFFFFF);
         }
 }
     private long sumDurations(java.util.Map<String, Long> durations) {
@@ -1404,8 +1404,8 @@ long difference = today - yesterday;
         if (carouselGames.isEmpty()) {
             heroImageRequest = "";
             heroCover.setImageResource(R.drawable.ic_launcher_foreground);
-            heroTitle.setText("开始你的游戏旅程");
-            heroSubtitle.setText("从游戏库添加或选择一个游戏");
+            heroTitle.setText("Start your gaming journey");
+            heroSubtitle.setText("Add or select a game from the game library");
             View action = findViewById(R.id.homeHeroAction);
             if (action != null) action.setEnabled(false);
             return;
@@ -1460,10 +1460,10 @@ long difference = today - yesterday;
     }
 
     private void bindCarouselContent(Game game) {
-        heroTitle.setText(empty(game.title, "未命名游戏"));
+        heroTitle.setText(empty(game.title, "Unnamed game"));
         heroSubtitle.setText(game.lastPlayedAt > 0
-                ? "上次游玩：" + new SimpleDateFormat("MM月dd日 HH:mm", Locale.getDefault()).format(new Date(game.lastPlayedAt))
-                : "已收录到游戏库");
+                ? "Last time played:" + new SimpleDateFormat("MM month dd day HH:mm", Locale.getDefault()).format(new Date(game.lastPlayedAt))
+                : "Already included in the game library");
         loadHeroCover(game);
     }
 
@@ -1588,7 +1588,7 @@ long difference = today - yesterday;
         });
         card.setClickable(true);
         card.setFocusable(true);
-        card.setContentDescription("进入游戏库查看" + empty(game.title, "游戏"));
+        card.setContentDescription("Enter the game library to view" + empty(game.title, "Game"));
 
         ImageView cover = new ImageView(this);
         cover.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -1616,7 +1616,7 @@ long difference = today - yesterday;
         card.addView(cover, new LinearLayout.LayoutParams(dp(62), dp(42)));
 
         TextView title = new TextView(this);
-        title.setText(empty(game.title, "未命名游戏"));
+        title.setText(empty(game.title, "Unnamed game"));
         title.setTextColor(Color.WHITE);
         title.setTextSize(8);
         title.setSingleLine(true);
@@ -1631,7 +1631,7 @@ long difference = today - yesterday;
         // 首页快捷启动：约 18% 白底 + 淡白边，整张卡片仍可启动游戏。
         button.setBackgroundResource(R.drawable.bg_home_quick_action_glass);
         button.setTextColor(Color.WHITE);
-        com.yuki.yukihub.util.IconedText.set(button, R.drawable.ic_btn_play, " 启动", 7f, Color.WHITE);
+        com.yuki.yukihub.util.IconedText.set(button, R.drawable.ic_btn_play, "Start up", 7f, Color.WHITE);
         button.setDuplicateParentStateEnabled(true);
         card.addView(button, new LinearLayout.LayoutParams(dp(62), dp(16)));
 
@@ -1647,7 +1647,7 @@ long difference = today - yesterday;
 
     private View createAddGameCard(int index) {
         TextView add = new TextView(this);
-        add.setText("＋\n添加游戏");
+        add.setText("+\\nAdd game");
         add.setGravity(android.view.Gravity.CENTER);
         add.setTextColor(Color.WHITE);
         add.setTextSize(9);
@@ -1655,7 +1655,7 @@ long difference = today - yesterday;
         add.setBackgroundResource(R.drawable.bg_home_glass);
         add.setClickable(true);
         add.setFocusable(true);
-        add.setContentDescription("进入游戏库添加游戏");
+        add.setContentDescription("Enter the game library to add games");
         add.setOnClickListener(v -> {
             touch(v);
             startActivity(new Intent(this, MainActivity.class));
@@ -1730,7 +1730,7 @@ long difference = today - yesterday;
             try {
                 items = fetchNewsFromApi();
             } catch (Throwable t) {
-                error = t.getMessage() == null ? "网络异常" : t.getMessage();
+                error = t.getMessage() == null ? "Network abnormality" : t.getMessage();
             }
             final List<NewsItem> fetched = items;
             final boolean timedOut = "TIMED_OUT".equals(error);
@@ -1747,7 +1747,7 @@ long difference = today - yesterday;
                         renderNews(stale);
                     } else {
                         homeNewsLoading.setVisibility(View.VISIBLE);
-                        homeNewsLoading.setText(timedOut ? "资讯加载较慢，稍后再试" : "资讯获取失败，点右上角刷新重试");
+                        homeNewsLoading.setText(timedOut ? "Information loading is slow, please try again later" : "Failed to obtain information, click refresh in the upper right corner to try again");
                         homeNewsBanner.setVisibility(View.GONE);
                         homeNewsTitle.setText("");
                         buildNewsDots();
@@ -1915,7 +1915,7 @@ long difference = today - yesterday;
         box.setPadding(pad, dp(4), pad, dp(2));
 
         TextView summary = new TextView(this);
-        summary.setText(item.summary.isEmpty() ? "暂无摘要。" : item.summary);
+        summary.setText(item.summary.isEmpty() ? "No summary yet." : item.summary);
         summary.setTextSize(13f);
         summary.setTextColor(0xE8FFFFFF);
         summary.setLineSpacing(dp(2), 1.0f);
@@ -1923,13 +1923,13 @@ long difference = today - yesterday;
 
         StringBuilder metaText = new StringBuilder();
         if (item.publishedAt != null && item.publishedAt.length() >= 10) {
-            metaText.append("发布于 ").append(item.publishedAt.substring(0, 10));
+            metaText.append("Posted in").append(item.publishedAt.substring(0, 10));
         }
         if (item.attribution != null && !item.attribution.isEmpty()) {
             if (metaText.length() > 0) metaText.append('\n');
             metaText.append(item.attribution);
         }
-        if (metaText.length() == 0) metaText.append("via NextMoe·未萌");
+        if (metaText.length() == 0) metaText.append("Via NextMoe·Weimeng");
         TextView meta = new TextView(this);
         meta.setText(metaText.toString());
         meta.setTextSize(10f);
@@ -1941,13 +1941,13 @@ long difference = today - yesterday;
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle(item.title)
                 .setView(box)
-                .setPositiveButton("关闭", null);
+                .setPositiveButton("closure", null);
         if (item.sourceUrl != null && !item.sourceUrl.isEmpty()) {
-            builder.setNegativeButton("阅读原文", (d, w) -> {
+            builder.setNegativeButton("Read the original article", (d, w) -> {
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.sourceUrl)));
                 } catch (Throwable t) {
-                    Toast.makeText(this, "无法打开资讯原文，请检查网络", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Unable to open the original message, please check the network", Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -270,7 +270,7 @@ public class MusicRepository {
         if (singles.isEmpty()) return null;
         MusicAlbum a = new MusicAlbum();
         a.id = MusicAlbum.SINGLES_ID;
-        a.title = "散装单曲";
+        a.title = "Bulk singles";
         a.trackCount = singles.size();
         a.createdAt = singles.get(0).createdAt;
         a.updatedAt = a.createdAt;

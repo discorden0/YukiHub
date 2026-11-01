@@ -64,31 +64,31 @@ public class GameLoadingView extends View {
     public static final String EXTRA_INITIAL_TIP_INDEX = "yukihubLaunchTipIndex";
 
     private static final String[] TIPS = {
-            "每一句台词，都是通往另一颗心的路。",
-            "在像素交织的世界里，寻找属于你的那条线。",
-            "有些感动只有亲身体验才会明白。",
-            "Galgame 的魅力在于选择本身就是答案。",
-            "一个好故事值得反复品味，就像值得反复重启的存档。",
-            "你按下的是鼠标，改变的是命运。",
-            "哪怕只有一条线分歧，结局也可能天差地别。",
-            "画面会褪色，故事不会。",
-            "在这个屏幕里，你是唯一的观众，也是主角。",
-            "在此刻驻足，倾听角色的呼吸。",
-            "BGM 响起的那一瞬，一切都对了。",
-            "存档不是终点，而是可能性的记录。",
-            "有些角色离开屏幕后依然住在你的记忆里。",
-            "好的 Galgame 让你在通关后久久沉默。",
-            "选择困难症？这大概就是 Galgame 的浪漫。",
-            "CG 全收集了，但她的话还是那句最动人。",
-            "不跳过任何一句独白，是对作者最大的尊重。",
-            "每次多周目都是一次平行世界的旅行。",
-            "比起抵达终点，途中的分歧更值得回味。",
-            "你不仅仅是玩家，你是这段时光的一部分。",
-            "保存进度，也是保存了那一刻的心情。",
-            "文字值得被慢慢读完。",
-            "陪伴是最长情的告白——角色对你的也是。",
-            "有些伏笔三章前就埋下了，而你此刻才懂。",
-            "别急，让片尾曲放完。",
+            "Every line is a road to another heart.",
+            "In a world of intertwined pixels, find the line that belongs to you.",
+            "Some emotions can only be understood through personal experience.",
+            "The beauty of Galgame is that the choice itself is the answer.",
+            "A good story is worth savoring over and over again, just like an archive worth restarting over and over again.",
+            "What you press is the mouse, and what you change is destiny.",
+            "Even if there is only one line of disagreement, the ending may be very different.",
+            "The image fades, the story does not.",
+            "In this screen, you are the only audience and the protagonist.",
+            "Stop in the moment and listen to the character breathing.",
+            "The moment the BGM started playing, everything clicked.",
+            "The archive is not an end, but a record of possibilities.",
+            "Some characters live in your memory long after they leave the screen.",
+            "A good Galgame leaves you silent for a long time after beating the game.",
+            "Difficulty choosing? This is probably the romance of Galgame.",
+            "I have collected all the CGs, but her words are still the most touching.",
+            "Not skipping any monologue is the greatest respect for the author.",
+            "Each multi-week tour is a journey into a parallel world.",
+            "The differences along the way are more worth remembering than reaching the destination.",
+            "You're not just a player, you're a part of this time.",
+            "Saving the progress also saves the mood at that moment.",
+            "The text is worth reading slowly.",
+            "Companionship is the longest confession of love - the same is true for you.",
+            "Some of the foreshadowing was laid three chapters ago, but you only understand it now.",
+            "Don't worry, let the ending song finish.",
     };
     private int tipIndex = 0;
     private long lastTipSwitch = 0L;
@@ -307,7 +307,7 @@ public class GameLoadingView extends View {
         textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD));
         textPaint.setColor(errorMode ? DANGER : TEXT_PRIMARY);
         textPaint.setAlpha((int)(255 * entranceProgress));
-        canvas.drawText(errorMode ? "启动失败" : "YukiHub", cx, nameY, textPaint);
+        canvas.drawText(errorMode ? "Startup failed" : "YukiHub", cx, nameY, textPaint);
 
         // === Status line ===
         float statusY = nameY + 24 * dp;
@@ -315,7 +315,7 @@ public class GameLoadingView extends View {
         tipPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
         tipPaint.setColor(errorMode ? DANGER : TEXT_MUTED);
         tipPaint.setAlpha((int)(200 * entranceProgress));
-        canvas.drawText(errorMode ? "游戏引擎初始化失败，请检查路径或重启" : "正在启动游戏…", cx, statusY, tipPaint);
+        canvas.drawText(errorMode ? "Game engine initialization failed, please check the path or restart" : "Starting game...", cx, statusY, tipPaint);
 
         // === Tip quotes (italic, wrapped) ===
         if (!errorMode) {

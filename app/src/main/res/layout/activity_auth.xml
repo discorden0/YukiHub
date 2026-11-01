@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="连接你的游戏库"
+                    android:text="Connect your game library"
                     android:textColor="#5A6A8A"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -75,7 +75,7 @@
                 android:textSize="17sp"
                 android:gravity="center"
                 android:background="@drawable/bg_auth_input"
-                android:contentDescription="关闭"
+                android:contentDescription="closure"
                 android:clickable="true"
                 android:focusable="true" />
         </FrameLayout>
@@ -95,7 +95,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="登录"
+                android:text="Log in"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -107,7 +107,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="注册"
+                android:text="register"
                 android:textColor="#4A5568"
                 android:textSize="14sp"
                 android:background="@drawable/bg_auth_tab_inactive" />
@@ -119,7 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:text="欢迎回来"
+            android:text="welcome back"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
-            android:text="登录后开启云同步和跨设备恢复"
+            android:text="After logging in, enable cloud synchronization and cross-device recovery."
             android:textColor="#5A6A8A"
             android:textSize="11sp" />
 
@@ -146,7 +146,7 @@
                 android:id="@+id/labelNickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="昵称"
+                android:text="Nick name"
                 android:textColor="#7A8BA8"
                 android:textSize="12sp" />
 
@@ -156,7 +156,7 @@
                 android:layout_height="42dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/bg_auth_input"
-                android:hint="你的显示名称"
+                android:hint="your display name"
                 android:textColorHint="#3A4568"
                 android:textColor="#EAF7FF"
                 android:textSize="14sp"
@@ -172,7 +172,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="邮箱"
+            android:text="Mail"
             android:textColor="#7A8BA8"
             android:textSize="12sp" />
 
@@ -204,7 +204,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="邮箱验证码"
+                android:text="Email verification code"
                 android:textColor="#7A8BA8"
                 android:textSize="12sp" />
 
@@ -221,7 +221,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/bg_auth_input"
-                    android:hint="输入邮箱验证码"
+                    android:hint="Enter email verification code"
                     android:textColorHint="#3A4568"
                     android:textColor="#EAF7FF"
                     android:textSize="14sp"
@@ -236,7 +236,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
-                    android:text="发送验证码"
+                    android:text="Send verification code"
                     android:textColor="#5AC8FA"
                     android:textSize="13sp"
                     android:background="@drawable/bg_auth_input"
@@ -273,7 +273,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="密码"
+                android:text="password"
                 android:textColor="#7A8BA8"
                 android:textSize="12sp" />
 
@@ -281,7 +281,7 @@
                 android:id="@+id/tvForgotPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="忘记密码？"
+                android:text="forget the password?"
                 android:textColor="#5AC8FA"
                 android:textSize="12sp"
                 android:paddingStart="16dp"
@@ -298,7 +298,7 @@
             android:layout_height="42dp"
             android:layout_marginTop="4dp"
             android:background="@drawable/bg_auth_input"
-            android:hint="输入密码"
+            android:hint="Enter password"
             android:textColorHint="#3A4568"
             android:textColor="#EAF7FF"
             android:textSize="14sp"
@@ -320,7 +320,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="确认密码"
+                android:text="Confirm Password"
                 android:textColor="#7A8BA8"
                 android:textSize="12sp" />
 
@@ -330,7 +330,7 @@
                 android:layout_height="42dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/bg_auth_input"
-                android:hint="再次输入密码"
+                android:hint="Enter password again"
                 android:textColorHint="#3A4568"
                 android:textColor="#EAF7FF"
                 android:textSize="14sp"
@@ -345,7 +345,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_marginTop="18dp"
-            android:text="登录"
+            android:text="Log in"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -400,7 +400,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginBottom="6dp"
-            android:text="NextMoe·未萌 账号登录"
+            android:text="NextMoe·Weimeng account login"
             android:textColor="#EAF7FF"
             android:textSize="14sp"
             android:drawableStart="@drawable/ic_kungal_logo"
@@ -417,7 +417,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginBottom="6dp"
-            android:text="Hikarinagi 账号登录"
+            android:text="Hikarinagi account login"
             android:textColor="#EAF7FF"
             android:textSize="14sp"
             android:drawableStart="@drawable/ic_hikarinagi_logo"
@@ -433,7 +433,7 @@
             android:id="@+id/tvContinueLocal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="继续使用本地账户"
+            android:text="Continue to use local account"
             android:textColor="#5AC8FA"
             android:textSize="13sp"
             android:padding="8dp"

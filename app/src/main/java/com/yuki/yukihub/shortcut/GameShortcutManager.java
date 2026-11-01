@@ -180,7 +180,7 @@ public final class GameShortcutManager {
                 if (hasPinned(sm, sid)) ids.add(sid);
             }
             if (ids.isEmpty()) return;
-            sm.disableShortcuts(ids, "游戏已从 YukiHub 移除，请长按删除此图标");
+            sm.disableShortcuts(ids, "The game has been removed from YukiHub, please long press to delete this icon");
         } catch (Throwable t) {
             Log.w(TAG, "disableForGames failed", t);
         }
@@ -203,7 +203,7 @@ public final class GameShortcutManager {
                 if (si.getId().startsWith(ID_PREFIX)) ids.add(si.getId());
             }
             if (ids.isEmpty()) return;
-            sm.disableShortcuts(ids, "游戏已从 YukiHub 移除，请长按删除此图标");
+            sm.disableShortcuts(ids, "The game has been removed from YukiHub, please long press to delete this icon");
         } catch (Throwable t) {
             Log.w(TAG, "disableAll failed", t);
         }
@@ -262,7 +262,7 @@ public final class GameShortcutManager {
 
     private static String safeLabel(String title) {
         String t = title == null ? "" : title.trim();
-        if (t.isEmpty()) return "未命名游戏";
+        if (t.isEmpty()) return "Unnamed game";
         // 桌面标签本身会被启动器截断，这里限长只为避免个别启动器对超长文本处理异常
         return t.length() > 24 ? t.substring(0, 24) : t;
     }

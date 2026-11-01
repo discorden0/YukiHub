@@ -92,7 +92,7 @@ public class BangumiClient {
         if (rating != null) {
             double score = rating.optDouble("score", 0);
             int total = rating.optInt("total", 0);
-            if (score > 0) m.ratingText = total > 0 ? String.format(java.util.Locale.US, "评分：%.1f/10（%d人）", score, total) : String.format(java.util.Locale.US, "评分：%.1f/10", score);
+            if (score > 0) m.ratingText = total > 0 ? String.format(java.util.Locale.US, "Rating: %.1f/10 (%d people)", score, total) : String.format(java.util.Locale.US, "Rating: %.1f/10", score);
         }
 
         JSONArray tags = o.optJSONArray("tags");
@@ -107,7 +107,7 @@ public class BangumiClient {
             m.tagsText = MetadataUtils.join(names, "  ");
         }
 
-        m.lengthText = "游玩时长：-";
+        m.lengthText = "Play time:-";
         return m;
     }
 

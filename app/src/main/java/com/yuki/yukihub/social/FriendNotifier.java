@@ -50,10 +50,10 @@ public class FriendNotifier {
 
         NotificationChannel fg = new NotificationChannel(
                 CHANNEL_FOREGROUND,
-                "在线状态",
+                "Online status",
                 NotificationManager.IMPORTANCE_LOW
         );
-        fg.setDescription("YukiHub 保持在线与好友动态监听");
+        fg.setDescription("YukiHub stays online and monitors your friends’ updates");
         fg.setShowBadge(false);
         fg.enableVibration(false);
         fg.setSound(null, null);
@@ -62,10 +62,10 @@ public class FriendNotifier {
         // HIGH：允许弹出横幅（heads-up），更接近 Steam 提醒
         NotificationChannel play = new NotificationChannel(
                 CHANNEL_FRIEND_PLAY,
-                "好友开始玩游戏",
+                "Friends start playing games",
                 NotificationManager.IMPORTANCE_HIGH
         );
-        play.setDescription("好友开始玩游戏时弹出横幅通知");
+        play.setDescription("Banner notification pops up when a friend starts playing a game");
         play.setShowBadge(true);
         play.enableVibration(true);
         play.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
@@ -118,7 +118,7 @@ public class FriendNotifier {
     private void notifyFriendStartedPlaying(FriendInfo friend, String activity) {
         try {
             String nickname = friend.nickname == null || friend.nickname.trim().isEmpty()
-                    ? "好友" : friend.nickname.trim();
+                    ? "Friends" : friend.nickname.trim();
             String game = PresenceManager.extractGameTitle(activity);
             if (game.isEmpty()) game = activity;
 
@@ -146,9 +146,9 @@ public class FriendNotifier {
             Notification notification = builder
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(nickname)
-                    .setContentText("开始玩 《" + game + "》")
+                    .setContentText("Start playing \"" + game + "》")
                     .setStyle(new Notification.BigTextStyle()
-                            .bigText(nickname + " 开始玩 《" + game + "》"))
+                            .bigText(nickname + "Start playing \"" + game + "》"))
                     .setContentIntent(pi)
                     .setAutoCancel(true)
                     .setOnlyAlertOnce(true)
@@ -193,9 +193,9 @@ public class FriendNotifier {
         String title = "YukiHub";
         String text;
         if (playingActivity != null && !playingActivity.trim().isEmpty()) {
-            text = playingActivity.trim() + " · 好友动态监听中";
+            text = playingActivity.trim() + "· Monitoring friends’ dynamics";
         } else {
-            text = "好友动态监听中";
+            text = "Friend activity monitoring";
         }
 
         Notification.Builder builder;

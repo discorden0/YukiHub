@@ -109,7 +109,7 @@ public abstract class r extends KR2Activity {
     private void tryLaunchGame(String path, boolean maps) {
         if (!nativeBridgeInitialized) {
             Log.e(TAG, "skip launch because native bridge was not initialized");
-            showLaunchFailure("KRKR 引擎初始化失败");
+            showLaunchFailure("KRKR engine initialization failed");
             return;
         }
         // Native launch must run on the GL thread. Wait for each queued call before retrying;
@@ -158,7 +158,7 @@ public abstract class r extends KR2Activity {
                     }
                 }
             }
-            if (!launched && !destroyed) showLaunchFailure("启动失败");
+            if (!launched && !destroyed) showLaunchFailure("Startup failed");
         }, "KrkrLaunch").start();
     }
 
@@ -227,7 +227,7 @@ public abstract class r extends KR2Activity {
         String oldPath = oldIntent.getStringExtra("path");
         String newPath = intent.getStringExtra("path");
         if (newPath != null && !newPath.equals(oldPath)) {
-            Toast.makeText(this, "已有游戏在运行，请先存档并退出游戏后再启动新游戏", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "There is already a game running. Please save and exit the game before starting a new game.", Toast.LENGTH_SHORT).show();
         }
     }
 

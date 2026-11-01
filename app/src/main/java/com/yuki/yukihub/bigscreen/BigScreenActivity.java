@@ -195,7 +195,7 @@ public class BigScreenActivity extends AppCompatActivity
         }
         // M18-2：**每次入场动画结束后都提示一次手柄状态**。
         // 之前只有"插拔事件"才会提示，而手柄多半是启动前就插着的 —— 于是入场完什么都看不到。
-        if (gamepadConnected()) { showGamepadNotice("手柄已连接"); }
+        if (gamepadConnected()) { showGamepadNotice("The handle is connected"); }
         if (trailerWaitIntro) {
             trailerWaitIntro = false;
             syncTrailer(null);   // PV 的延迟计时从这一刻开始
@@ -944,7 +944,7 @@ public class BigScreenActivity extends AppCompatActivity
             trailerPickerLauncher.launch("video/*");
         } catch (Throwable t) {
             pendingTrailerGame = null;
-            toast("无法打开文件选择器：" + t.getMessage());
+            toast("Unable to open file chooser:" + t.getMessage());
         }
     }
 
@@ -953,7 +953,7 @@ public class BigScreenActivity extends AppCompatActivity
         if (game == null) { return; }
         new com.yuki.yukihub.ui.filechooser.FileChooserDialog(this)
                 .setMode(com.yuki.yukihub.ui.filechooser.FileChooserDialog.Mode.FILE)
-                .setTitle("从文件夹选择 PV 视频")
+                .setTitle("Select PV video from folder")
                 .setExtFilter(".mp4", ".m4v", ".mkv", ".avi", ".mov", ".webm", ".3gp", ".ts", ".mpeg", ".mpg")
                 .setOnFileSelectedListener(new com.yuki.yukihub.ui.filechooser.FileChooserDialog.OnFileSelectedListener() {
                     @Override public void onFileSelected(Uri uri, String path, String fileName) {
@@ -969,7 +969,7 @@ public class BigScreenActivity extends AppCompatActivity
                     try { trailerDocumentLauncher.launch(new String[]{"video/*"}); }
                     catch (Exception e) {
                         pendingTrailerGame = null;
-                        toast("无法打开系统文件选择器：" + e.getMessage());
+                        toast("Unable to open system file picker:" + e.getMessage());
                     }
                 })
                 .show();
@@ -979,17 +979,17 @@ public class BigScreenActivity extends AppCompatActivity
     private void openTrailerSourceMenu(Game game) {
         if (game == null) { return; }
         List<BigScreenPanel.Item> items = new ArrayList<>();
-        items.add(new BigScreenPanel.Item("从相册选择", "系统相册 / 媒体选择器", R.drawable.bs_ic_play,
+        items.add(new BigScreenPanel.Item("Select from album", "System Album/Media Selector", R.drawable.bs_ic_play,
                 () -> { panel.hide(); requestTrailerPick(game); }));
-        items.add(new BigScreenPanel.Item("从文件夹选择", "按目录和文件名查找视频", R.drawable.bs_ic_chip,
+        items.add(new BigScreenPanel.Item("Select from folder", "Find videos by directory and filename", R.drawable.bs_ic_chip,
                 () -> { panel.hide(); requestTrailerFolderPick(game); }));
-        items.add(new BigScreenPanel.Item("视频链接（URL）", "http(s) 直链",
+        items.add(new BigScreenPanel.Item("Video link (URL)", "Http(s) direct link",
                 R.drawable.bs_ic_chip, () -> { panel.hide(); promptTrailerUrl(game); }));
         if (!TextUtils.isEmpty(game.trailerPath)) {
-            items.add(new BigScreenPanel.Item("移除当前PV", null, 0,
+            items.add(new BigScreenPanel.Item("Remove current PV", null, 0,
                     () -> { panel.hide(); removeTrailer(game); }));
         }
-        panel.show("PV视频来源", items);
+        panel.show("PV video source", items);
     }
 
     /** 让用户填一个 http(s) 视频直链（M11） */
@@ -1002,10 +1002,10 @@ public class BigScreenActivity extends AppCompatActivity
         input.setHintTextColor(ContextCompat.getColor(this, R.color.bs_text_muted));
         if (TrailerPlayer.isRemote(game.trailerPath)) { input.setText(game.trailerPath); }
         new AlertDialog.Builder(this)
-                .setTitle("PV 视频链接")
-                .setMessage("支持 http / https 直链（mp4 最佳；能不能播取决于系统解码器）")
+                .setTitle("PV video link")
+                .setMessage("Support http / https direct link (mp4 is best; whether it can be played depends on the system decoder)")
                 .setView(input)
-                .setPositiveButton("保存", (d, w) -> {
+                .setPositiveButton("Save", (d, w) -> {
                     String url = input.getText() == null ? "" : input.getText().toString().trim();
                     if (!TrailerPlayer.isRemote(url)) {
                         toast("请填写 http:// 或 https:// 开头的链接");
@@ -1015,9 +1015,9 @@ public class BigScreenActivity extends AppCompatActivity
                     try { repository.update(game); } catch (Throwable ignored) { }
                     updateInfoBar(focusedGame());
                     if (focusedGame() == game && !detailsLayer.isVisible()) { syncTrailer(game); }
-                    toast("PV 链接已设置");
+                    toast("PV link is set");
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -1039,7 +1039,7 @@ public class BigScreenActivity extends AppCompatActivity
         try {
             artPickerLauncher.launch("image/*");
         } catch (Throwable t) {
-            toast("无法打开图片选择器：" + t.getMessage());
+            toast("Unable to open image picker:" + t.getMessage());
         }
     }
 
@@ -1047,12 +1047,12 @@ public class BigScreenActivity extends AppCompatActivity
         final Game game = pendingArtGame;
         final String kind = pendingArtKind;
         if (game == null || uri == null || kind == null) { return; }
-        toast("正在导入图片…");
+        toast("Importing images...");
         bgExecutor.execute(() -> {
             final File copied = artManager.copyToInternal(uri, game.id, kind);
             uiHandler.post(() -> {
                 if (copied == null) {
-                    toast("导入失败（图片无法读取）");
+                    toast("Import failed (image cannot be read)");
                     return;
                 }
                 if (BigScreenArt.KIND_LOGO.equals(kind)) {
@@ -1069,7 +1069,7 @@ public class BigScreenActivity extends AppCompatActivity
                 if (BigScreenArt.KIND_BG.equals(kind)) {
                     setBackground(bgUriOf(game), game.nsfw && prefs.nsfwBlur());
                 }
-                toast(BigScreenArt.KIND_LOGO.equals(kind) ? "标题图已设置" : "背景图已设置");
+                toast(BigScreenArt.KIND_LOGO.equals(kind) ? "Title image has been set" : "Background image has been set");
             });
         });
     }
@@ -1088,7 +1088,7 @@ public class BigScreenActivity extends AppCompatActivity
         if (BigScreenArt.KIND_BG.equals(kind)) {
             setBackground(bgUriOf(game), game.nsfw && prefs.nsfwBlur());
         }
-        toast("已清除");
+        toast("Cleared");
     }
 
     /**
@@ -1126,7 +1126,7 @@ public class BigScreenActivity extends AppCompatActivity
     private void onTrailerPicked(final Uri uri) {
         final Game game = pendingTrailerGame;
         if (game == null) { return; }
-        toast("正在检查视频…");
+        toast("Checking video…");
         bgExecutor.execute(() -> {
             final TrailerManager.Probe probe = trailerManager.probe(uri);
             uiHandler.post(() -> evaluateTrailer(game, uri, probe));
@@ -1136,20 +1136,20 @@ public class BigScreenActivity extends AppCompatActivity
     /** 校验（spec §S10.3）：>500MB 拒绝 · >100MB 确认 · >120s 提示 */
     private void evaluateTrailer(final Game game, final Uri uri, final TrailerManager.Probe probe) {
         if (probe.sizeBytes > TrailerManager.REJECT_BYTES) {
-            toast("视频超过 500MB（" + TrailerManager.formatSize(probe.sizeBytes)
-                    + "），请先裁剪再绑定");
+            toast("Video larger than 500MB (" + TrailerManager.formatSize(probe.sizeBytes)
+                    + "), please crop first and then bind");
             return;
         }
         if (probe.durationMs > TrailerManager.WARN_DURATION_MS) {
-            toast("提示：视频约 " + (probe.durationMs / 1000) + " 秒，PV建议 60 秒内");
+            toast("Tip: video appointment" + (probe.durationMs / 1000) + "Seconds, PV is recommended within 60 seconds");
         }
         if (probe.sizeBytes > TrailerManager.WARN_BYTES) {
             new AlertDialog.Builder(this)
-                    .setTitle("视频较大")
-                    .setMessage("文件约 " + TrailerManager.formatSize(probe.sizeBytes)
-                            + "，将复制进应用内部存储（会占用手机空间）。继续吗？")
-                    .setPositiveButton("继续", (d, w) -> importTrailer(game, uri))
-                    .setNegativeButton("取消", null)
+                    .setTitle("Video is larger")
+                    .setMessage("Document approx." + TrailerManager.formatSize(probe.sizeBytes)
+                            + ", will be copied to the internal storage of the app (it will take up space on the phone). Continue?")
+                    .setPositiveButton("Continue", (d, w) -> importTrailer(game, uri))
+                    .setNegativeButton("Cancel", null)
                     .show();
         } else {
             importTrailer(game, uri);
@@ -1157,19 +1157,19 @@ public class BigScreenActivity extends AppCompatActivity
     }
 
     private void importTrailer(final Game game, final Uri uri) {
-        toast("正在复制视频…");
+        toast("Copying video…");
         bgExecutor.execute(() -> {
             final File copied = trailerManager.copyToInternal(uri, game.id);
             uiHandler.post(() -> {
                 if (copied == null) {
-                    toast("复制失败：空间不足或来源不可读");
+                    toast("Copy failed: insufficient space or unreadable source");
                     return;
                 }
                 // 换绑时删掉旧文件，避免残留占空间
                 trailerManager.delete(game.trailerPath);
                 game.trailerPath = copied.getAbsolutePath();
                 try { repository.update(game); } catch (Throwable ignored) { }
-                toast("PV已绑定 · " + TrailerManager.formatSize(copied.length()));
+                toast("PV has been bound ·" + TrailerManager.formatSize(copied.length()));
                 updateInfoBar(game);
                 syncTrailer(game);
             });
@@ -1182,7 +1182,7 @@ public class BigScreenActivity extends AppCompatActivity
         trailerManager.delete(game.trailerPath);
         game.trailerPath = null;
         try { repository.update(game); } catch (Throwable ignored) { }
-        toast("已移除PV视频");
+        toast("PV video has been removed");
         updateInfoBar(game);
     }
 
@@ -1198,7 +1198,7 @@ public class BigScreenActivity extends AppCompatActivity
                 break;
             }
         }
-        if (healed) { toast("PV文件已不存在，已自动解除绑定"); }
+        if (healed) { toast("The PV file no longer exists and has been automatically unbound."); }
     }
 
     /** 目标（主背景 / 详情层背景）+ 焦点游戏 → 统一驱动PV播放 */
@@ -1268,96 +1268,96 @@ public class BigScreenActivity extends AppCompatActivity
         List<BigScreenSettings.Section> list = new ArrayList<>();
 
         // ① 常规
-        list.add(new BigScreenSettings.Section("常规", java.util.Arrays.asList(
-                new BigScreenSettings.Item("性能档", this::effectLevelLabel, this::chooseEffectLevel),
-                new BigScreenSettings.Item("入场动画", () -> yesNo(prefs.introEnabled()),
+        list.add(new BigScreenSettings.Section("Conventional", java.util.Arrays.asList(
+                new BigScreenSettings.Item("Performance file", this::effectLevelLabel, this::chooseEffectLevel),
+                new BigScreenSettings.Item("Entrance animation", () -> yesNo(prefs.introEnabled()),
                         () -> { prefs.setIntroEnabled(!prefs.introEnabled()); settings.refreshItems(); }),
-                new BigScreenSettings.Item("开机直接进大屏", this::startupLabel, () -> {
+                new BigScreenSettings.Item("Boot directly into the big screen", this::startupLabel, () -> {
                     boolean on = !"bigscreen".equals(currentStartupPage());
                     prefs.setAutoEnter(on);
                     getSharedPreferences(BigScreenPrefs.PREFS, MODE_PRIVATE).edit()
                             .putString("startup_page", on ? "bigscreen" : "home").apply();
                     settings.refreshItems();
                 }),
-                new BigScreenSettings.Item("记住筛选", () -> yesNo(prefs.rememberFilter()),
+                new BigScreenSettings.Item("Remember to filter", () -> yesNo(prefs.rememberFilter()),
                         () -> { prefs.setRememberFilter(!prefs.rememberFilter()); settings.refreshItems(); })
         )));
 
         // ② 视觉
-        list.add(new BigScreenSettings.Section("视觉", java.util.Arrays.asList(
-                new BigScreenSettings.Item("卡片大小", this::cardScaleLabel, this::chooseCardScale),
+        list.add(new BigScreenSettings.Section("Vision", java.util.Arrays.asList(
+                new BigScreenSettings.Item("Card size", this::cardScaleLabel, this::chooseCardScale),
                 // ===== M18-2：入场动画（用户要的：可换视频；原来的"风格/速度/文字"三项已删） =====
-                new BigScreenSettings.Item("入场动画", this::introSourceLabel, this::chooseIntroSource),
+                new BigScreenSettings.Item("Entrance animation", this::introSourceLabel, this::chooseIntroSource),
                 // ===== M17：观感细节 =====
-                new BigScreenSettings.Item("提示条时长", this::bannerHoldLabel, this::chooseBannerHold),
-                new BigScreenSettings.Item("焦点缩放", this::focusScaleLabel, this::chooseFocusScale),
-                new BigScreenSettings.Item("显示卡片标题", () -> yesNo(prefs.showTitles()),
+                new BigScreenSettings.Item("Prompt bar duration", this::bannerHoldLabel, this::chooseBannerHold),
+                new BigScreenSettings.Item("Focus zoom", this::focusScaleLabel, this::chooseFocusScale),
+                new BigScreenSettings.Item("Show card title", () -> yesNo(prefs.showTitles()),
                         () -> { prefs.setShowTitles(!prefs.showTitles()); settings.refreshItems(); }),
-                new BigScreenSettings.Item("背景氛围（雪花）", () -> yesNo(prefs.snowEnabled()),
+                new BigScreenSettings.Item("Background atmosphere (snowflakes)", () -> yesNo(prefs.snowEnabled()),
                         () -> { prefs.setSnowEnabled(!prefs.snowEnabled()); settings.refreshItems(); }),
-                new BigScreenSettings.Item("NSFW 封面模糊", () -> yesNo(prefs.nsfwBlur()),
+                new BigScreenSettings.Item("NSFW cover blurry", () -> yesNo(prefs.nsfwBlur()),
                         () -> { prefs.setNsfwBlur(!prefs.nsfwBlur()); settings.refreshItems(); }),
-                new BigScreenSettings.Item("PV只在详情层播放", () -> yesNo(prefs.trailerDetailsOnly()),
+                new BigScreenSettings.Item("PV can only be played at the detail level", () -> yesNo(prefs.trailerDetailsOnly()),
                         () -> { prefs.setTrailerDetailsOnly(!prefs.trailerDetailsOnly()); settings.refreshItems(); }),
-                new BigScreenSettings.Item("PV显示方式", () -> prefs.pvFit() ? "原比例" : "铺满",
+                new BigScreenSettings.Item("PV display mode", () -> prefs.pvFit() ? "Original proportion" : "Covered",
                         () -> {
                             List<BigScreenPanel.Item> items = new ArrayList<>();
                             String cur = prefs.pvFit() ? "fit" : "fill";
-                            items.add(selectorItem("pvfit", "铺满（裁切）", "fill", cur));
-                            items.add(selectorItem("pvfit", "原比例（留黑边）", "fit", cur));
-                            panel.show("PV显示方式", items);
+                            items.add(selectorItem("pvfit", "Cover (cut)", "fill", cur));
+                            items.add(selectorItem("pvfit", "Original proportion (leaving black edges)", "fit", cur));
+                            panel.show("PV display mode", items);
                         }),
-                new BigScreenSettings.Item("PV遮罩", () -> yesNo(prefs.pvScrim()),
+                new BigScreenSettings.Item("PV mask", () -> yesNo(prefs.pvScrim()),
                         () -> { prefs.setPvScrim(!prefs.pvScrim()); settings.refreshItems(); }),
-                new BigScreenSettings.Item("PV遮罩强度", () -> prefs.pvScrimPercent() + "%",
+                new BigScreenSettings.Item("PV mask strength", () -> prefs.pvScrimPercent() + "%",
                         () -> {
                             List<BigScreenPanel.Item> items = new ArrayList<>();
                             String cur = String.valueOf(prefs.pvScrimPercent());
                             for (int v : new int[]{0, 20, 35, 45, 60, 80}) {
                                 items.add(selectorItem("pvscrim", v + "%", String.valueOf(v), cur));
                             }
-                            panel.show("PV遮罩强度", items);
+                            panel.show("PV mask strength", items);
                         })
         )));
 
         // ③ 音频
-        list.add(new BigScreenSettings.Section("音频", java.util.Arrays.asList(
-                new BigScreenSettings.Item("界面音效", () -> yesNo(prefs.soundEnabled()),
+        list.add(new BigScreenSettings.Section("Audio", java.util.Arrays.asList(
+                new BigScreenSettings.Item("Interface sound effects", () -> yesNo(prefs.soundEnabled()),
                         () -> { prefs.setSoundEnabled(!prefs.soundEnabled()); settings.refreshItems(); }),
-                new BigScreenSettings.Item("音效音量", () -> prefs.soundVolume() + "%", this::chooseVolume),
-                new BigScreenSettings.Item("焦点音", () -> yesNo(prefs.focusTick()),
+                new BigScreenSettings.Item("Sound effect volume", () -> prefs.soundVolume() + "%", this::chooseVolume),
+                new BigScreenSettings.Item("Focus sound", () -> yesNo(prefs.focusTick()),
                         () -> { prefs.setFocusTick(!prefs.focusTick()); settings.refreshItems(); }),
-                new BigScreenSettings.Item("PV静音", () -> yesNo(prefs.trailerMuted()),
+                new BigScreenSettings.Item("PV mute", () -> yesNo(prefs.trailerMuted()),
                         () -> { prefs.setTrailerMuted(!prefs.trailerMuted()); settings.refreshItems(); })
         )));
 
         // ④ 布局
-        list.add(new BigScreenSettings.Section("布局", java.util.Arrays.asList(
-                new BigScreenSettings.Item("侧栏钉住展开", () -> yesNo(prefs.railExpanded()),
+        list.add(new BigScreenSettings.Section("Layout", java.util.Arrays.asList(
+                new BigScreenSettings.Item("Sidebar pinned to expand", () -> yesNo(prefs.railExpanded()),
                         () -> { prefs.setRailExpanded(!prefs.railExpanded()); settings.refreshItems(); }),
-                new BigScreenSettings.Item("按键提示条", this::hintModeLabel, this::chooseHintMode),
-                new BigScreenSettings.Item("PV播放延迟", () -> (prefs.trailerDelayMs() / 1000f) + " 秒",
+                new BigScreenSettings.Item("Button prompt bar", this::hintModeLabel, this::chooseHintMode),
+                new BigScreenSettings.Item("PV playback delay", () -> (prefs.trailerDelayMs() / 1000f) + " 秒",
                         this::chooseDelay),
-                new BigScreenSettings.Item("PV占用与清理", this::trailerStorageLabel, this::openTrailerStorage)
+                new BigScreenSettings.Item("PV occupation and cleaning", this::trailerStorageLabel, this::openTrailerStorage)
         )));
 
         // ⑤ 菜单
-        list.add(new BigScreenSettings.Section("菜单", java.util.Arrays.asList(
-                new BigScreenSettings.Item("按键图标风格", () -> keys.styleName(), this::chooseKeyStyle),
-                new BigScreenSettings.Item("清除筛选记忆", () -> prefs.lastFilter(),
-                        () -> { prefs.setLastFilter("ALL"); settings.refreshItems(); toast("已清除筛选记忆"); }),
-                new BigScreenSettings.Item("恢复默认设置", () -> "", this::resetBigScreenSettings)
+        list.add(new BigScreenSettings.Section("menu", java.util.Arrays.asList(
+                new BigScreenSettings.Item("Button icon style", () -> keys.styleName(), this::chooseKeyStyle),
+                new BigScreenSettings.Item("Clear filter memory", () -> prefs.lastFilter(),
+                        () -> { prefs.setLastFilter("ALL"); settings.refreshItems(); toast("Filter memory cleared"); }),
+                new BigScreenSettings.Item("Restore default settings", () -> "", this::resetBigScreenSettings)
         )));
 
         // ⑥ 兼容（M13：大屏改为原地启动后，KR 存档兜底由这里手动控制）
-        list.add(new BigScreenSettings.Section("兼容", java.util.Arrays.asList(
-                new BigScreenSettings.Item("KR存档兜底", () -> yesNo(prefs.krSafFallback()),
+        list.add(new BigScreenSettings.Section("compatible", java.util.Arrays.asList(
+                new BigScreenSettings.Item("KR Archives", () -> yesNo(prefs.krSafFallback()),
                         () -> {
                             prefs.setKrSafFallback(!prefs.krSafFallback());
                             settings.refreshItems();
                             toast(prefs.krSafFallback()
-                                    ? "已开启：KR 游戏将通过 SAF 读写存档"
-                                    : "已关闭");
+                                    ? "Enabled: KR games will read and write archives through SAF"
+                                    : "Closed");
                         })
         )));
 
@@ -1365,33 +1365,33 @@ public class BigScreenActivity extends AppCompatActivity
     }
 
     // ===== 值文案 =====
-    private String yesNo(boolean v) { return v ? "开启" : "关闭"; }
+    private String yesNo(boolean v) { return v ? "Turn on" : "Close"; }
 
     private String effectLevelLabel() {
         switch (prefs.effectLevel()) {
-            case "low": return "低（最省电）";
+            case "low": return "Low (most power efficient)";
             case "medium": return "中";
-            default: return "高（全部特效）";
+            default: return "High (all special effects)";
         }
     }
 
     private String cardScaleLabel() {
         int p = Math.round(prefs.cardScale() * 100);
         // M18-5：小=原来的"标准"，大=原来的"大"（现在默认），更大=新加的一档
-        if (p <= 105) { return "小"; }
+        if (p <= 105) { return "Small"; }
         if (p <= 118) { return "大"; }
-        return "更大";
+        return "Bigger";
     }
 
     private String hintModeLabel() {
         switch (prefs.hintMode()) {
-            case "off": return "隐藏";
-            case "always": return "常显";
-            default: return "自动淡出";
+            case "off": return "hide";
+            case "always": return "Chang Xian";
+            default: return "Auto fade out";
         }
     }
 
-    private String startupLabel() { return "bigscreen".equals(currentStartupPage()) ? "开启" : "关闭"; }
+    private String startupLabel() { return "bigscreen".equals(currentStartupPage()) ? "Turn on" : "Close"; }
 
     private String currentStartupPage() {
         try {
@@ -1405,28 +1405,28 @@ public class BigScreenActivity extends AppCompatActivity
     private String trailerStorageLabel() {
         if (trailerManager == null) { return ""; }
         int count = trailerManager.fileCount();
-        if (count == 0) { return "空"; }
-        return count + " 个 · " + TrailerManager.formatSize(trailerManager.totalSize());
+        if (count == 0) { return "Null"; }
+        return count + "Indivual ·" + TrailerManager.formatSize(trailerManager.totalSize());
     }
 
     // ===== S8 选择器（复用 BigScreenPanel）=====
 
     private void chooseEffectLevel() {
         List<BigScreenPanel.Item> items = new ArrayList<>();
-        items.add(selectorItem("effect", "高（全部特效）", "high", prefs.effectLevel()));
+        items.add(selectorItem("effect", "High (all special effects)", "high", prefs.effectLevel()));
         items.add(selectorItem("effect", "中", "medium", prefs.effectLevel()));
-        items.add(selectorItem("effect", "低（最省电）", "low", prefs.effectLevel()));
-        panel.show("性能档", items);
+        items.add(selectorItem("effect", "Low (most power efficient)", "low", prefs.effectLevel()));
+        panel.show("Performance file", items);
     }
 
     private void chooseCardScale() {
         List<BigScreenPanel.Item> items = new ArrayList<>();
         String cur = String.valueOf(Math.round(prefs.cardScale() * 100));
         // M18-5：小 = 原来的"标准"；大 = 原来的"大"（现在默认）；更大 = 新加一档（有人反馈还是偏小）
-        items.add(selectorItem("card", "小", "100", cur));
-        items.add(selectorItem("card", "大（默认）", "112", cur));
-        items.add(selectorItem("card", "更大", "128", cur));
-        panel.show("卡片大小", items);
+        items.add(selectorItem("card", "Small", "100", cur));
+        items.add(selectorItem("card", "Large (default)", "112", cur));
+        items.add(selectorItem("card", "Bigger", "128", cur));
+        panel.show("Card size", items);
     }
 
     // ==================== M18-2：入场动画（可替换视频） ====================
@@ -1434,7 +1434,7 @@ public class BigScreenActivity extends AppCompatActivity
     /** 入场动画来源：内置动画 / 用户选的视频文件名 */
     private String introSourceLabel() {
         String uri = prefs.introVideoUri();
-        if (uri.isEmpty()) { return "内置动画"; }
+        if (uri.isEmpty()) { return "Built-in animation"; }
         String name = uri;
         try {
             name = android.net.Uri.decode(uri);
@@ -1443,21 +1443,21 @@ public class BigScreenActivity extends AppCompatActivity
             int colon = name.lastIndexOf(':');
             if (colon >= 0) { name = name.substring(colon + 1); }
         } catch (Throwable ignored) { }
-        return name.isEmpty() ? "已选择视频" : name;
+        return name.isEmpty() ? "Video selected" : name;
     }
 
     private void chooseIntroSource() {
         List<BigScreenPanel.Item> items = new ArrayList<>();
-        items.add(new BigScreenPanel.Item("选择视频…", "挑一个视频文件当开场", 0, this::pickIntroVideo));
+        items.add(new BigScreenPanel.Item("Select video…", "Pick a video file as the opening", 0, this::pickIntroVideo));
         if (!prefs.introVideoUri().isEmpty()) {
-            items.add(new BigScreenPanel.Item("清除", "恢复内置开场动画", 0, () -> {
+            items.add(new BigScreenPanel.Item("Clear", "Restore built-in opening animation", 0, () -> {
                 prefs.setIntroVideoUri("");
                 applyAllSettings();
                 if (settings != null) { settings.refreshItems(); }
-                toast("已恢复内置开场动画");
+                toast("Built-in opening animation restored");
             }));
         }
-        panel.show("入场动画", items);
+        panel.show("Entrance animation", items);
     }
 
     private static final int REQ_INTRO_VIDEO = 0x8B21;
@@ -1472,7 +1472,7 @@ public class BigScreenActivity extends AppCompatActivity
                     | android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
             startActivityForResult(it, REQ_INTRO_VIDEO);
         } catch (Throwable t) {
-            toast("打不开文件选择器");
+            toast("Can't open file selector");
         }
     }
 
@@ -1489,44 +1489,44 @@ public class BigScreenActivity extends AppCompatActivity
         prefs.setIntroVideoUri(uri.toString());
         applyAllSettings();
         if (settings != null) { settings.refreshItems(); }
-        toast("已设为开场视频（下次进入大屏生效）");
+        toast("It has been set as the opening video (it will take effect next time you enter the big screen)");
     }
 
     private String bannerHoldLabel() {
         int ms = prefs.bannerHoldMs();
-        if (ms <= 1400) { return "短（1.2s）"; }
-        if (ms <= 2200) { return "标准（2s）"; }
-        if (ms <= 3200) { return "长（3s）"; }
-        return "很长（4.5s）";
+        if (ms <= 1400) { return "Short (1.2s)"; }
+        if (ms <= 2200) { return "Standard(2s)"; }
+        if (ms <= 3200) { return "Long(3s)"; }
+        return "Very long (4.5s)";
     }
 
     private void chooseBannerHold() {
         List<BigScreenPanel.Item> items = new ArrayList<>();
         String cur = String.valueOf(prefs.bannerHoldMs());
         int[] levels = {1200, 2000, 3000, 4500};
-        String[] labels = {"短（1.2s）", "标准（2s）", "长（3s）", "很长（4.5s）"};
+        String[] labels = {"Short (1.2s)", "Standard(2s)", "Long(3s)", "Very long (4.5s)"};
         for (int i = 0; i < levels.length; i++) {
             items.add(selectorItem("bannerhold", labels[i], String.valueOf(levels[i]), cur));
         }
-        panel.show("提示条时长", items);
+        panel.show("Prompt bar duration", items);
     }
 
     private String focusScaleLabel() {
         int v = prefs.focusScale();
-        if (v == 0) { return "不缩放（只描边）"; }
-        if (v <= 60) { return "轻微"; }
-        if (v >= 140) { return "夸张"; }
-        return "标准";
+        if (v == 0) { return "No scaling (only stroke)"; }
+        if (v <= 60) { return "Slight"; }
+        if (v >= 140) { return "Exaggerate"; }
+        return "standard";
     }
 
     private void chooseFocusScale() {
         List<BigScreenPanel.Item> items = new ArrayList<>();
         String cur = String.valueOf(prefs.focusScale());
-        items.add(selectorItem("focusscale", "不缩放（只描边）", "0", cur));
-        items.add(selectorItem("focusscale", "轻微", "50", cur));
-        items.add(selectorItem("focusscale", "标准", "100", cur));
-        items.add(selectorItem("focusscale", "夸张", "150", cur));
-        panel.show("焦点缩放", items);
+        items.add(selectorItem("focusscale", "No scaling (only stroke)", "0", cur));
+        items.add(selectorItem("focusscale", "Slight", "50", cur));
+        items.add(selectorItem("focusscale", "standard", "100", cur));
+        items.add(selectorItem("focusscale", "Exaggerate", "150", cur));
+        panel.show("Focus zoom", items);
     }
 
     private void chooseVolume() {
@@ -1536,7 +1536,7 @@ public class BigScreenActivity extends AppCompatActivity
         for (int v : levels) {
             items.add(selectorItem("volume", v + "%", String.valueOf(v), cur));
         }
-        panel.show("音效音量", items);
+        panel.show("Sound effect volume", items);
     }
 
     private void chooseDelay() {
@@ -1546,22 +1546,22 @@ public class BigScreenActivity extends AppCompatActivity
         for (int v : delays) {
             items.add(selectorItem("delay", (v / 1000f) + " 秒", String.valueOf(v), cur));
         }
-        panel.show("PV播放延迟", items);
+        panel.show("PV playback delay", items);
     }
 
     private void chooseKeyStyle() {
         List<BigScreenPanel.Item> items = new ArrayList<>();
         items.add(selectorItem("keys", "Xbox（Ⓐ Ⓑ Ⓧ Ⓨ）", BigScreenKeys.STYLE_XBOX, prefs.keyStyle()));
         items.add(selectorItem("keys", "PlayStation（✕ ○ □ △）", BigScreenKeys.STYLE_PS, prefs.keyStyle()));
-        panel.show("按键图标风格", items);
+        panel.show("Button icon style", items);
     }
 
     private void chooseHintMode() {
         List<BigScreenPanel.Item> items = new ArrayList<>();
-        items.add(selectorItem("hint", "自动淡出（4 秒）", "auto", prefs.hintMode()));
-        items.add(selectorItem("hint", "常显", "always", prefs.hintMode()));
-        items.add(selectorItem("hint", "隐藏", "off", prefs.hintMode()));
-        panel.show("按键提示条", items);
+        items.add(selectorItem("hint", "Auto fade out (4 seconds)", "auto", prefs.hintMode()));
+        items.add(selectorItem("hint", "Chang Xian", "always", prefs.hintMode()));
+        items.add(selectorItem("hint", "hide", "off", prefs.hintMode()));
+        panel.show("Button prompt bar", items);
     }
 
     /** 生成一个选择项：命中的那个带 ✓ 前缀。kind 用来明确"改哪一项设置"——
@@ -1607,12 +1607,12 @@ public class BigScreenActivity extends AppCompatActivity
         if (trailerManager == null) { return; }
         final int count = trailerManager.fileCount();
         final long size = trailerManager.totalSize();
-        if (count == 0) { toast("PV目录是空的"); return; }
+        if (count == 0) { toast("The PV directory is empty"); return; }
         new AlertDialog.Builder(this)
-                .setTitle("PV视频占用")
-                .setMessage("共 " + count + " 个文件，" + TrailerManager.formatSize(size)
-                        + "。\n清理后会解除所有游戏的PV绑定（**不会动你原来的视频文件**）。")
-                .setPositiveButton("清理", (d, w) -> {
+                .setTitle("PV video occupation")
+                .setMessage("Common" + count + "Files," + TrailerManager.formatSize(size)
+                        + ".\nAfter cleaning, the PV bindings of all games will be unbound (**your original video files will not be touched**).")
+                .setPositiveButton("Clean up", (d, w) -> {
                     int removed = trailerManager.deleteAll();
                     for (Game g : allGames) {
                         if (!TextUtils.isEmpty(g.trailerPath)) {
@@ -1621,11 +1621,11 @@ public class BigScreenActivity extends AppCompatActivity
                         }
                     }
                     cancelTrailer();
-                    toast("已清理 " + removed + " 个PV文件 · 释放 " + TrailerManager.formatSize(size));
+                    toast("Cleaned" + removed + "PV files · Release" + TrailerManager.formatSize(size));
                     if (settings != null) { settings.refreshItems(); }
                     updateInfoBar(focusedGame());
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -1633,9 +1633,9 @@ public class BigScreenActivity extends AppCompatActivity
 
     private void resetBigScreenSettings() {
         new AlertDialog.Builder(this)
-                .setTitle("恢复默认设置")
-                .setMessage("会把大屏模式的全部设置恢复为默认值（不会动游戏库与PV文件）。")
-                .setPositiveButton("恢复", (d, w) -> {
+                .setTitle("Restore default settings")
+                .setMessage("All settings in large screen mode will be restored to default values ​​(the game library and PV files will not be touched).")
+                .setPositiveButton("Recover", (d, w) -> {
                     android.content.SharedPreferences sp =
                             getSharedPreferences(BigScreenPrefs.PREFS, MODE_PRIVATE);
                     android.content.SharedPreferences.Editor e = sp.edit();
@@ -1657,9 +1657,9 @@ public class BigScreenActivity extends AppCompatActivity
                     keys = new BigScreenKeys(prefs.keyStyle());
                     applyAllSettings();
                     if (settings != null) { settings.refreshItems(); }
-                    toast("已恢复默认设置");
+                    toast("Default settings restored");
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -1735,7 +1735,7 @@ public class BigScreenActivity extends AppCompatActivity
         try {
             allGames.addAll(repository.getAll());
         } catch (Throwable t) {
-            toast("读取游戏库失败：" + t.getMessage());
+            toast("Failed to read game library:" + t.getMessage());
         }
 
         if (prefs.rememberFilter()) {
@@ -1753,14 +1753,14 @@ public class BigScreenActivity extends AppCompatActivity
         List<BigScreenRailView.Entry> entries = new ArrayList<>();
         // M22：搜索放在最顶部 —— 手柄用户 ↑ 顶到头就是它，Ⓐ 打开搜索浮层
         BigScreenRailView.Entry search = new BigScreenRailView.Entry(
-                F_SEARCH, "搜索", R.drawable.ic_st_search);
+                F_SEARCH, "Search", R.drawable.ic_st_search);
         entries.add(search);
-        entries.add(new BigScreenRailView.Entry(F_ALL, "全部游戏", R.drawable.bs_ic_all));
-        entries.add(new BigScreenRailView.Entry(F_FAV, "收藏", R.drawable.bs_ic_star));
-        entries.add(new BigScreenRailView.Entry(F_RECENT, "最近游玩", R.drawable.bs_ic_clock));
-        entries.add(new BigScreenRailView.Entry(F_PLAYING, "游玩中", R.drawable.bs_ic_play));
-        entries.add(new BigScreenRailView.Entry(F_DONE, "已完成", R.drawable.bs_ic_check));
-        entries.add(new BigScreenRailView.Entry(F_TODO, "未游玩", R.drawable.bs_ic_circle));
+        entries.add(new BigScreenRailView.Entry(F_ALL, "All games", R.drawable.bs_ic_all));
+        entries.add(new BigScreenRailView.Entry(F_FAV, "collect", R.drawable.bs_ic_star));
+        entries.add(new BigScreenRailView.Entry(F_RECENT, "Recently visited", R.drawable.bs_ic_clock));
+        entries.add(new BigScreenRailView.Entry(F_PLAYING, "Playing", R.drawable.bs_ic_play));
+        entries.add(new BigScreenRailView.Entry(F_DONE, "Completed", R.drawable.bs_ic_check));
+        entries.add(new BigScreenRailView.Entry(F_TODO, "Not played", R.drawable.bs_ic_circle));
 
         // 引擎分组（M8 起**不再放进侧栏**）：用户反馈"什么引擎不重要"，侧栏只保留状态/收藏类
         // 过滤逻辑 filterGames 仍然支持 ENGINE:xxx（以后要加回只需在这里 add 一行）
@@ -1773,7 +1773,7 @@ public class BigScreenActivity extends AppCompatActivity
     }
 
     private String engineLabel(Game game) {
-        if (game == null || game.engine == null) { return "其他"; }
+        if (game == null || game.engine == null) { return "Other"; }
         switch (game.engine) {
             case KIRIKIRI: return "KIRIKIRI";
             case ONS:      return "ONS";
@@ -1785,7 +1785,7 @@ public class BigScreenActivity extends AppCompatActivity
             case GAMEHUB:  return "GAMEHUB";
             case PSP:      return "PSP";
             case ANDROID:  return "Android";
-            default:       return "其他";
+            default:       return "Other";
         }
     }
 
@@ -1814,16 +1814,16 @@ public class BigScreenActivity extends AppCompatActivity
     }
 
     private String filterLabel(String id) {
-        if (id == null) { return "全部游戏"; }
+        if (id == null) { return "All games"; }
         switch (id) {
-            case F_ALL:     return "全部游戏";
-            case F_FAV:     return "收藏";
-            case F_RECENT:  return "最近游玩";
-            case F_PLAYING: return "游玩中";
-            case F_DONE:    return "已完成";
-            case F_TODO:    return "未游玩";
+            case F_ALL:     return "All games";
+            case F_FAV:     return "collect";
+            case F_RECENT:  return "Recently visited";
+            case F_PLAYING: return "Playing";
+            case F_DONE:    return "Completed";
+            case F_TODO:    return "Not played";
             default:
-                return id.startsWith(ENGINE_PREFIX) ? id.substring(ENGINE_PREFIX.length()) : "游戏";
+                return id.startsWith(ENGINE_PREFIX) ? id.substring(ENGINE_PREFIX.length()) : "Games";
         }
     }
 
@@ -2136,13 +2136,13 @@ List<Shelf> defs = new ArrayList<>();
         if (F_SEARCH.equals(entry.id)) {
             if (railZone) {
                 infoTitleView.setText(entry.label);
-                infoMetaView.setText("按 " + keys.confirm() + " 打开搜索");
+                infoMetaView.setText("According to" + keys.confirm() + "Open search");
             }
             return;
         }
         if (railZone) {
             infoTitleView.setText(entry.label);
-            infoMetaView.setText("该分类共 " + entry.count + " 款游戏");
+            infoMetaView.setText("This category has a total of" + entry.count + "Games");
         }
         // 焦点移动即生效筛选（Steam 式）；只有真变了才重建
         if (!entry.id.equals(filter)) {
@@ -2224,7 +2224,7 @@ List<Shelf> defs = new ArrayList<>();
         if (banner == null) { return; }
         for (BigScreenRailView.Entry e : rail.entries()) {
             if (e.id.equals(id)) {
-                banner.show(e.label + " · " + e.count + " 款");
+                banner.show(e.label + " · " + e.count + "Payment");
                 return;
             }
         }
@@ -2317,7 +2317,7 @@ List<Shelf> defs = new ArrayList<>();
         try {
             allGames.addAll(repository.getAll());
         } catch (Throwable t) {
-            toast("刷新游戏库失败：" + t.getMessage());
+            toast("Failed to refresh game library:" + t.getMessage());
         }
         buildRailEntries();
 
@@ -2372,7 +2372,7 @@ List<Shelf> defs = new ArrayList<>();
             infoMetaView.setText("");
             return;
         }
-        infoTitleView.setText(TextUtils.isEmpty(game.title) ? "未命名" : game.title);
+        infoTitleView.setText(TextUtils.isEmpty(game.title) ? "Unnamed" : game.title);
         applyInfoLogo(game);
         // 信息浮层入场动效（M9）：换游戏时轻微上浮淡入
         // M14-1：**必须先看让位状态** —— 侧栏展开时保持隐藏，否则"往下按一个分类标题又露出来"
@@ -2399,12 +2399,12 @@ List<Shelf> defs = new ArrayList<>();
         // 否则同一款游戏二次进卡时，下面的"只请求一次"守卫会拦住请求 → 永远只剩兜底显示。
         renderInfoMeta(game, metaLoader != null ? metaLoader.peek(game.id) : null);
 
-        addInfoAction("▶ 启动", true, () -> launch(game));
-        addInfoAction(keys.third() + (game.favorite ? " 已收藏" : " 收藏"), false, () -> toggleFavorite(game));
+        addInfoAction("▶ Start", true, () -> launch(game));
+        addInfoAction(keys.third() + (game.favorite ? "Collected" : "Collect"), false, () -> toggleFavorite(game));
         // M14-1：「详情」= Ⓨ（fourth，与 onIntent 的 DETAILS 一致）；
         // 「更多」**不标按键** —— 它没有独立按键，靠 ↑ 进入按钮排后 ←→ 选择。
-        addInfoAction(keys.fourth() + " 详情", false, this::openDetails);
-        addInfoAction("更多", false, () -> openGameMenu(game));
+        addInfoAction(keys.fourth() + "Details", false, this::openDetails);
+        addInfoAction("More", false, () -> openGameMenu(game));
 
         // 元数据：只有「缓存没命中」且「没请求过」才真正去读库（M21-1）
         // 命中缓存的情况上面已经同步渲染过了。
@@ -2430,9 +2430,9 @@ List<Shelf> defs = new ArrayList<>();
         if (parts.isEmpty()) { parts.add(engineLabel(game)); }
         parts.add(formatHours(game.totalPlayTime));
         parts.add(statusLabel(game.playStatus));
-        if (game.favorite) { parts.add("★ 已收藏"); }
+        if (game.favorite) { parts.add("★ Favorite"); }
         if (!TextUtils.isEmpty(game.trailerPath)) {
-            parts.add(trailerPlayer != null && trailerPlayer.isPlaying() ? "🎬 PV播放中" : "🎬 有PV");
+            parts.add(trailerPlayer != null && trailerPlayer.isPlaying() ? "🎬 PV is playing" : "🎬 There is PV");
         }
         infoMetaView.setText(join("　·　", parts));
 
@@ -2576,14 +2576,14 @@ List<Shelf> defs = new ArrayList<>();
         try {
             repository.update(game);
         } catch (Throwable t) {
-            toast("收藏失败：" + t.getMessage());
+            toast("Collection failed:" + t.getMessage());
         }
         for (Shelf s : shelves) {
             if (s.adapter != null) { s.adapter.notifyDataSetChanged(); }
         }
         buildRailEntries();
         updateInfoBar(game);
-        toast(game.favorite ? "已收藏 · " + game.title : "已取消收藏 · " + game.title);
+        toast(game.favorite ? "Collected ·" + game.title : "Canceled collection ·" + game.title);
     }
 
     /** 启动游戏：复用既有 Intent 通路（spec §6.2，零重构） */
@@ -2673,7 +2673,7 @@ List<Shelf> defs = new ArrayList<>();
      */
     private void enterTrailerFullscreen(Game game) {
         if (game == null) { return; }
-        if (TextUtils.isEmpty(game.trailerPath)) { toast("这款游戏还没有绑定 PV"); return; }
+        if (TextUtils.isEmpty(game.trailerPath)) { toast("This game has not been bound to PV yet"); return; }
         trailerFullscreen = true;
         trailerFullscreenWasDetails = detailsLayer != null && detailsLayer.isVisible();
         if (trailerFullscreenWasDetails) { detailsLayer.hide(); }
@@ -2683,7 +2683,7 @@ List<Shelf> defs = new ArrayList<>();
             trailerPlayer.setFitMode(prefs.pvFit());
             trailerPlayer.request(game.trailerPath, 0L);   // 立刻起播（不等延迟）
         }
-        if (banner != null) { banner.show("全屏预览中 · 按任意键返回"); }
+        if (banner != null) { banner.show("Full screen preview in progress · Press any key to return"); }
     }
 
     /** 退出全屏预览并恢复界面 */
@@ -2718,94 +2718,94 @@ List<Shelf> defs = new ArrayList<>();
     private void openGameMenu(Game game) {
         if (game == null) { return; }
         List<BigScreenPanel.Item> items = new ArrayList<>();
-        items.add(new BigScreenPanel.Item("启动游戏", null, R.drawable.bs_ic_play, () -> {
+        items.add(new BigScreenPanel.Item("Start the game", null, R.drawable.bs_ic_play, () -> {
             panel.hide();
             launch(game);
         }));
-        items.add(new BigScreenPanel.Item(game.favorite ? "取消收藏" : "加入收藏",
-                game.favorite ? "已收藏" : null, R.drawable.bs_ic_star, () -> {
+        items.add(new BigScreenPanel.Item(game.favorite ? "Cancel favorites" : "Add to favorites",
+                game.favorite ? "Collected" : null, R.drawable.bs_ic_star, () -> {
             panel.hide();
             toggleFavorite(game);
         }));
-        items.add(new BigScreenPanel.Item("游玩状态：" + statusLabel(game.playStatus), null,
+        items.add(new BigScreenPanel.Item("Play status:" + statusLabel(game.playStatus), null,
                 R.drawable.bs_ic_check, () -> {
             panel.hide();
             cycleStatus(game);
         }));
         // 自定义标题图 / 背景图（M10：Steam 式 logo + 自定义背景）
         if (TextUtils.isEmpty(game.logoPath)) {
-            items.add(new BigScreenPanel.Item("设置标题图", "用图片替代游戏名",
+            items.add(new BigScreenPanel.Item("Set title image", "Replace game name with picture",
                     R.drawable.bs_ic_star, () -> { panel.hide(); requestArtPick(game, BigScreenArt.KIND_LOGO); }));
         } else {
-            items.add(new BigScreenPanel.Item("更换标题图", "已设置", R.drawable.bs_ic_star,
+            items.add(new BigScreenPanel.Item("Change title image", "Already set", R.drawable.bs_ic_star,
                     () -> { panel.hide(); requestArtPick(game, BigScreenArt.KIND_LOGO); }));
-            items.add(new BigScreenPanel.Item("清除标题图", null, R.drawable.bs_ic_circle,
+            items.add(new BigScreenPanel.Item("Clear title image", null, R.drawable.bs_ic_circle,
                     () -> { panel.hide(); clearArt(game, BigScreenArt.KIND_LOGO); }));
         }
         if (TextUtils.isEmpty(game.bgPath)) {
-            items.add(new BigScreenPanel.Item("设置背景图", "替代封面做背景",
+            items.add(new BigScreenPanel.Item("Set background image", "Alternative cover as background",
                     R.drawable.bs_ic_all, () -> { panel.hide(); requestArtPick(game, BigScreenArt.KIND_BG); }));
         } else {
-            items.add(new BigScreenPanel.Item("更换背景图", "已设置", R.drawable.bs_ic_all,
+            items.add(new BigScreenPanel.Item("Change background image", "Already set", R.drawable.bs_ic_all,
                     () -> { panel.hide(); requestArtPick(game, BigScreenArt.KIND_BG); }));
-            items.add(new BigScreenPanel.Item("清除背景图", null, R.drawable.bs_ic_circle,
+            items.add(new BigScreenPanel.Item("Clear background image", null, R.drawable.bs_ic_circle,
                     () -> { panel.hide(); clearArt(game, BigScreenArt.KIND_BG); }));
         }
 
         // PV视频（M2.5 / spec §S10）
         if (TextUtils.isEmpty(game.trailerPath)) {
-            items.add(new BigScreenPanel.Item("设置PV视频", "本地视频 / 链接", R.drawable.bs_ic_play,
+            items.add(new BigScreenPanel.Item("Set up PV video", "Local video/link", R.drawable.bs_ic_play,
                     () -> { panel.hide(); openTrailerSourceMenu(game); }));
         } else {
             boolean remote = TrailerPlayer.isRemote(game.trailerPath);
             String sub;
             if (remote) {
-                sub = "链接：" + shortUrl(game.trailerPath);
+                sub = "Link:" + shortUrl(game.trailerPath);
             } else {
                 long size = 0;
                 try { size = new File(game.trailerPath).length(); } catch (Throwable ignored) { }
                 sub = TrailerManager.formatSize(size);
             }
-            items.add(new BigScreenPanel.Item(remote ? "更换PV链接" : "更换PV视频", sub,
+            items.add(new BigScreenPanel.Item(remote ? "Change PV link" : "Replace PV video", sub,
                     R.drawable.bs_ic_play,
                     () -> { panel.hide(); openTrailerSourceMenu(game); }));
-            items.add(new BigScreenPanel.Item("移除PV视频", null, 0,
+            items.add(new BigScreenPanel.Item("Remove PV video", null, 0,
                     () -> { panel.hide(); removeTrailer(game); }));
         }
         items.add(BigScreenPanel.Item.sep());
-        items.add(new BigScreenPanel.Item(game.hidden ? "取消隐藏" : "在库中隐藏",
-                "可在主菜单 → 隐藏游戏管理恢复", 0, () -> {
+        items.add(new BigScreenPanel.Item(game.hidden ? "Unhide" : "Hide in library",
+                "Can be restored in the main menu → Hidden Game Management", 0, () -> {
             if (game.hidden) { changeGameHidden(game, false); }
             else { confirmHideGame(game); }
         }));
-        items.add(new BigScreenPanel.Item("编辑信息", "触摸模式", 0,
-                () -> { panel.hide(); jumpToTouchMode("编辑信息 → 跳转触摸模式"); }));
-        items.add(new BigScreenPanel.Item("打开游戏目录", "触摸模式", 0,
-                () -> { panel.hide(); jumpToTouchMode("打开目录 → 跳转触摸模式"); }));
-        items.add(new BigScreenPanel.Item("从库中移除", "需二次确认", 0,
-                () -> { panel.hide(); jumpToTouchMode("移除需在触摸模式二次确认（只删库记录，不删文件）"); }));
-        panel.show("游戏操作 · " + game.title, items);
+        items.add(new BigScreenPanel.Item("Edit information", "Touch mode", 0,
+                () -> { panel.hide(); jumpToTouchMode("Edit information → Jump to touch mode"); }));
+        items.add(new BigScreenPanel.Item("Open game directory", "Touch mode", 0,
+                () -> { panel.hide(); jumpToTouchMode("Open directory → Jump to touch mode"); }));
+        items.add(new BigScreenPanel.Item("Remove from library", "Need second confirmation", 0,
+                () -> { panel.hide(); jumpToTouchMode("Removal needs to be confirmed twice in touch mode (only the library records will be deleted, not the files)"); }));
+        panel.show("Game operation ·" + game.title, items);
     }
 
     /** 用同一菜单面板做二次确认，触摸与手柄都可操作，取消放在首项。 */
     private void confirmHideGame(final Game game) {
         List<BigScreenPanel.Item> items = new ArrayList<>();
-        items.add(new BigScreenPanel.Item("取消，不隐藏", null, 0, () -> openGameMenu(game)));
-        items.add(new BigScreenPanel.Item("确认隐藏这款游戏", "不删除游戏；主菜单 → 隐藏游戏管理可恢复", 
+        items.add(new BigScreenPanel.Item("Cancel, don't hide", null, 0, () -> openGameMenu(game)));
+        items.add(new BigScreenPanel.Item("Confirm to hide this game", "Do not delete the game; main menu → hide game management can be restored", 
                 R.drawable.bs_ic_check, () -> {
             if (changeGameHidden(game, true)) { panel.hide(); }
         }));
-        panel.show("隐藏游戏？· " + game.title, items);
+        panel.show("Hidden game? ·" + game.title, items);
     }
 
     private boolean changeGameHidden(Game game, boolean hidden) {
         try {
             if (repository.setHidden(game.id, hidden) != 1) {
-                toast("操作失败：未找到游戏记录");
+                toast("Operation failed: Game record not found");
                 return false;
             }
         } catch (Exception e) {
-            toast("保存隐藏状态失败，请重试");
+            toast("Failed to save hidden state, please try again");
             return false;
         }
         game.hidden = hidden;
@@ -2816,70 +2816,70 @@ List<Shelf> defs = new ArrayList<>();
             allGames.clear();
             allGames.addAll(visible);
         } catch (Exception e) {
-            toast("隐藏状态已保存，但刷新失败；请重新进入大屏模式");
+            toast("The hidden state has been saved, but the refresh failed; please re-enter the large screen mode");
             return true;
         }
         buildRailEntries();
         buildShelves();
-        toast(hidden ? "已隐藏；主菜单 → 隐藏游戏管理可恢复" : "已恢复 · " + game.title + "（全部游戏中可查看）");
+        toast(hidden ? "Hidden; Main menu → Hide game management can be restored" : "Restored ·" + game.title + "(Available in all games)");
         return true;
     }
 
     private void openHiddenGames() {
         final List<Game> hidden;
         try { hidden = repository.getHiddenGames(); }
-        catch (Exception e) { toast("读取隐藏游戏失败，请重试"); return; }
+        catch (Exception e) { toast("Failed to read hidden game, please try again"); return; }
         List<BigScreenPanel.Item> items = new ArrayList<>();
-        items.add(new BigScreenPanel.Item("返回主菜单", null, 0, this::openMainMenu));
+        items.add(new BigScreenPanel.Item("Return to main menu", null, 0, this::openMainMenu));
         for (Game game : hidden) {
-            items.add(new BigScreenPanel.Item(TextUtils.isEmpty(game.title) ? "未命名游戏" : game.title,
-                    "点击恢复 · 保留封面、PV与游玩时长", R.drawable.bs_ic_all, () -> {
+            items.add(new BigScreenPanel.Item(TextUtils.isEmpty(game.title) ? "Unnamed game" : game.title,
+                    "Click to restore · Keep cover, PV and play time", R.drawable.bs_ic_all, () -> {
                 if (changeGameHidden(game, false)) { openHiddenGames(); }
             }));
         }
-        panel.show(hidden.isEmpty() ? "隐藏游戏管理 · 没有隐藏游戏" : "隐藏游戏管理 · " + hidden.size() + " 款", items);
+        panel.show(hidden.isEmpty() ? "Hidden game management · No hidden games" : "Hidden game management ·" + hidden.size() + "Payment", items);
     }
 
     private void openMainMenu() {
         List<BigScreenPanel.Item> items = new ArrayList<>();
-        items.add(new BigScreenPanel.Item("设置", null, 0, () -> {
+        items.add(new BigScreenPanel.Item("Settings", null, 0, () -> {
             panel.hide();
             openSettings();
         }));
-        items.add(new BigScreenPanel.Item("隐藏游戏管理", "找回误隐藏的游戏", 0,
+        items.add(new BigScreenPanel.Item("Hidden game management", "Retrieve accidentally hidden games", 0,
                 this::openHiddenGames));
-        items.add(new BigScreenPanel.Item("重新扫描游戏库", "触摸模式", 0,
-                () -> { panel.hide(); jumpToTouchMode("重新扫描 → 跳转触摸模式执行"); }));
-        items.add(new BigScreenPanel.Item("随机选一款", null, 0, () -> {
+        items.add(new BigScreenPanel.Item("Rescan game library", "Touch mode", 0,
+                () -> { panel.hide(); jumpToTouchMode("Rescan → Jump to touch mode execution"); }));
+        items.add(new BigScreenPanel.Item("Choose one at random", null, 0, () -> {
             panel.hide();
             pickRandom();
         }));
-        items.add(new BigScreenPanel.Item("切换排序方式", sortLabel(), 0, () -> {
+        items.add(new BigScreenPanel.Item("Switch sorting method", sortLabel(), 0, () -> {
             panel.hide();
             sortMode = "recent".equals(sortMode) ? "newest"
                     : ("newest".equals(sortMode) ? "name" : "recent");
             buildShelves();
-            toast("排序：" + sortLabel());
+            toast("Sort by:" + sortLabel());
         }));
-        items.add(new BigScreenPanel.Item("回到触摸模式", null, 0,
-                () -> { panel.hide(); jumpToTouchMode("已回到触摸模式"); }));
-        items.add(new BigScreenPanel.Item("快捷键说明", null, 0, () -> {
+        items.add(new BigScreenPanel.Item("Return to touch mode", null, 0,
+                () -> { panel.hide(); jumpToTouchMode("Returned to touch mode"); }));
+        items.add(new BigScreenPanel.Item("Shortcut key description", null, 0, () -> {
             panel.hide();
             toast("方向键 移动　Ⓐ 启动　Ⓑ 返回　Ⓧ 收藏　Ⓨ 详情　← 进筛选栏　LB/RB 翻页　☰ 菜单");
         }));
         items.add(BigScreenPanel.Item.sep());
-        items.add(new BigScreenPanel.Item("退出 YukiHub", null, 0, () -> {
+        items.add(new BigScreenPanel.Item("Exit YukiHub", null, 0, () -> {
             panel.hide();
             finishAffinity();
         }));
-        panel.show("主菜单", items);
+        panel.show("Main menu", items);
     }
 
     private String sortLabel() {
         switch (sortMode) {
-            case "newest": return "最新添加";
-            case "name":   return "名称";
-            default:       return "最近游玩";
+            case "newest": return "Latest addition";
+            case "name":   return "Name";
+            default:       return "Recently visited";
         }
     }
 
@@ -2894,7 +2894,7 @@ List<Shelf> defs = new ArrayList<>();
         applyContentFocus();
         scrollVerticalToRow(row);
         Game g = focusedGame();
-        if (g != null) { toast("随机选中 · " + g.title); }
+        if (g != null) { toast("Randomly selected ·" + g.title); }
     }
 
     private void cycleStatus(Game game) {
@@ -2905,7 +2905,7 @@ List<Shelf> defs = new ArrayList<>();
         for (Shelf s : shelves) {
             if (s.adapter != null) { s.adapter.notifyDataSetChanged(); }
         }
-        toast("游玩状态：" + statusLabel(game.playStatus));
+        toast("Play status:" + statusLabel(game.playStatus));
     }
 
     // ================= 面板回调 =================
@@ -2929,7 +2929,7 @@ List<Shelf> defs = new ArrayList<>();
         if (ev != null && ev.getActionMasked() == MotionEvent.ACTION_DOWN && !touchMode) {
             touchMode = true;
             updateHints();
-            if (gamepadView != null) { gamepadView.setText("触摸操作"); }
+            if (gamepadView != null) { gamepadView.setText("Touch operation"); }
         }
         // M15：**点浮层外的空白处＝关闭浮层**。
         // M16 起由各浮层自己的"遮罩层 / 根容器"消费点击（panel 用 scrim，settings 用 root），
@@ -3063,7 +3063,7 @@ List<Shelf> defs = new ArrayList<>();
                     boolean pinned = !rail.isPinned();
                     rail.setPinned(pinned);
                     prefs.setRailExpanded(pinned);
-                    toast(pinned ? "侧栏已钉住展开" : "侧栏已取消钉住");
+                    toast(pinned ? "Sidebar pinned to expand" : "Sidebar Unpinned");
                 } else {
                     openDetails();
                 }
@@ -3085,7 +3085,7 @@ List<Shelf> defs = new ArrayList<>();
         updateHeader();
         updateHints();
         // M18-2：提示里带**手柄图标**（用户要的是消息里的图标，不是顶栏常驻图标）
-        final String notice = connected ? "手柄已连接" : "手柄已断开";
+        final String notice = connected ? "The handle is connected" : "The handle is disconnected";
         if (intro != null && intro.isPlaying()) {
             pendingIntroNotice = notice;   // M17：入场动画期间先攒着，动画播完再提示
         } else {
@@ -3101,10 +3101,10 @@ List<Shelf> defs = new ArrayList<>();
         if (e == null) { return; }
         // M22：「搜索」项没有计数，别显示"0 款"
         if (F_SEARCH.equals(e.id)) {
-            banner.show("搜索 · 按 " + keys.confirm() + " 打开");
+            banner.show("Search · Press" + keys.confirm() + " 打开");
             return;
         }
-        banner.show(e.label + " · " + e.count + " 款");
+        banner.show(e.label + " · " + e.count + "Payment");
     }
 
     // ================= 输入入口 =================
@@ -3220,7 +3220,7 @@ List<Shelf> defs = new ArrayList<>();
             // M14-3：之前只有裸 "86%"，用户看不出这是手机电量 —— 加"电池图标 + 百分比 + 按电量染色"
             // （图标在布局里用 drawableStart 指定）
             batteryView.setText(charging ? pct + "%+" : pct + "%");
-            batteryView.setContentDescription("手机电量 " + pct + "%" + (charging ? "，充电中" : ""));
+            batteryView.setContentDescription("Mobile phone battery" + pct + "%" + (charging ? ", charging" : ""));
 
             int color;
             if (charging) {
@@ -3242,10 +3242,10 @@ List<Shelf> defs = new ArrayList<>();
         boolean connected = inputRouter != null && inputRouter.isGamepadConnected();
         if (!connected && touchMode) {
             // 手机用户没有手柄：显示"触摸操作"比"手柄未连接"有用得多
-            gamepadView.setText("触摸操作");
+            gamepadView.setText("Touch operation");
             gamepadView.setTextColor(ContextCompat.getColor(this, R.color.bs_text_muted));
         } else {
-            gamepadView.setText(connected ? "手柄已连接" : "手柄未连接");
+            gamepadView.setText(connected ? "The handle is connected" : "Handle not connected");
             gamepadView.setTextColor(ContextCompat.getColor(this,
                     connected ? R.color.bs_success : R.color.bs_text_muted));
         }
@@ -3275,26 +3275,26 @@ List<Shelf> defs = new ArrayList<>();
         applyTouchUi();
         hintView.setAlpha(1f);
         if (searchLayer != null && searchLayer.isVisible()) {
-            hintView.setText("方向键 选择　" + keys.confirm() + " 选中并返回　" + keys.fourth()
-                    + " 详情　" + keys.back() + " 关闭");
+            hintView.setText("Direction key selection" + keys.confirm() + "Select and return" + keys.fourth()
+                    + " 详情　" + keys.back() + "Closure");
         } else if (panel.isVisible()) {
-            hintView.setText("↑↓ 选择　" + keys.confirm() + " 确认　" + keys.back() + " 关闭");
+            hintView.setText("↑↓ Select" + keys.confirm() + "Confirm" + keys.back() + "Closure");
         } else if (settings != null && settings.isVisible()) {
-            hintView.setText("← → 分区　↑↓ 条目　" + keys.confirm() + " 修改　" + keys.back() + " 关闭");
+            hintView.setText("← → Partition ↑↓ Entry" + keys.confirm() + "Revise" + keys.back() + "Closure");
         } else if (detailsLayer.isVisible()) {
-            hintView.setText("← → 切换　" + keys.confirm() + " 启动　" + keys.third() + " 收藏　"
-                    + keys.fourth() + " 菜单　" + keys.back() + " 关闭");
+            hintView.setText("← → Toggle" + keys.confirm() + "Start up" + keys.third() + "Collect"
+                    + keys.fourth() + "Menu" + keys.back() + "Closure");
         } else if (railZone) {
-            hintView.setText("↑↓ 选分类（含「搜索」）　" + keys.confirm() + "/→ 回游戏　" + keys.fourth() + " 展开　"
-                    + keys.lb() + "/" + keys.rb() + " 切分类　↑到顶 顶栏　" + keys.menu() + " 主菜单");
+            hintView.setText("↑↓ Select category (including \"Search\")" + keys.confirm() + "/→ Return to game" + keys.fourth() + "Expand"
+                    + keys.lb() + "/" + keys.rb() + "Cut categories ↑ Go to top Top bar" + keys.menu() + "Main menu");
         } else if (infoZone) {
             // M23：↑ 现在能进顶栏按钮区，提示里补一句
-            hintView.setText("← → 选择　" + keys.confirm() + " 执行　↑ 顶栏　↓/" + keys.back() + " 回到游戏");
+            hintView.setText("← → Select" + keys.confirm() + "Execute ↑ Top bar ↓/" + keys.back() + "Back to game");
         } else {
             // M14-1：文案与实际绑定一一对齐 —— LB/RB 才是切分类；☰ 是主菜单；「更多」没独立按键
-            hintView.setText("方向键 移动　↑ 操作按钮　" + keys.confirm() + " 启动　"
-                    + keys.third() + " 收藏　" + keys.fourth() + " 详情　"
-                    + keys.lb() + "/" + keys.rb() + " 切分类　" + keys.menu() + " 主菜单");
+            hintView.setText("Arrow keys to move ↑ Operation buttons" + keys.confirm() + "Start up"
+                    + keys.third() + "Collect" + keys.fourth() + " 详情　"
+                    + keys.lb() + "/" + keys.rb() + "Cut classification" + keys.menu() + "Main menu");
         }
     }
 
@@ -3426,19 +3426,19 @@ List<Shelf> defs = new ArrayList<>();
     // ================= 工具 =================
 
     private static String statusLabel(String status) {
-        if (status == null) { return "未游玩"; }
+        if (status == null) { return "Not played"; }
         switch (status) {
-            case "playing":   return "游玩中";
-            case "completed": return "已完成";
-            default:          return "未游玩";
+            case "playing":   return "Playing";
+            case "completed": return "Completed";
+            default:          return "Not played";
         }
     }
 
     private static String formatHours(long ms) {
-        if (ms <= 0) { return "未游玩"; }
+        if (ms <= 0) { return "Not played"; }
         double hours = ms / 3600000.0;
-        return hours >= 10 ? String.format(Locale.getDefault(), "%.0f 小时", hours)
-                : String.format(Locale.getDefault(), "%.1f 小时", hours);
+        return hours >= 10 ? String.format(Locale.getDefault(), "%.0f hours", hours)
+                : String.format(Locale.getDefault(), "%.1f hours", hours);
     }
 
     private static String join(String sep, List<String> parts) {

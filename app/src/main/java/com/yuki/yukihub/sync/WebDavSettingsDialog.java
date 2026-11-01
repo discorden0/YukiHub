@@ -97,7 +97,7 @@ public class WebDavSettingsDialog extends DialogFragment {
         // 显示最后同步时间
         long lastSync = syncManager.getLastSyncTime();
         if (lastSync > 0) {
-            tvLastSync.setText("上次同步: " + android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", lastSync));
+            tvLastSync.setText("Last sync:" + android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", lastSync));
             tvLastSync.setVisibility(View.VISIBLE);
         }
         
@@ -148,13 +148,13 @@ public class WebDavSettingsDialog extends DialogFragment {
         String password = etPassword.getText().toString().trim();
         
         if (server.isEmpty() || username.isEmpty() || password.isEmpty()) {
-            showStatus("请填写完整的 WebDAV 配置", 0xFFFF9500);
+            showStatus("Please complete your WebDAV configuration", 0xFFFF9500);
             return;
         }
         
         btnTest.setEnabled(false);
-        btnTest.setText("测试中...");
-        showStatus("正在测试连接...", 0xFF8E9AB5);
+        btnTest.setText("Testing...");
+        showStatus("Testing connection...", 0xFF8E9AB5);
         
         AppExecutors.runOnIo(() -> {
             // 创建临时客户端测试
@@ -172,13 +172,13 @@ public class WebDavSettingsDialog extends DialogFragment {
             
             requireActivity().runOnUiThread(() -> {
                 btnTest.setEnabled(true);
-                btnTest.setText("测试连接");
+                btnTest.setText("test connection");
                 
                 if (finalSuccess) {
-                    showStatus("✓ 连接成功！", 0xFF34D158);
+                    showStatus("✓ Connection successful!", 0xFF34D158);
                     syncOptions.setVisibility(View.VISIBLE);
                 } else {
-                    showStatus("✗ 连接失败: " + (error[0] == null ? "请检查配置" : error[0]), 0xFFFF3B30);
+                    showStatus("✗ Connection failed:" + (error[0] == null ? "Please check configuration" : error[0]), 0xFFFF3B30);
                 }
             });
         });
@@ -191,17 +191,17 @@ public class WebDavSettingsDialog extends DialogFragment {
         boolean autoSync = swAutoSync.isChecked();
         
         if (server.isEmpty()) {
-            showStatus("请输入 WebDAV 服务器地址", 0xFFFF9500);
+            showStatus("Please enter the WebDAV server address", 0xFFFF9500);
             return;
         }
         
         if (username.isEmpty()) {
-            showStatus("请输入用户名", 0xFFFF9500);
+            showStatus("Please enter username", 0xFFFF9500);
             return;
         }
         
         if (password.isEmpty()) {
-            showStatus("请输入密码/应用密码", 0xFFFF9500);
+            showStatus("Please enter password/application password", 0xFFFF9500);
             return;
         }
         
@@ -214,34 +214,34 @@ public class WebDavSettingsDialog extends DialogFragment {
         // 保存配置
         syncManager.saveConfig(server, username, password, autoSync);
         
-        showStatus("✓ 配置已保存", 0xFF34D158);
+        showStatus("✓ Configuration saved", 0xFF34D158);
         btnSyncNow.setEnabled(true);
         
-        Toast.makeText(requireContext(), "WebDAV 配置已保存", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "WebDAV configuration saved", Toast.LENGTH_SHORT).show();
     }
     
     private void startSync() {
         if (!syncManager.isConfigured()) {
-            showStatus("请先保存 WebDAV 配置", 0xFFFF9500);
+            showStatus("Please save the WebDAV configuration first", 0xFFFF9500);
             return;
         }
         
         btnSyncNow.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
-        showStatus("正在同步...", 0xFF8E9AB5);
+        showStatus("Syncing...", 0xFF8E9AB5);
         
         syncManager.sync(new SyncManager.SyncListener() {
             @Override
             public void onSyncStart() {
                 requireActivity().runOnUiThread(() -> {
-                    showStatus("同步开始...", 0xFF8E9AB5);
+                    showStatus("Synchronization starts...", 0xFF8E9AB5);
                 });
             }
             
             @Override
             public void onProgress(String item, boolean changed) {
                 requireActivity().runOnUiThread(() -> {
-                    showStatus("同步 " + item + (changed ? " ✓" : " (无变化)"), 0xFF8E9AB5);
+                    showStatus("同步 " + item + (changed ? " ✓" : "(no change)"), 0xFF8E9AB5);
                 });
             }
             
@@ -250,16 +250,16 @@ public class WebDavSettingsDialog extends DialogFragment {
                 final java.util.concurrent.CountDownLatch latch = new java.util.concurrent.CountDownLatch(1);
                 final int[] decision = new int[]{SyncManager.RESOLVE_CANCEL};
                 requireActivity().runOnUiThread(() -> {
-                    String msg = "本地和云端都有修改，请选择处理方式。\n\n"
-                            + "本地大小：" + (conflict.localBytes / 1024) + "KB\n"
-                            + "云端大小：" + (conflict.remoteBytes / 1024) + "KB\n\n"
-                            + "建议选择“智能合并”：会按游戏路径和游玩记录 UUID 去重合并，累计游玩时长取两边较大值；如果某设备执行过清除/重设时长，则以更新的重置时间为准。";
+                    String msg = "There are modifications both locally and in the cloud, please choose a processing method."
+                            + "Local size:" + (conflict.localBytes / 1024) + "KB\n"
+                            + "Cloud size:" + (conflict.remoteBytes / 1024) + "KB\n\n"
+                            + "It is recommended to select \"Smart Merge\": the game path and play record UUID will be deduplicated and merged, and the cumulative play time will be the larger of both sides; if a device has been cleared/reset, the updated reset time will prevail.";
                     new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                            .setTitle("同步冲突")
+                            .setTitle("Synchronization conflict")
                             .setMessage(msg)
-                            .setPositiveButton("智能合并", (d, w) -> { decision[0] = SyncManager.RESOLVE_MERGE; latch.countDown(); })
-                            .setNegativeButton("使用云端", (d, w) -> { decision[0] = SyncManager.RESOLVE_USE_REMOTE; latch.countDown(); })
-                            .setNeutralButton("使用本地", (d, w) -> { decision[0] = SyncManager.RESOLVE_USE_LOCAL; latch.countDown(); })
+                            .setPositiveButton("Smart merge", (d, w) -> { decision[0] = SyncManager.RESOLVE_MERGE; latch.countDown(); })
+                            .setNegativeButton("Use the cloud", (d, w) -> { decision[0] = SyncManager.RESOLVE_USE_REMOTE; latch.countDown(); })
+                            .setNeutralButton("Use local", (d, w) -> { decision[0] = SyncManager.RESOLVE_USE_LOCAL; latch.countDown(); })
                             .setOnCancelListener(d -> { decision[0] = SyncManager.RESOLVE_CANCEL; latch.countDown(); })
                             .show();
                 });
@@ -274,27 +274,27 @@ public class WebDavSettingsDialog extends DialogFragment {
                     btnSyncNow.setEnabled(true);
                     
                     if (result.hasChanges()) {
-                        StringBuilder msg = new StringBuilder("同步完成：");
-                        if (result.uploaded) msg.append(" 已上传");
-                        if (result.downloaded) msg.append(" 已下载");
-                        if (result.merged) msg.append(" 已合并");
+                        StringBuilder msg = new StringBuilder("Synchronization completed:");
+                        if (result.uploaded) msg.append("Uploaded");
+                        if (result.downloaded) msg.append("Downloaded");
+                        if (result.merged) msg.append("Merged");
                         int showBytes = result.compressedBytes > 0 ? result.compressedBytes : result.localBytes;
                         msg.append(" · ").append(showBytes / 1024).append("KB");
                         showStatus(msg.toString(), 0xFF34D158);
                     } else if (result.cancelled) {
-                        showStatus("已取消同步", 0xFFFF9500);
+                        showStatus("Sync canceled", 0xFFFF9500);
                     } else {
                         int showBytes = result.compressedBytes > 0 ? result.compressedBytes : result.localBytes;
-                        showStatus("✓ 已是最新 · " + (showBytes / 1024) + "KB", 0xFF34D158);
+                        showStatus("✓ Already the latest ·" + (showBytes / 1024) + "KB", 0xFF34D158);
                     }
                     
                     // 更新最后同步时间
-                    tvLastSync.setText("上次同步: " + android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", System.currentTimeMillis()));
+                    tvLastSync.setText("Last sync:" + android.text.format.DateFormat.format("yyyy-MM-dd HH:mm", System.currentTimeMillis()));
                     tvLastSync.setVisibility(View.VISIBLE);
 
                     // 如果本地数据被云端覆盖或合并，刷新主界面让游戏库/资料立即生效。
                     if (result.downloaded || result.merged) {
-                        Toast.makeText(requireContext(), "同步数据已应用，正在刷新界面", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "The synchronized data has been applied and the interface is being refreshed.", Toast.LENGTH_SHORT).show();
                         requireActivity().recreate();
                     }
                 });
@@ -305,7 +305,7 @@ public class WebDavSettingsDialog extends DialogFragment {
                 requireActivity().runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
                     btnSyncNow.setEnabled(true);
-                    showStatus("✗ 同步失败: " + error, 0xFFFF3B30);
+                    showStatus("✗ Sync failed:" + error, 0xFFFF3B30);
                 });
             }
         });

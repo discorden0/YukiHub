@@ -65,7 +65,7 @@ public class TyranoActivity extends Activity {
         gameDir = resolveGameDir(getIntent());
         Log.i(TAG, "onCreate gameDir=" + gameDir);
         if (gameDir == null || gameDir.trim().isEmpty()) {
-            Toast.makeText(this, "Tyrano 启动失败：游戏目录为空", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Tyrano startup failed: game directory is empty", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -81,7 +81,7 @@ public class TyranoActivity extends Activity {
             gameUsesAsar = true;
             asarPath = resourcesAsar.getAbsolutePath();
         } else if (!index.isFile()) {
-            Toast.makeText(this, "Tyrano 启动失败：未找到 index.html 或 app.asar", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Tyrano startup failed: index.html or app.asar not found", Toast.LENGTH_LONG).show();
             Log.e(TAG, "entry not found index=" + index.getAbsolutePath() + " app.asar=" + asar.getAbsolutePath() + " resources/app.asar=" + resourcesAsar.getAbsolutePath());
             finish();
             return;
@@ -91,7 +91,7 @@ public class TyranoActivity extends Activity {
                 asarArchive = new AsarArchive(new File(asarPath));
             } catch (Throwable t) {
             Log.e(TAG, "open asar failed", t);
-            Toast.makeText(this, "Tyrano 启动失败：无法读取 app.asar", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Tyrano startup failed: Unable to read app.asar", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -105,7 +105,7 @@ public class TyranoActivity extends Activity {
             localServer.start();
         } catch (Throwable t) {
             Log.e(TAG, "start local server failed", t);
-            Toast.makeText(this, "Tyrano 启动失败：本地服务器启动失败", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Tyrano startup failed: Local server failed to start", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -264,9 +264,9 @@ public class TyranoActivity extends Activity {
 
     private void confirmReturnToTitle() {
         new AlertDialog.Builder(this)
-                .setTitle("提示")
-                .setMessage("确定要返回到标题界面吗？（要注意保存游戏进度哦！）")
-                .setPositiveButton("确定", (d, w) -> {
+                .setTitle("Notice")
+                .setMessage("Are you sure you want to return to the title screen? (Be careful to save your game progress!)")
+                .setPositiveButton("OK", (d, w) -> {
                     try {
                         if (webView != null) {
                             webView.post(() -> {
@@ -275,7 +275,7 @@ public class TyranoActivity extends Activity {
                         }
                     } catch (Throwable ignored) { }
                 })
-                .setNegativeButton("点错了", null)
+                .setNegativeButton("Wrong click", null)
                 .show();
     }
 
@@ -304,10 +304,10 @@ public class TyranoActivity extends Activity {
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
-                .setTitle("提示")
-                .setMessage("就这样结束了？")
-                .setPositiveButton("是的", (d, w) -> finish())
-                .setNegativeButton("点错了", null)
+                .setTitle("Notice")
+                .setMessage("Is this the end?")
+                .setPositiveButton("Yes", (d, w) -> finish())
+                .setNegativeButton("Wrong click", null)
                 .show();
     }
 

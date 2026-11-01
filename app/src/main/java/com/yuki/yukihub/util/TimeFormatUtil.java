@@ -23,7 +23,7 @@ public class TimeFormatUtil {
     }
 
     public static String date(long time) {
-        if (time <= 0) return "从未游玩";
+        if (time <= 0) return "Never played";
         return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date(time));
     }
 }

@@ -118,8 +118,8 @@ public final class PPOcrV6Engine {
     }
 
     public static String runOCR(Bitmap bitmap) throws Exception {
-        if (!initialized) throw new IllegalStateException("PP-OCRv6 未初始化");
-        if (bitmap == null || bitmap.isRecycled()) throw new IllegalArgumentException("Bitmap 无效");
+        if (!initialized) throw new IllegalStateException("PP-OCRv6 not initialized");
+        if (bitmap == null || bitmap.isRecycled()) throw new IllegalArgumentException("Bitmap is invalid");
 
         List<TextBox> boxes = detect(bitmap);
         if (boxes.isEmpty()) return recognize(bitmap);
@@ -261,7 +261,7 @@ public final class PPOcrV6Engine {
         try {
             return Bitmap.createBitmap(source, left, top, right - left, bottom - top);
         } catch (Throwable error) {
-            Log.w(TAG, "文本区域裁剪失败", error);
+            Log.w(TAG, "Text area cropping failed", error);
             return null;
         }
     }
@@ -313,7 +313,7 @@ public final class PPOcrV6Engine {
             Object value = result.get(i);
             if (value instanceof OnnxTensor) return (OnnxTensor) value;
         }
-        throw new IllegalStateException("ONNX 没有 Tensor 输出");
+        throw new IllegalStateException("ONNX has no Tensor output");
     }
 
     private static String decode(float[] data, int sequenceLength, int classCount) {

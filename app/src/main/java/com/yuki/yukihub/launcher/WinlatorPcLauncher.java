@@ -134,7 +134,7 @@ public class WinlatorPcLauncher {
             return new Result(false, CODE_DIR_UNRESOLVED);
         }
         String exe = exeName == null ? "" : exeName.trim();
-        if (exe.isEmpty() || "[游戏目录]".equals(exe)) {
+        if (exe.isEmpty() || "[Game Catalog]".equals(exe)) {
             // 未指定启动文件：目录内恰有一个 .exe 时自动选中
             String auto = findSingleExe(dir);
             if (auto == null) return new Result(false, CODE_EXE_UNRESOLVED);

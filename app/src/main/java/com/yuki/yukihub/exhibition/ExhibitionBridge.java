@@ -37,13 +37,13 @@ public class ExhibitionBridge {
     /** 页面模块加载完成（M0 会传 "M0"） */
     @JavascriptInterface
     public void onReady(String stage) {
-        Log.i(TAG, "展厅就绪: " + stage);
+        Log.i(TAG, "Showroom ready:" + stage);
     }
 
     /** 每 5 秒一次的性能摘要（JSON 字符串），M0 先只写日志 */
     @JavascriptInterface
     public void onPerf(String json) {
-        Log.i(TAG, "性能摘要: " + json);
+        Log.i(TAG, "Performance summary:" + json);
     }
 
     /**
@@ -89,7 +89,7 @@ public class ExhibitionBridge {
             root.put("count", arr.length());
             return root.toString();
         } catch (Throwable t) {
-            Log.w(TAG, "getMyLibrary 失败", t);
+            Log.w(TAG, "GetMyLibrary failed", t);
             return "{\"error\":\"" + String.valueOf(t.getMessage()).replace("\"", "'") + "\"}";
         }
     }
@@ -174,7 +174,7 @@ com.yuki.yukihub.model.MusicAlbum singles = repo.virtualSinglesAlbum();
 if (singles != null) {
     org.json.JSONObject saO = new org.json.JSONObject();
     saO.put("id", singles.id);
-    saO.put("title", "♪ 散装单曲");
+    saO.put("title", "♪ Bulk singles");
     saO.put("gameId", null);
     saO.put("trackCount", singles.trackCount);
     
@@ -225,7 +225,7 @@ root.put("count", albumsArr.length());
 root.put("trackCount", tracksArr.length());
 return root.toString();
         } catch (Throwable t) {
-            Log.w(TAG, "getMusicLibrary 失败", t);
+            Log.w(TAG, "GetMusicLibrary failed", t);
             return "{\"error\":\"" + String.valueOf(t.getMessage()).replace("\"", "'") + "\"}";
         }
     }
@@ -304,7 +304,7 @@ return root.toString();
             o.put("apiBase", ONLINE_API_BASE);
             return o.toString();
         } catch (Throwable t) {
-            Log.w(TAG, "getAuthInfo 失败", t);
+            Log.w(TAG, "GetAuthInfo failed", t);
             return "{\"loggedIn\":false}";
         }
     }
@@ -334,7 +334,7 @@ return root.toString();
                     .getSharedPreferences(SP_DISPLAY, android.content.Context.MODE_PRIVATE)
                     .getString(KEY_SLOTS, "");
         } catch (Throwable t) {
-            Log.w(TAG, "getDisplaySlots 失败", t);
+            Log.w(TAG, "GetDisplaySlots failed", t);
             return "";
         }
     }
@@ -351,7 +351,7 @@ return root.toString();
                     .apply();
             return true;
         } catch (Throwable t) {
-            Log.w(TAG, "setDisplaySlots 失败", t);
+            Log.w(TAG, "SetDisplaySlots failed", t);
             return false;
         }
     }

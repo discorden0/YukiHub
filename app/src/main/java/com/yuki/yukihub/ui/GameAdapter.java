@@ -268,7 +268,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.Holder> {
             if (h.engineTitle != null) h.engineTitle.setBackground(chipBg);
         }
 
-        h.playTime.setText("总时长 " + TimeFormatUtil.playTime(g.totalPlayTime));
+        h.playTime.setText("Total duration" + TimeFormatUtil.playTime(g.totalPlayTime));
         h.playTime.setTextColor(themeActive ? 0xFFB0B8C8 : h.playTime.getContext().getResources().getColor(R.color.yh_text_muted));
         bindStatusBadge(h.statusBadge, g.playStatus);
         String coverUri = chooseSafeCoverUri(g);

@@ -30,7 +30,7 @@ public final class FvpLaunchPrefs {
 
     /** 文本编码（对齐 rfvp 支持的三档）。 */
     public static final String[] NLS_LABELS = {
-            "Shift-JIS（sjis，日文原版）", "GBK（gbk，简体汉化）", "UTF-8（utf8）"
+            "Shift-JIS (sjis, original Japanese version)", "GBK (gbk, simplified Chinese)", "UTF-8（utf8）"
     };
     public static final String[] NLS_VALUES = {
             NLS_SJIS, "gbk", "utf8"
@@ -71,13 +71,13 @@ public final class FvpLaunchPrefs {
 
     /** 画面放大档位。 */
     public static final String[] SCALE_LABELS = {
-            "1.0x（默认）", "1.25x", "1.5x", "1.75x", "2.0x"
+            "1.0x (default)", "1.25x", "1.5x", "1.75x", "2.0x"
     };
     public static final float[] SCALE_VALUES = {1.0f, 1.25f, 1.5f, 1.75f, 2.0f};
 
     /** 文字缩放档位标签（值复用 SCALE_VALUES）。 */
     public static final String[] TEXT_SCALE_LABELS = {
-            "1.0x（脚本原大）", "1.25x", "1.5x", "1.75x", "2.0x"
+            "1.0x (script original size)", "1.25x", "1.5x", "1.75x", "2.0x"
     };
 
     /**
@@ -85,8 +85,8 @@ public final class FvpLaunchPrefs {
      * 0.0 = 行距完全不变（最紧凑）；0.5 = 放大增量减半（默认）；1.0 = 与字号等比。
      */
     public static final String[] LINE_SCALE_LABELS = {
-            "比原版更紧（-1.0，可能贴字）", "比原版略紧（-0.5）", "与原版行距一致（0.0，推荐）",
-            "比原版松一半（+0.5）", "随字号等比（+1.0，原样）"
+            "Tighter than the original (-1.0, may be posted)", "Slightly tighter than original (-0.5)", "Same line spacing as the original (0.0, recommended)",
+            "Half looser than the original version (+0.5)", "Proportional to the font size (+1.0, as is)"
     };
     public static final float[] LINE_SCALE_VALUES = {-1.0f, -0.5f, 0.0f, 0.5f, 1.0f};
 

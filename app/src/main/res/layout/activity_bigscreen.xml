@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="14dp"
                 android:gravity="center_vertical"
-                android:text="手柄：检测中"
+                android:text="Handle: under detection"
                 android:textColor="@color/bs_text_muted"
                 android:textSize="12sp" />
 
@@ -131,7 +131,7 @@
                 android:drawableStart="@drawable/bs_ic_battery"
                 android:drawablePadding="5dp"
                 android:gravity="center_vertical"
-                android:contentDescription="手机电量"
+                android:contentDescription="Mobile phone battery"
                 android:text="—"
                 android:textColor="@color/bs_text_muted"
                 android:textSize="13sp" />
@@ -150,7 +150,7 @@
                 android:background="@drawable/bg_bs_icon_btn"
                 android:src="@drawable/ic_nav_home"
                 android:scaleType="fitCenter"
-                android:contentDescription="退出大屏返回首页"
+                android:contentDescription="Exit the big screen and return to the homepage"
                 android:clickable="true"
                 android:focusable="false" />
             <!-- 菜单按钮：图标化（汉堡三条线），比文字「菜单」更省横向空间。
@@ -165,7 +165,7 @@
                 android:background="@drawable/bg_bs_icon_btn"
                 android:src="@drawable/bs_ic_menu"
                 android:scaleType="fitCenter"
-                android:contentDescription="菜单"
+                android:contentDescription="menu"
                 android:clickable="true"
                 android:focusable="false" />
         </LinearLayout>
@@ -229,7 +229,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="这个分类下还没有游戏"
+                        android:text="There are no games in this category yet"
                         android:textColor="@color/bs_text"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -255,7 +255,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="正在读取游戏库…"
+                        android:text="Loading game library..."
                         android:textColor="@color/bs_text_muted"
                         android:textSize="14sp" />
                 </LinearLayout>

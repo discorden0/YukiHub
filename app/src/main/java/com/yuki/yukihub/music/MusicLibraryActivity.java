@@ -110,7 +110,7 @@ public class MusicLibraryActivity extends Activity {
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         TextView title = new TextView(this);
-        title.setText("音乐库");
+        title.setText("Music library");
         title.setTextSize(19);
         title.setTextColor(getColorCompat(R.color.yh_text));
         title.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -120,7 +120,7 @@ public class MusicLibraryActivity extends Activity {
         top.addView(title, tp);
 
         TextView addBtn = new TextView(this);
-        addBtn.setText("＋ 添加");
+        addBtn.setText("+ Add");
         addBtn.setTextSize(14);
         addBtn.setTextColor(getColorCompat(R.color.yh_primary));
         addBtn.setPadding(dp(12), dp(8), dp(12), dp(8));
@@ -147,7 +147,7 @@ public class MusicLibraryActivity extends Activity {
                 ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
 
         emptyHint = new TextView(this);
-        emptyHint.setText("还没有音乐\n\n点右上角「＋ 添加」：\n   📁 添加专辑 — 选一个文件夹，自动扫描里面的音频\n   🎵 添加单曲 — 单独挑几首\n\n添加后，去 3D 展厅的音乐厅就能听到 ♪");
+        emptyHint.setText("No music yet\n\nClick \"+ Add\" in the upper right corner:\n   📁 Add album — select a folder and automatically scan the audio inside\n   🎵 Add singles — pick a few individually\n\nAfter adding it, you can hear it in the concert hall of the 3D exhibition hall ♪");
         emptyHint.setTextSize(13);
         emptyHint.setTextColor(getColorCompat(R.color.yh_text_muted));
         emptyHint.setLineSpacing(dp(3), 1f);
@@ -216,7 +216,7 @@ public class MusicLibraryActivity extends Activity {
         head.addView(texts, tp);
 
         TextView t1 = new TextView(this);
-        t1.setText(isSingles ? "♪ 散装单曲" : nz(album.title));
+        t1.setText(isSingles ? "♪ Bulk singles" : nz(album.title));
         t1.setTextSize(15);
         t1.setTextColor(getColorCompat(R.color.yh_text));
         t1.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -225,7 +225,7 @@ public class MusicLibraryActivity extends Activity {
         texts.addView(t1);
 
         TextView t2 = new TextView(this);
-        t2.setText(album.trackCount + " 首");
+        t2.setText(album.trackCount + "Head");
         t2.setTextSize(12);
         t2.setTextColor(getColorCompat(R.color.yh_text_muted));
         t2.setPadding(0, dp(4), 0, 0);
@@ -340,22 +340,22 @@ public class MusicLibraryActivity extends Activity {
         LinearLayout root = dialogRoot();
         final AlertDialog[] holder = new AlertDialog[1];
 
-        root.addView(dialogOption("📁  添加专辑",
-                "选一个文件夹，自动扫描里面的音频（推荐）",
+        root.addView(dialogOption("📁 Add album",
+                "Select a folder and automatically scan the audio inside (recommended)",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     startActivityForResult(MusicSafHelper.folderPickerIntent(null), REQ_FOLDER);
                 }));
         root.addView(dialogGap());
-        root.addView(dialogOption("🎵  添加单曲",
-                "单独挑几首音频，放进「散装单曲」",
+        root.addView(dialogOption("🎵 Add single",
+                "Select a few audio tracks individually and put them into \"Bulk Singles\"",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     startActivityForResult(MusicSafHelper.audioPickerIntent(true), REQ_AUDIO);
                 }));
 
         AlertDialog d = new AlertDialog.Builder(this)
-                .setTitle("添加音乐").setView(root).setNegativeButton("取消", null).create();
+                .setTitle("Add music").setView(root).setNegativeButton("Cancel", null).create();
         holder[0] = d;
         styleDialog(d);
         d.show();
@@ -365,30 +365,30 @@ public class MusicLibraryActivity extends Activity {
         LinearLayout root = dialogRoot();
         final AlertDialog[] holder = new AlertDialog[1];
 
-        root.addView(dialogOption("✏️  重命名",
-                "改专辑标题",
+        root.addView(dialogOption("✏️ Rename",
+                "Change album title",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     promptRenameAlbum(album);
                 }));
         root.addView(dialogGap());
-        root.addView(dialogOption("🖼  更换封面",
-                "选一张图片当封面",
+        root.addView(dialogOption("🖼 Change cover",
+                "Choose a picture as cover",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     pendingAlbumId = album.id;
                     startActivityForResult(MusicSafHelper.imagePickerIntent(), REQ_COVER);
                 }));
         root.addView(dialogGap());
-        root.addView(dialogOption("🗑  删除专辑",
-                "只删记录，不动你的原文件",
+        root.addView(dialogOption("🗑 Delete album",
+                "Only delete the record and leave your original files untouched",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     confirmDeleteAlbum(album);
                 }));
 
         AlertDialog d = new AlertDialog.Builder(this)
-                .setTitle(nz(album.title)).setView(root).setNegativeButton("取消", null).create();
+                .setTitle(nz(album.title)).setView(root).setNegativeButton("Cancel", null).create();
         holder[0] = d;
         styleDialog(d);
         d.show();
@@ -399,17 +399,17 @@ public class MusicLibraryActivity extends Activity {
         final AlertDialog[] holder = new AlertDialog[1];
 
         if (t.hasPv()) {
-            root.addView(dialogOption("🎬  解绑 PV",
-                    "保留音频，只去掉 PV 关联",
+            root.addView(dialogOption("🎬 Unbind PV",
+                    "Keep audio, only remove PV association",
                     () -> {
                         if (holder[0] != null) holder[0].dismiss();
                         repo.setTrackPv(t.id, null);
-                        toast("已解绑 PV");
+                        toast("Unbound PV");
                         reload();
                     }));
         } else {
-            root.addView(dialogOption("🎬  绑定 PV",
-                    "选一个视频，作为这首歌的 PV",
+            root.addView(dialogOption("🎬 Bind PV",
+                    "Choose a video as the PV for this song",
                     () -> {
                         if (holder[0] != null) holder[0].dismiss();
                         pendingTrackId = t.id;
@@ -417,25 +417,25 @@ public class MusicLibraryActivity extends Activity {
                     }));
         }
         root.addView(dialogGap());
-        root.addView(dialogOption("✏️  编辑标题",
-                "改这首歌显示的名字",
+        root.addView(dialogOption("✏️ Edit title",
+                "Change the displayed name of this song",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     promptRenameTrack(t);
                 }));
         root.addView(dialogGap());
-        root.addView(dialogOption("🗑  删除这首",
-                "只删记录，不动你的原文件",
+        root.addView(dialogOption("🗑 Delete this song",
+                "Only delete the record and leave your original files untouched",
                 () -> {
                     if (holder[0] != null) holder[0].dismiss();
                     repo.deleteTrack(t.id);
                     if (album.id != MusicAlbum.SINGLES_ID) repo.refreshTrackCount(album.id);
-                    toast("已移除");
+                    toast("Removed");
                     reload();
                 }));
 
         AlertDialog d = new AlertDialog.Builder(this)
-                .setTitle(nz(t.title)).setView(root).setNegativeButton("取消", null).create();
+                .setTitle(nz(t.title)).setView(root).setNegativeButton("Cancel", null).create();
         holder[0] = d;
         styleDialog(d);
         d.show();
@@ -450,15 +450,15 @@ public class MusicLibraryActivity extends Activity {
         wrap.setPadding(dp(18), dp(4), dp(18), dp(4));
         wrap.addView(input);
         AlertDialog d = new AlertDialog.Builder(this)
-                .setTitle("重命名专辑")
+                .setTitle("Rename album")
                 .setView(wrap)
-                .setPositiveButton("确定", (dl, w) -> {
+                .setPositiveButton("OK", (dl, w) -> {
                     album.title = input.getText().toString().trim();
-                    if (album.title.isEmpty()) album.title = "未命名专辑";
+                    if (album.title.isEmpty()) album.title = "Untitled album";
                     repo.updateAlbum(album);
                     reload();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .create();
         styleDialog(d);
         d.show();
@@ -473,15 +473,15 @@ public class MusicLibraryActivity extends Activity {
         wrap.setPadding(dp(18), dp(4), dp(18), dp(4));
         wrap.addView(input);
         AlertDialog d = new AlertDialog.Builder(this)
-                .setTitle("编辑标题")
+                .setTitle("Edit title")
                 .setView(wrap)
-                .setPositiveButton("确定", (dl, w) -> {
+                .setPositiveButton("OK", (dl, w) -> {
                     String s = input.getText().toString().trim();
                     t.title = s.isEmpty() ? t.title : s;
                     repo.updateTrack(t);
                     reload();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .create();
         styleDialog(d);
         d.show();
@@ -489,15 +489,15 @@ public class MusicLibraryActivity extends Activity {
 
     private void confirmDeleteAlbum(MusicAlbum album) {
         AlertDialog d = new AlertDialog.Builder(this)
-                .setTitle("删除专辑")
-                .setMessage("将移除「" + nz(album.title) + "」及它的 " + album.trackCount + " 首歌的记录。\n\n"
-                        + "⚠️ 不会删除你手机里的原文件。")
-                .setPositiveButton("删除", (dl, w) -> {
+                .setTitle("Delete album")
+                .setMessage("Will remove \"" + nz(album.title) + "” and its" + album.trackCount + "The record of the song."
+                        + "⚠️ The original files on your phone will not be deleted.")
+                .setPositiveButton("Delete", (dl, w) -> {
                     repo.deleteAlbum(album.id);
-                    toast("已移除");
+                    toast("Removed");
                     reload();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .create();
         styleDialog(d);
         d.show();
@@ -532,17 +532,17 @@ public class MusicLibraryActivity extends Activity {
     private void handleFolderPicked(Uri treeUri) {
         if (treeUri == null) return;
         if (!MusicSafHelper.persistRead(this, treeUri)) {
-            toast("无法保存该文件夹的访问权限，请从系统文件选择器重新选取");
+            toast("Unable to save access permissions for this folder, please select again from the system file selector");
             return;
         }
         // 同一个文件夹不重复添加
         MusicAlbum exist = repo.findAlbumByRootUri(treeUri.toString());
         if (exist != null) {
-            toast("这个文件夹已经添加过了");
+            toast("This folder has already been added");
             return;
         }
 
-        setBusy(true, "正在扫描音频…");
+        setBusy(true, "Scanning for audio…");
         new Thread(() -> {
             final MusicSafHelper.ScanResult r = MusicSafHelper.scanAudioFolder(this, treeUri);
             main.post(() -> {
@@ -552,7 +552,7 @@ public class MusicLibraryActivity extends Activity {
                     return;
                 }
                 if (r.tracks.isEmpty()) {
-                    toast("这个文件夹里没找到音频文件");
+                    toast("No audio files found in this folder");
                     return;
                 }
                 MusicAlbum a = new MusicAlbum();
@@ -562,7 +562,7 @@ public class MusicLibraryActivity extends Activity {
                 a.trackCount = r.tracks.size();
                 long albumId = repo.insertAlbum(a);
                 if (albumId <= 0) {
-                    toast("写入失败（专辑）");
+                    toast("Write failed (album)");
                     return;
                 }
                 List<MusicTrack> list = new ArrayList<>();
@@ -580,7 +580,7 @@ public class MusicLibraryActivity extends Activity {
                 int n = repo.insertTracks(list);
                 repo.refreshTrackCount(albumId);
                 expanded.add(albumId);
-                toast("已添加「" + r.folderName + "」，共 " + n + " 首");
+                toast("Added \"" + r.folderName + "\",common" + n + "Head");
                 reload();
             });
         }, "music-scan").start();
@@ -597,7 +597,7 @@ public class MusicLibraryActivity extends Activity {
         }
         if (uris.isEmpty()) return;
 
-        setBusy(true, "正在读取音频信息…");
+        setBusy(true, "Reading audio information...");
         new Thread(() -> {
             int ok = 0, denied = 0;
             for (Uri u : uris) {
@@ -620,9 +620,9 @@ public class MusicLibraryActivity extends Activity {
             final int fok = ok, fdenied = denied;
             main.post(() -> {
                 setBusy(false, null);
-                if (fok > 0) toast("已添加 " + fok + " 首");
-                if (fdenied > 0) toast(fdenied + " 首无法保存访问权限，已跳过");
-                if (fok == 0 && fdenied == 0) toast("没有可添加的音频");
+                if (fok > 0) toast("Added" + fok + "Head");
+                if (fdenied > 0) toast(fdenied + "Unable to save access rights, skipped");
+                if (fok == 0 && fdenied == 0) toast("No audio to add");
                 expanded.add(MusicAlbum.SINGLES_ID);
                 reload();
             });
@@ -633,11 +633,11 @@ public class MusicLibraryActivity extends Activity {
     private void handlePvPicked(Uri uri) {
         if (uri == null || pendingTrackId <= 0) return;
         if (!MusicSafHelper.persistRead(this, uri)) {
-            toast("无法保存该视频的访问权限，请从系统文件选择器重新选取");
+            toast("Unable to save access to this video, please select again from the system file selector");
             return;
         }
         repo.setTrackPv(pendingTrackId, uri.toString());
-        toast("已绑定 PV");
+        toast("Bound PV");
         reload();
     }
 
@@ -645,11 +645,11 @@ public class MusicLibraryActivity extends Activity {
     private void handleCoverPicked(Uri uri) {
         if (uri == null || pendingAlbumId <= 0) return;
         if (!MusicSafHelper.persistRead(this, uri)) {
-            toast("无法保存该图片的访问权限，请从系统文件选择器重新选取");
+            toast("Unable to save access to this image, please select again from the system file selector");
             return;
         }
         repo.updateAlbumCover(pendingAlbumId, uri.toString());
-        toast("封面已更新");
+        toast("Cover has been updated");
         reload();
     }
 

@@ -263,7 +263,7 @@ private void resetCodeUiState() {
         tvCodeStatus.setText("");
     }
     if (!sendCodeInFlight && btnSendCode != null && btnSendCode.isEnabled()) {
-        btnSendCode.setText("发送验证码");
+        btnSendCode.setText("Send verification code");
     }
 }
 
@@ -277,11 +277,11 @@ private void switchToLogin() {
     tabRegister.setTextColor(themed ? 0xFFB0B8C8 : 0xFF4A5568);
     tabRegister.setBackgroundResource(R.drawable.bg_auth_tab_inactive);
 
-    tvFormTitle.setText("欢迎回来");
-    tvFormHint.setText("登录后开启云同步和跨设备恢复");
-    btnSubmit.setText("登录");
-    if (labelPassword != null) labelPassword.setText("密码");
-    etPassword.setHint("输入密码");
+    tvFormTitle.setText("welcome back");
+    tvFormHint.setText("After logging in, enable cloud synchronization and cross-device recovery.");
+    btnSubmit.setText("Log in");
+    if (labelPassword != null) labelPassword.setText("password");
+    etPassword.setHint("Enter password");
 
     rowNickname.setVisibility(View.GONE);
     rowConfirmPassword.setVisibility(View.GONE);
@@ -301,13 +301,13 @@ private void switchToRegister() {
     tabLogin.setTextColor(themed ? 0xFFB0B8C8 : 0xFF4A5568);
     tabLogin.setBackgroundResource(R.drawable.bg_auth_tab_inactive);
 
-    tvFormTitle.setText("创建账户");
-    tvFormHint.setText("注册后开启云同步、好友聊天和跨设备恢复");
-    btnSubmit.setText("创建账户");
-    if (labelPassword != null) labelPassword.setText("密码");
-    if (labelVerifyCode != null) labelVerifyCode.setText("邮箱验证码");
-    etPassword.setHint("输入密码");
-    etConfirmPassword.setHint("再次输入密码");
+    tvFormTitle.setText("Create Account");
+    tvFormHint.setText("After registration, enable cloud synchronization, friend chat and cross-device recovery.");
+    btnSubmit.setText("Create Account");
+    if (labelPassword != null) labelPassword.setText("password");
+    if (labelVerifyCode != null) labelVerifyCode.setText("Email verification code");
+    etPassword.setHint("Enter password");
+    etConfirmPassword.setHint("Enter password again");
 
     rowNickname.setVisibility(View.VISIBLE);
     rowConfirmPassword.setVisibility(View.VISIBLE);
@@ -333,13 +333,13 @@ private void switchToReset() {
     tabRegister.setTextColor(themed ? 0xFFB0B8C8 : 0xFF4A5568);
     tabRegister.setBackgroundResource(R.drawable.bg_auth_tab_inactive);
 
-    tvFormTitle.setText("找回密码");
-    tvFormHint.setText("用注册邮箱接收验证码，设置新的密码");
-    btnSubmit.setText("重置密码");
-    if (labelPassword != null) labelPassword.setText("新密码");
-    if (labelVerifyCode != null) labelVerifyCode.setText("邮箱验证码");
-    etPassword.setHint("输入新密码（至少6位）");
-    etConfirmPassword.setHint("再次输入新密码");
+    tvFormTitle.setText("Retrieve password");
+    tvFormHint.setText("Use your registered email address to receive the verification code and set a new password.");
+    btnSubmit.setText("Reset password");
+    if (labelPassword != null) labelPassword.setText("New Password");
+    if (labelVerifyCode != null) labelVerifyCode.setText("Email verification code");
+    etPassword.setHint("Enter new password (at least 6 digits)");
+    etConfirmPassword.setHint("Enter new password again");
 
     rowNickname.setVisibility(View.GONE);
     rowConfirmPassword.setVisibility(View.VISIBLE);
@@ -362,50 +362,50 @@ private void switchToReset() {
     String verifyCode = etVerifyCode.getText() == null ? "" : etVerifyCode.getText().toString().trim();
 
     if (!isValidEmail(email)) {
-        showStatus("请输入有效的邮箱地址", 0xFFFF9500);
+        showStatus("Please enter a valid email address", 0xFFFF9500);
         return;
     }
     if (password.length() < 6) {
-        showStatus(formMode == MODE_RESET ? "新密码至少需要6位" : "密码至少需要6位", 0xFFFF9500);
+        showStatus(formMode == MODE_RESET ? "The new password needs to be at least 6 characters" : "The password must be at least 6 characters", 0xFFFF9500);
         return;
     }
     if (formMode == MODE_RESET) {
         if (!password.equals(confirmPassword)) {
-            showStatus("两次密码输入不一致", 0xFFFF9500);
+            showStatus("The two password inputs are inconsistent", 0xFFFF9500);
             return;
         }
         if (verifyCode.isEmpty()) {
-            showStatus("请输入邮箱验证码", 0xFFFF9500);
+            showStatus("Please enter the email verification code", 0xFFFF9500);
             return;
         }
         btnSubmit.setEnabled(false);
-        btnSubmit.setText("重置中...");
-        showStatus("正在连接...", 0xFF8E9AB5);
+        btnSubmit.setText("Resetting...");
+        showStatus("Connecting...", 0xFF8E9AB5);
         performResetPassword(email, verifyCode, password);
         return;
     }
     if (formMode == MODE_REGISTER) {
         if (nickname.length() < 2 || nickname.length() > 20) {
-            showStatus("昵称需要2-20个字符", 0xFFFF9500);
+            showStatus("Nickname requires 2-20 characters", 0xFFFF9500);
             return;
         }
         if (nickname.matches(".*[<>{}\\[\\]\\\\/].*")) {
-            showStatus("昵称不能包含特殊字符", 0xFFFF9500);
+            showStatus("Nickname cannot contain special characters", 0xFFFF9500);
             return;
         }
         if (!password.equals(confirmPassword)) {
-            showStatus("两次密码输入不一致", 0xFFFF9500);
+            showStatus("The two password inputs are inconsistent", 0xFFFF9500);
             return;
         }
         if (verifyCode.isEmpty()) {
-            showStatus("请输入邮箱验证码", 0xFFFF9500);
+            showStatus("Please enter the email verification code", 0xFFFF9500);
             return;
         }
     }
 
     btnSubmit.setEnabled(false);
-    btnSubmit.setText(formMode == MODE_REGISTER ? "注册中..." : "登录中...");
-    showStatus("正在连接...", 0xFF8E9AB5);
+    btnSubmit.setText(formMode == MODE_REGISTER ? "Registering..." : "Login...");
+    showStatus("Connecting...", 0xFF8E9AB5);
 
     performAuth(email, password, nickname, verifyCode);
 }
@@ -426,20 +426,20 @@ private void performResetPassword(String email, String code, String newPassword)
             postJson(AUTH_BASE_URL + "/auth/reset_password", body);
 
             runOnUiThread(() -> {
-                Toast.makeText(this, "密码已重置，请用新密码登录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Password has been reset, please log in with new password", Toast.LENGTH_SHORT).show();
                 btnSubmit.setEnabled(true);
                 // 回到登录页并保留邮箱，用户直接输新密码即可
                 switchToLogin();
                 etPassword.setText("");
                 etConfirmPassword.setText("");
                 etVerifyCode.setText("");
-                showStatus("密码已重置，请用新密码登录", 0xFF34D158);
+                showStatus("Password has been reset, please log in with new password", 0xFF34D158);
             });
         } catch (Throwable t) {
             Log.w("YukiHub", "Reset password failed", t);
             runOnUiThread(() -> {
                 btnSubmit.setEnabled(true);
-                btnSubmit.setText("重置密码");
+                btnSubmit.setText("Reset password");
                 showStatus(extractServerError(t), 0xFFFF3B30);
             });
         }
@@ -453,7 +453,7 @@ private void performResetPassword(String email, String code, String newPassword)
  * 这里统一收拢，新增的重置流程直接复用。
  */
 private String extractServerError(Throwable t) {
-    String msg = t != null && t.getMessage() != null ? t.getMessage() : "请检查网络";
+    String msg = t != null && t.getMessage() != null ? t.getMessage() : "Please check the network";
     if (msg.startsWith("HTTP ")) {
         int colonIdx = msg.indexOf(": ");
         if (colonIdx > 0) {
@@ -469,7 +469,7 @@ private String extractServerError(Throwable t) {
 
 private void startKungalQuickLogin() {
     if (KUN_ANDROID_CLIENT_ID.startsWith("TODO_")) {
-        showStatus("NextMoe·未萌 快捷登录还没有配置 client_id，稍后在 AuthActivity.java 中填写", 0xFFFF9500);
+        showStatus("NextMoe·Weimeng Quick login has not yet configured client_id, which will be filled in in AuthActivity.java later.", 0xFFFF9500);
         return;
     }
     try {
@@ -493,19 +493,19 @@ private void startKungalQuickLogin() {
                 .appendQueryParameter("code_challenge_method", "S256")
                 .build();
 
-        showStatus("正在打开 NextMoe·未萌 授权页面...", 0xFF8E9AB5);
+        showStatus("Opening NextMoe·Weimeng authorization page...", 0xFF8E9AB5);
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.addCategory(Intent.CATEGORY_BROWSABLE);
         startActivity(i);
     } catch (Throwable t) {
         Log.w("YukiHub", "start KUN quick login failed", t);
-        showStatus("无法打开 NextMoe·未萌 快捷登录：" + (t.getMessage() == null ? "请检查浏览器" : t.getMessage()), 0xFFFF3B30);
+        showStatus("Unable to open NextMoe·Weimeng Quick login:" + (t.getMessage() == null ? "Please check your browser" : t.getMessage()), 0xFFFF3B30);
     }
 }
 
 private void startHikarinagiQuickLogin() {
     if (HIKARINAGI_ANDROID_CLIENT_ID.startsWith("TODO_")) {
-        showStatus("Hikarinagi 快捷登录还没有配置 client_id，稍后在 AuthActivity.java 中填写", 0xFFFF9500);
+        showStatus("Hikarinagi quick login has not configured client_id, which will be filled in in AuthActivity.java later.", 0xFFFF9500);
         return;
     }
     try {
@@ -532,13 +532,13 @@ private void startHikarinagiQuickLogin() {
                 .appendQueryParameter("code_challenge_method", "S256")
                 .build();
 
-        showStatus("正在打开 Hikarinagi 授权页面...", 0xFF8E9AB5);
+        showStatus("Opening Hikarinagi authorization page...", 0xFF8E9AB5);
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.addCategory(Intent.CATEGORY_BROWSABLE);
         startActivity(i);
     } catch (Throwable t) {
         Log.w("YukiHub", "start Hikarinagi quick login failed", t);
-        showStatus("无法打开 Hikarinagi 快捷登录：" + (t.getMessage() == null ? "请检查浏览器" : t.getMessage()), 0xFFFF3B30);
+        showStatus("Unable to open Hikarinagi quick login:" + (t.getMessage() == null ? "Please check your browser" : t.getMessage()), 0xFFFF3B30);
     }
 }
 
@@ -563,7 +563,7 @@ return android.util.Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches();
  * 测试API连接
  */
 private void testApiConnection() {
-    showStatus("正在测试API...", 0xFF8E9AB5);
+    showStatus("Testing API...", 0xFF8E9AB5);
     
     new Thread(() -> {
         try {
@@ -588,7 +588,7 @@ private void testApiConnection() {
             final String result = "HTTP " + code + "\n" + text;
             runOnUiThread(() -> showStatus(result, code >= 200 && code < 300 ? 0xFF34D158 : 0xFFFF3B30));
         } catch (Throwable t) {
-            runOnUiThread(() -> showStatus("连接失败: " + t.getMessage(), 0xFFFF3B30));
+            runOnUiThread(() -> showStatus("Connection failed:" + t.getMessage(), 0xFFFF3B30));
         }
     }).start();
 }
@@ -615,7 +615,7 @@ private void testApiConnection() {
             saveSession(resp, email, nickname);
 
             runOnUiThread(() -> {
-                Toast.makeText(this, registerMode ? "注册成功" : "登录成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, registerMode ? "Registration successful" : "Login successful", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(this, MainActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 i.putExtra("home_target", "profile");
@@ -626,7 +626,7 @@ private void testApiConnection() {
             Log.w("YukiHub", "Auth failed", t);
             runOnUiThread(() -> {
                 btnSubmit.setEnabled(true);
-                btnSubmit.setText(registerMode ? "创建账户" : "登录");
+                btnSubmit.setText(registerMode ? "Create Account" : "Log in");
                 showStatus(extractServerError(t), 0xFFFF3B30);
             });
         }
@@ -649,30 +649,30 @@ private void onSendCode() {
     // 重复点击的兜底：按钮 disabled 后外观无变化，用户仍可能连点，
     // 这里显式拦掉并复述当前状态，而不是静默丢弃。
     if (sendCodeInFlight) {
-        Toast.makeText(this, "正在发送验证码，请稍候…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Sending verification code, please wait...", Toast.LENGTH_SHORT).show();
         return;
     }
     if (!btnSendCode.isEnabled()) {
-        Toast.makeText(this, "验证码已发送，请等待倒计时结束后重试", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Verification code has been sent, please wait for the countdown to end and try again", Toast.LENGTH_SHORT).show();
         return;
     }
 
     String email = etEmail.getText() == null ? "" : etEmail.getText().toString().trim();
 
     if (!isValidEmail(email)) {
-        showCodeStatus("请先输入有效的邮箱地址", 0xFFFF9500);
-        showStatus("请先输入有效的邮箱地址", 0xFFFF9500);
-        Toast.makeText(this, "请先输入有效的邮箱地址", Toast.LENGTH_SHORT).show();
+        showCodeStatus("Please enter a valid email address first", 0xFFFF9500);
+        showStatus("Please enter a valid email address first", 0xFFFF9500);
+        Toast.makeText(this, "Please enter a valid email address first", Toast.LENGTH_SHORT).show();
         return;
     }
 
     final boolean resetMode = formMode == MODE_RESET;
     sendCodeInFlight = true;
     btnSendCode.setEnabled(false);
-    btnSendCode.setText("发送中…");
-    showCodeStatus("正在发送验证码，最长可能需要 20 秒，请勿重复点击…", 0xFF8E9AB5);
-    showStatus("正在发送邮箱验证码...", 0xFF8E9AB5);
-    Toast.makeText(this, "正在发送验证码，请稍候…", Toast.LENGTH_SHORT).show();
+    btnSendCode.setText("Sending…");
+    showCodeStatus("Verification code is being sent, it may take up to 20 seconds, please do not click repeatedly...", 0xFF8E9AB5);
+    showStatus("Sending email verification code...", 0xFF8E9AB5);
+    Toast.makeText(this, "Sending verification code, please wait...", Toast.LENGTH_SHORT).show();
 
     new Thread(() -> {
         try {
@@ -688,8 +688,8 @@ private void onSendCode() {
                 // 找回密码时服务端对未注册邮箱也返回成功（防邮箱枚举），
                 // 所以这里的文案不能断言「已发送」。
                 String msg = resetMode
-                        ? "若该邮箱已注册，验证码已发送，请查收"
-                        : "验证码已发送至邮箱，请查收";
+                        ? "If the email address has been registered and the verification code has been sent, please check it."
+                        : "The verification code has been sent to your email, please check it";
                 showCodeStatus(msg, 0xFF34D158);
                 showStatus(msg, 0xFF34D158);
                 Toast.makeText(AuthActivity.this, msg, Toast.LENGTH_LONG).show();
@@ -705,7 +705,7 @@ private void onSendCode() {
                     // 此时验证码通常已入库并发出，若放开按钮让用户重试，
                     // 只会白白消耗每日额度、并让用户收到多封邮件。
                     // 因此按「已发送」处理，同样启动倒计时。
-                    String msg = "服务器响应较慢，验证码可能已发出，请先查收邮箱";
+                    String msg = "The server response is slow. The verification code may have been sent. Please check your email first.";
                     showCodeStatus(msg, 0xFFFF9500);
                     showStatus(msg, 0xFFFF9500);
                     Toast.makeText(AuthActivity.this, msg, Toast.LENGTH_LONG).show();
@@ -713,7 +713,7 @@ private void onSendCode() {
                     return;
                 }
                 btnSendCode.setEnabled(true);
-                btnSendCode.setText("发送验证码");
+                btnSendCode.setText("Send verification code");
                 String msg = extractServerError(t);
                 showCodeStatus(msg, 0xFFFF3B30);
                 showStatus(msg, 0xFFFF3B30);
@@ -732,12 +732,12 @@ private void startSendCodeCountdown() {
     sendCodeTimer = new android.os.CountDownTimer(60000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            btnSendCode.setText("重发 " + (millisUntilFinished / 1000) + "s");
+            btnSendCode.setText("Resend" + (millisUntilFinished / 1000) + "s");
         }
         @Override
         public void onFinish() {
             btnSendCode.setEnabled(true);
-            btnSendCode.setText("发送验证码");
+            btnSendCode.setText("Send verification code");
         }
     }.start();
 }
@@ -768,7 +768,7 @@ private void showCodeStatus(String msg, int color) {
         int code = c.getResponseCode();
         String text = readSmallText(code >= 200 && code < 300 ? c.getInputStream() : c.getErrorStream());
         if (text != null && text.trim().startsWith("<")) {
-            throw new RuntimeException("服务器返回了HTML页面，可能是免费主机防护页/缓存页，请稍后重试");
+            throw new RuntimeException("The server returned an HTML page, which may be a free host protection page/cache page. Please try again later.");
         }
         if (code < 200 || code >= 300) throw new RuntimeException("HTTP " + code + ": " + text);
         return text != null && !text.trim().isEmpty() ? new JSONObject(text) : new JSONObject();
@@ -784,7 +784,7 @@ private void showCodeStatus(String msg, int color) {
         String email = user != null ? firstString(user, "email") : firstString(resp, "email");
         String avatar = user != null ? firstString(user, "avatarUrl", "avatar_url", "avatar") : firstString(resp, "avatarUrl", "avatar_url", "avatar");
 
-        if (access == null || access.isEmpty()) throw new RuntimeException("服务器未返回令牌");
+        if (access == null || access.isEmpty()) throw new RuntimeException("Server did not return token");
         if (nickname == null || nickname.isEmpty()) nickname = nicknameFallback;
         if (email == null || email.isEmpty()) email = emailFallback;
 
@@ -821,7 +821,7 @@ private void showCodeStatus(String msg, int color) {
         // 与 getJson 保持一致：免费主机的防护页/缓存页会返回 HTML，
         // 直接丢给 JSONObject 会抛出难以理解的解析异常。
         if (text != null && text.trim().startsWith("<")) {
-            throw new RuntimeException("服务器返回了HTML页面，可能是免费主机防护页/缓存页，请稍后重试");
+            throw new RuntimeException("The server returned an HTML page, which may be a free host protection page/cache page. Please try again later.");
         }
         if (code < 200 || code >= 300) throw new RuntimeException("HTTP " + code + ": " + text);
         return text != null && !text.trim().isEmpty() ? new JSONObject(text) : new JSONObject();

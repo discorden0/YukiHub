@@ -173,7 +173,7 @@ public class GameScanner {
     private static boolean addDesktopResult(List<ScanResult> results, Set<String> seenUris, String title, String resultUri, String launchTarget, String coverUri) {
         if (results == null || resultUri == null || !markSeen(seenUris, resultUri)) return false;
         results.add(new ScanResult(
-                title == null || title.trim().isEmpty() ? "未命名游戏" : title,
+                title == null || title.trim().isEmpty() ? "Unnamed game" : title,
                 resultUri,
                 com.yuki.yukihub.model.EngineType.WINLATOR,
                 90,
@@ -196,7 +196,7 @@ public class GameScanner {
         }
         
         results.add(new ScanResult(
-                title == null || title.trim().isEmpty() ? "未命名PSP游戏" : title,
+                title == null || title.trim().isEmpty() ? "Unnamed PSP game" : title,
                 uri,
                 com.yuki.yukihub.model.EngineType.PSP,
                 95,
@@ -259,7 +259,7 @@ public class GameScanner {
     private static boolean addPspFileResultWithCover(List<ScanResult> results, Set<String> seenUris, String title, String resultUri, String launchTarget, String coverUri) {
         if (results == null || resultUri == null || !markSeen(seenUris, resultUri)) return false;
         results.add(new ScanResult(
-                title == null || title.trim().isEmpty() ? "未命名PSP游戏" : title,
+                title == null || title.trim().isEmpty() ? "Unnamed PSP game" : title,
                 resultUri,
                 com.yuki.yukihub.model.EngineType.PSP,
                 95,
@@ -303,7 +303,7 @@ public class GameScanner {
         String lower = name.toLowerCase(Locale.ROOT);
         if (lower.equals("cover.jpg") || lower.equals("cover.png") || lower.equals("cover.webp")) return 100;
         if (lower.equals("folder.jpg") || lower.equals("folder.png") || lower.equals("folder.webp")) return 95;
-        if (lower.contains("cover") || lower.contains("folder") || lower.contains("封面")) return 80;
+        if (lower.contains("cover") || lower.contains("folder") || lower.contains("Cover")) return 80;
         if (lower.contains("poster") || lower.contains("package") || lower.contains("main")) return 60;
         return 10;
     }
@@ -319,10 +319,10 @@ public class GameScanner {
     private static String safeName(DocumentFile file) {
         try {
             String name = file == null ? null : file.getName();
-            return name == null || name.trim().isEmpty() ? "未命名游戏" : name;
+            return name == null || name.trim().isEmpty() ? "Unnamed game" : name;
         } catch (Throwable t) {
             Log.w(TAG, "safeName failed uri=" + safeUri(file), t);
-            return "未命名游戏";
+            return "Unnamed game";
         }
     }
 
@@ -334,7 +334,7 @@ public class GameScanner {
     }
 
     private static String stripDesktopSuffix(String name) {
-        if (name == null) return "未命名游戏";
+        if (name == null) return "Unnamed game";
         return name.toLowerCase(Locale.ROOT).endsWith(".desktop") ? name.substring(0, Math.max(0, name.length() - 8)) : name;
     }
 

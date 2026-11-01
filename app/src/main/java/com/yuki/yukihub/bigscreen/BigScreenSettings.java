@@ -114,7 +114,7 @@ public class BigScreenSettings {
         root.setOnClickListener(v -> { if (isVisible()) { BigScreenSound.open(); hide(); } });
         // M16：右上角"关闭"按钮 —— 仅触摸模式显示（手柄按 Ⓑ 即可）
         closeBtn = new TextView(activity);
-        closeBtn.setText("关闭");
+        closeBtn.setText("Close");
         closeBtn.setTextSize(14f);
         closeBtn.setTextColor(0xFFD5DCF0);
         closeBtn.setPadding(dp(18), dp(10), dp(18), dp(10));
@@ -384,7 +384,7 @@ public class BigScreenSettings {
             }
         }
         if (hintView != null) {
-            hintView.setText("← → 切换分区　↑↓ 选择条目　Ⓐ 修改　Ⓑ 关闭");
+            hintView.setText("← → Switch partition ↑↓ Select entry Ⓐ Modify Ⓑ Close");
         }
         scrollFocusIntoView();
     }

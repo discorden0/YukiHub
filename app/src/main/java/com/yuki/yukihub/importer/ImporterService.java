@@ -53,7 +53,7 @@ public class ImporterService {
         for (ImportGameData g : games) {
             g.exists = existingNames.contains(g.name.toLowerCase());
             g.selected = !g.exists; // 默认：新游戏选中，已存在的不选
-            g.conflictReason = g.exists ? "已存在" : null;
+            g.conflictReason = g.exists ? "Already exists" : null;
         }
     }
 
@@ -109,7 +109,7 @@ public class ImporterService {
             if (listener != null) listener.onProgress(index, total, igd == null ? "" : igd.name);
             if (igd.name == null || igd.name.trim().isEmpty()) {
                 result.failed++;
-                result.failedNames.add("(空名称)");
+                result.failedNames.add("(empty name)");
                 continue;
             }
 
@@ -117,7 +117,7 @@ public class ImporterService {
             Game existingGame = existingByName.get(nameKey);
             if (existingGame != null) {
                 result.skipped++;
-                result.skippedNames.add(igd.name + " (已存在)");
+                result.skippedNames.add(igd.name + "(already exists)");
                 continue;
             }
 

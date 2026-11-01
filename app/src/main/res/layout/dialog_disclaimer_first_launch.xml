@@ -40,7 +40,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="欢迎使用 YukiHub"
+                    android:text="Welcome to YukiHub"
                     android:textColor="@color/yh_text"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="首次启动前，请确认免责声明"
+                    android:text="Before starting for the first time, please confirm the disclaimer"
                     android:textColor="@color/yh_text_muted"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -66,7 +66,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="使用前须知"
+                android:text="Instructions before use"
                 android:textColor="@color/yh_text"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="如果你不同意以上内容，请退出应用。"
+            android:text="If you do not agree with the above, please exit the application."
             android:textColor="#F0A64A"
             android:textSize="12sp" />
 
@@ -94,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="我已阅读并同意免责声明"
+            android:text="I have read and agree to the disclaimer"
             android:textColor="@color/yh_text"
             android:textSize="13sp"
             android:paddingTop="6dp"
@@ -104,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="勾选后方可继续进入主界面。"
+            android:text="After checking, you can continue to enter the main interface."
             android:textColor="@color/yh_text_muted"
             android:textSize="11sp" />
 
@@ -122,7 +122,7 @@
                 android:gravity="center"
                 android:background="@drawable/bg_auth_tab_inactive"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:text="退出"
+                android:text="quit"
                 android:textColor="@color/yh_text_muted"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -137,7 +137,7 @@
                 android:background="@drawable/bg_auth_button_primary"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:alpha="0.45"
-                android:text="继续"
+                android:text="continue"
                 android:textColor="#071221"
                 android:textSize="14sp"
                 android:textStyle="bold" />

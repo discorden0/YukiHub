@@ -46,7 +46,7 @@ public class FileChooserDialog {
     private Mode mode = Mode.FILE;
     private String[] mimeFilters;
     private String[] extFilters;
-    private String title = "选择文件";
+    private String title = "Select file";
     private String startPath;
     private boolean showHidden = false;
     private OnFileSelectedListener listener;
@@ -92,11 +92,11 @@ public class FileChooserDialog {
         String internalPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         File internalDir = new File(internalPath);
         if (internalDir.isDirectory() && internalDir.canRead()) {
-            roots.add(new StorageRoot("内部存储", internalPath));
+            roots.add(new StorageRoot("Internal storage", internalPath));
         }
         File appInternal = context.getFilesDir();
         if (appInternal != null) {
-            roots.add(new StorageRoot("应用内部", appInternal.getAbsolutePath()));
+            roots.add(new StorageRoot("Inside the app", appInternal.getAbsolutePath()));
         }
         return roots;
     }
@@ -161,7 +161,7 @@ public class FileChooserDialog {
         pathEditBar.setPadding(0, dp(4), 0, 0);
 
         etPath = new EditText(context);
-        etPath.setHint("输入路径跳转…");
+        etPath.setHint("Enter path to jump...");
         etPath.setTextColor(C_TEXT);
         etPath.setHintTextColor(C_TEXT_DIM);
         etPath.setTextSize(13);
@@ -170,13 +170,13 @@ public class FileChooserDialog {
         etPath.setPadding(dp(8), dp(4), dp(8), dp(4));
         pathEditBar.addView(etPath, new LinearLayout.LayoutParams(0, -2, 1f));
 
-        Button btnGo = makeSmallButton("跳转");
+        Button btnGo = makeSmallButton("Jump");
         btnGo.setOnClickListener(v -> {
             String p = etPath.getText().toString().trim();
             if (!p.isEmpty()) {
                 File f = new File(p);
                 if (f.isDirectory() && canReadDir(f)) navigateTo(f);
-                else toast("路径不可访问");
+                else toast("Path is not accessible");
             }
         });
         pathEditBar.addView(btnGo, new LinearLayout.LayoutParams(-2, -2));
@@ -233,11 +233,11 @@ public class FileChooserDialog {
         bottomBar.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
         bottomBar.setPadding(0, dp(6), 0, 0);
 
-        Button btnCancel = makeSmallButton("取消");
+        Button btnCancel = makeSmallButton("Cancel");
         btnCancel.setTextColor(C_TEXT_MUTED);
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
-        Button btnConfirm = makeSmallButton(mode == Mode.DIRECTORY ? "选择此目录" : "确定");
+        Button btnConfirm = makeSmallButton(mode == Mode.DIRECTORY ? "Select this directory" : "OK");
         btnConfirm.setTextColor(C_ACCENT);
         btnConfirm.setOnClickListener(v -> {
             if (mode != Mode.FILE && currentDir != null) onFileSelected(currentDir);
@@ -298,7 +298,7 @@ public class FileChooserDialog {
         browsingRoots = true;
         currentDir = null;
         backStack.clear();
-        tvCurrentPath.setText("选择存储位置");
+        tvCurrentPath.setText("Select storage location");
 
         List<FileEntry> entries = new ArrayList<>();
         for (StorageRoot r : detectStorageRoots()) {
@@ -306,12 +306,12 @@ public class FileChooserDialog {
         }
 
         // SD 卡 → 原生 SAF（始终可见）
-        entries.add(new FileEntry(RootType.SAF, "SD卡 / 其它存储 (系统授权访问)", null));
+        entries.add(new FileEntry(RootType.SAF, "SD card / other storage (system authorized access)", null));
 
         // Android/data
         File adDir = new File(Environment.getExternalStorageDirectory(), "Android/data");
         if (adDir.isDirectory() && adDir.listFiles() == null) {
-            entries.add(new FileEntry(RootType.INTERNAL, "Android/data (需要所有文件访问权限)", adDir));
+            entries.add(new FileEntry(RootType.INTERNAL, "Android/data (requires all file access)", adDir));
         }
 
         adapter.setData(entries);
@@ -324,9 +324,9 @@ public class FileChooserDialog {
     }
 
     private void navigateTo(File dir) {
-        if (dir == null || !dir.isDirectory()) { toast("该路径不存在"); return; }
+        if (dir == null || !dir.isDirectory()) { toast("The path does not exist"); return; }
         if (!dir.canRead() || dir.listFiles() == null) {
-            toast("此目录受系统限制");
+            toast("This directory is subject to system restrictions");
             promptAllFilesAccess();
             return;
         }
@@ -340,7 +340,7 @@ public class FileChooserDialog {
 
     private void promptAllFilesAccess() {
         if (Build.VERSION.SDK_INT >= 30 && !Environment.isExternalStorageManager()) {
-            toast("请授予「所有文件访问权限」");
+            toast("Please grant \"All file access\"");
             try {
                 context.startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                         .setData(Uri.parse("package:" + context.getPackageName())));
@@ -441,10 +441,10 @@ public class FileChooserDialog {
             switch (type) {
                 case UP:
                     this.isUp = true; this.isDirectory = true; this.isSafEntry = false;
-                    this.name = ".."; this.detail = "返回上级"; break;
+                    this.name = ".."; this.detail = "Return to previous level"; break;
                 case SAF:
                     this.isUp = false; this.isDirectory = true; this.isSafEntry = true;
-                    this.name = label; this.detail = "跳转系统文件选择器"; break;
+                    this.name = label; this.detail = "Jump to system file selector"; break;
                 case INTERNAL:
                     this.isUp = false; this.isDirectory = true; this.isSafEntry = false;
                     this.name = label;
@@ -462,7 +462,7 @@ public class FileChooserDialog {
 
         private String childrenCount(File d) {
             File[] c = d.listFiles();
-            return (c != null ? c.length : 0) + " 项";
+            return (c != null ? c.length : 0) + "Item";
         }
 
         private String fmtSize(long b) {

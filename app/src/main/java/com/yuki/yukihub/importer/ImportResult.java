@@ -13,7 +13,7 @@ public class ImportResult {
 
     @Override
     public String toString() {
-        return "成功 " + success + "，跳过 " + skipped + "，失败 " + failed
-                + (sessionsImported > 0 ? "，游玩记录 " + sessionsImported : "");
+        return "成功 " + success + ",jump over" + skipped + ",fail" + failed
+                + (sessionsImported > 0 ? ", play records" + sessionsImported : "");
     }
 }

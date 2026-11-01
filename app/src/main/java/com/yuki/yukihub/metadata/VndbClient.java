@@ -124,7 +124,7 @@ public class VndbClient {
         m.description = stripVndbMarkup(o.optString("description", ""));
         m.released = o.optString("released", "");
         int rating = o.optInt("rating", 0);
-        if (rating > 0) m.ratingText = String.format(java.util.Locale.US, "评分：%.1f/10", rating / 10.0f);
+        if (rating > 0) m.ratingText = String.format(java.util.Locale.US, "Rating: %.1f/10", rating / 10.0f);
         m.lengthMinutes = o.optInt("length_minutes", 0);
         m.lengthVotes = o.optInt("length_votes", 0);
         m.lengthText = formatLengthText(o.optInt("length", 0), m.lengthMinutes, m.lengthVotes);
@@ -203,21 +203,21 @@ public class VndbClient {
     private static String formatLengthText(int length, int minutes, int votes) {
         String label;
         switch (length) {
-            case 1: label = "很短"; break;
+            case 1: label = "Very short"; break;
             case 2: label = "短"; break;
-            case 3: label = "中等"; break;
+            case 3: label = "Medium"; break;
             case 4: label = "长"; break;
-            case 5: label = "很长"; break;
+            case 5: label = "Very long"; break;
             default: label = ""; break;
         }
         String hoursText = "";
         if (minutes > 0) {
-            hoursText = String.format(java.util.Locale.US, "%.1f小时", minutes / 60.0f);
+            hoursText = String.format(java.util.Locale.US, "%.1f hours", minutes / 60.0f);
         }
-        String voteText = votes > 0 ? "，" + votes + "人统计" : "";
-        if (!label.isEmpty() && !hoursText.isEmpty()) return "游玩时长：" + label + "（" + hoursText + voteText + "）";
-        if (!hoursText.isEmpty()) return "游玩时长：" + hoursText + voteText;
-        if (!label.isEmpty()) return "游玩时长：" + label;
+        String voteText = votes > 0 ? "，" + votes + "People statistics" : "";
+        if (!label.isEmpty() && !hoursText.isEmpty()) return "Play time:" + label + "（" + hoursText + voteText + "）";
+        if (!hoursText.isEmpty()) return "Play time:" + hoursText + voteText;
+        if (!label.isEmpty()) return "Play time:" + label;
         return "";
     }
 

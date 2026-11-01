@@ -181,7 +181,7 @@ public final class BigScreenLauncher {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             act.startActivity(intent);
         } catch (Throwable t) {
-            Toast.makeText(act, "启动失败：未找到可用的启动方式", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, "Startup failed: No available startup method found", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -238,7 +238,7 @@ public final class BigScreenLauncher {
     /** 真正启动：分支与游戏库 launchGameInternal 一一对应 */
     private static boolean startGame(Activity act, Game game, String pkg, BigScreenPrefs prefs) {
         String target = game.launchTarget;
-        if (game.engine == EngineType.ARTEMIS || game.engine == EngineType.TYRANO || game.engine == EngineType.FVP) { target = "[游戏目录]"; }
+        if (game.engine == EngineType.ARTEMIS || game.engine == EngineType.TYRANO || game.engine == EngineType.FVP) { target = "[Game Catalog]"; }
         if (game.engine == EngineType.GAMEHUB) { target = game.title; }
 
         if (pkg.startsWith("internal.krkr") || pkg.equals("org.tvp.kirikiri2.internal")) {

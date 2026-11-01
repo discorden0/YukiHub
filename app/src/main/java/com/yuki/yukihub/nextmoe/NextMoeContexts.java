@@ -11,7 +11,7 @@ final class NextMoeContexts {
     static void set(Context c) { ctx = c.getApplicationContext(); }
 
     static Context app() {
-        if (ctx == null) throw new IllegalStateException("NextMoeContexts 未初始化");
+        if (ctx == null) throw new IllegalStateException("NextMoeContexts not initialized");
         return ctx;
     }
 }

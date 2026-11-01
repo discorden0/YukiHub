@@ -134,14 +134,14 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
 
     public void sync(SyncListener listener) {
         if (!isConfigured()) {
-            if (listener != null) listener.onError("WebDAV 未配置");
+            if (listener != null) listener.onError("WebDAV not configured");
             return;
         }
         AppExecutors.runOnSingle(() -> {
             try {
                 if (listener != null) listener.onSyncStart();
                 WebDavClient c = getClient();
-                if (c == null) throw new Exception("WebDAV 客户端初始化失败");
+                if (c == null) throw new Exception("WebDAV client initialization failed");
                 // 坚果云根目录通常不可直接创建同步文件夹；要求用户先在坚果云创建 YukiHub 文件夹。
 
                 // 同步前：如果用户已登录且有本地头像（file:// 开头），先上传到服务器
@@ -160,7 +160,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     byte[] remoteBytes = c.readFile(REMOTE_FILE);
                     remoteText = decompressIfGzip(remoteBytes);
                     remote = new JSONObject(remoteText);
-                    if (!"YukiHub".equals(remote.optString("app", ""))) throw new Exception("云端文件不是有效的 YukiHub 同步文件");
+                    if (!"YukiHub".equals(remote.optString("app", ""))) throw new Exception("The cloud file is not a valid YukiHub sync file");
                     remoteHash = sha256(remoteText);
                 }
 
@@ -173,7 +173,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     c.writeFile(REMOTE_FILE, compressGzip(localText));
                     markSynced(localHash);
                     result.uploaded = true;
-                    if (listener != null) listener.onProgress("首次上传", true);
+                    if (listener != null) listener.onProgress("First upload", true);
                     if (listener != null) listener.onSyncComplete(result);
                     return;
                 }
@@ -186,7 +186,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     importSnapshot(remote);
                     markSynced(remoteHash);
                     result.downloaded = true;
-                    if (listener != null) listener.onProgress("首次下载云端数据", true);
+                    if (listener != null) listener.onProgress("Download cloud data for the first time", true);
                     if (listener != null) listener.onSyncComplete(result);
                     return;
                 }
@@ -194,7 +194,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                 if (!localChanged && !remoteChanged) {
                     result.noChanges = true;
                     markSynced(localHash);
-                    if (listener != null) listener.onProgress("数据检查", false);
+                    if (listener != null) listener.onProgress("Data check", false);
                     if (listener != null) listener.onSyncComplete(result);
                     return;
                 }
@@ -202,7 +202,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     c.writeFile(REMOTE_FILE, compressGzip(localText));
                     markSynced(localHash);
                     result.uploaded = true;
-                    if (listener != null) listener.onProgress("上传本地修改", true);
+                    if (listener != null) listener.onProgress("Upload local modifications", true);
                     if (listener != null) listener.onSyncComplete(result);
                     return;
                 }
@@ -210,7 +210,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     importSnapshot(remote);
                     markSynced(remoteHash);
                     result.downloaded = true;
-                    if (listener != null) listener.onProgress("下载云端修改", true);
+                    if (listener != null) listener.onProgress("Download cloud modifications", true);
                     if (listener != null) listener.onSyncComplete(result);
                     return;
                 }
@@ -241,7 +241,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                 if (listener != null) listener.onSyncComplete(result);
             } catch (Throwable t) {
                 Log.e(TAG, "sync failed", t);
-                if (listener != null) listener.onError(t.getMessage() == null ? "未知错误" : t.getMessage());
+                if (listener != null) listener.onError(t.getMessage() == null ? "Unknown error" : t.getMessage());
             }
         });
     }
@@ -324,7 +324,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
 
     private void importSnapshot(JSONObject root) throws Exception {
         if (root == null) return;
-        if (!"YukiHub".equals(root.optString("app", ""))) throw new Exception("不是有效的 YukiHub 同步文件");
+        if (!"YukiHub".equals(root.optString("app", ""))) throw new Exception("Not a valid YukiHub sync file");
         JSONObject profile = root.optJSONObject("profile");
         if (profile != null) {
             String incomingAvatar = profile.optString("avatar_uri", "");
@@ -448,13 +448,13 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
     public void syncToServer(SyncListener listener) {
         // 冷却检查
         if (System.currentTimeMillis() - lastServerSyncTime < SYNC_COOLDOWN_MS) {
-            if (listener != null) listener.onError("同步冷却中，请稍后再试（60秒内仅限一次）");
+            if (listener != null) listener.onError("Synchronous cooling is in progress, please try again later (only once within 60 seconds)");
             return;
         }
 
         String accessToken = appPrefs.getString(KEY_AUTH_ACCESS_TOKEN, "");
         if (accessToken == null || accessToken.trim().isEmpty()) {
-            if (listener != null) listener.onError("未登录，无法同步");
+            if (listener != null) listener.onError("Not logged in, unable to sync");
             return;
         }
 
@@ -479,16 +479,16 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                 String remoteHash = "";
                 boolean remoteExists = false;
                 try {
-                    if (listener != null) listener.onProgress("检查云端数据", false);
+                    if (listener != null) listener.onProgress("Check cloud data", false);
                     byte[] remoteBytes = httpGetBinary(AUTH_BASE_URL + "/sync/download", accessToken);
                     remoteText = decompressIfGzip(remoteBytes);
                     remote = new JSONObject(remoteText);
-                    if (!"YukiHub".equals(remote.optString("app", ""))) throw new Exception("云端数据格式无效");
+                    if (!"YukiHub".equals(remote.optString("app", ""))) throw new Exception("The cloud data format is invalid");
                     remoteHash = sha256(remoteText);
                     remoteExists = true;
                 } catch (Exception downloadEx) {
                     // 404 = 首次上传，没有云端数据，正常
-                    if (listener != null) listener.onProgress("云端无数据，准备首次上传", true);
+                    if (listener != null) listener.onProgress("No data in the cloud, ready to upload for the first time", true);
                 }
 
                 SyncResult result = new SyncResult();
@@ -497,12 +497,12 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
 
                 // 云端没有数据 → 首次上传
                 if (!remoteExists) {
-                    if (listener != null) listener.onProgress("首次上传", true);
+                    if (listener != null) listener.onProgress("First upload", true);
                     byte[] compressed = compressGzip(localText);
                     String uploadResp = httpPostBinary(AUTH_BASE_URL + "/sync/upload", accessToken, compressed);
                     JSONObject uploadJson = new JSONObject(uploadResp);
                     if (!uploadJson.optBoolean("success", false)) {
-                        throw new Exception("服务器上传失败: " + uploadJson.optString("error", "未知错误"));
+                        throw new Exception("Server upload failed:" + uploadJson.optString("error", "Unknown error"));
                     }
                     markServerSynced(localHash);
                     result.uploaded = true;
@@ -517,7 +517,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     markServerSynced(remoteHash);
                     result.downloaded = true;
                     result.compressedBytes = result.remoteBytes; // 下载场景用远端大小
-                    if (listener != null) listener.onProgress("首次下载云端数据", true);
+                    if (listener != null) listener.onProgress("Download cloud data for the first time", true);
                     if (listener != null) listener.onSyncComplete(result);
                     return;
                 }
@@ -530,19 +530,19 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     result.noChanges = true;
                     markServerSynced(localHash);
                     result.compressedBytes = compressGzip(localText).length;
-                    if (listener != null) listener.onProgress("数据已是最新", false);
+                    if (listener != null) listener.onProgress("The data is up to date", false);
                     if (listener != null) listener.onSyncComplete(result);
                     return;
                 }
 
                 // 本地变了，云端没变 → 上传
                 if (localChanged && !remoteChanged) {
-                    if (listener != null) listener.onProgress("上传本地修改", true);
+                    if (listener != null) listener.onProgress("Upload local modifications", true);
                     byte[] compressed = compressGzip(localText);
                     String uploadResp = httpPostBinary(AUTH_BASE_URL + "/sync/upload", accessToken, compressed);
                     JSONObject uploadJson = new JSONObject(uploadResp);
                     if (!uploadJson.optBoolean("success", false)) {
-                        throw new Exception("服务器上传失败: " + uploadJson.optString("error", "未知错误"));
+                        throw new Exception("Server upload failed:" + uploadJson.optString("error", "Unknown error"));
                     }
                     markServerSynced(localHash);
                     result.uploaded = true;
@@ -557,7 +557,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     markServerSynced(remoteHash);
                     result.downloaded = true;
                     result.compressedBytes = result.remoteBytes;
-                    if (listener != null) listener.onProgress("下载云端修改", true);
+                    if (listener != null) listener.onProgress("Download cloud modifications", true);
                     if (listener != null) listener.onSyncComplete(result);
                     return;
                 }
@@ -580,14 +580,14 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     String uploadResp = httpPostBinary(AUTH_BASE_URL + "/sync/upload", accessToken, compressed);
                     JSONObject uploadJson = new JSONObject(uploadResp);
                     if (!uploadJson.optBoolean("success", false)) {
-                        throw new Exception("服务器上传失败: " + uploadJson.optString("error", "未知错误"));
+                        throw new Exception("Server upload failed:" + uploadJson.optString("error", "Unknown error"));
                     }
                     markServerSynced(localHash);
                     result.uploaded = true;
                     result.compressedBytes = compressed.length;
                 } else {
                     // 智能合并
-                    if (listener != null) listener.onProgress("合并云端数据", true);
+                    if (listener != null) listener.onProgress("Merge cloud data", true);
                     JSONObject merged = mergeSnapshots(local, remote);
                     String mergedText = merged.toString();
                     importSnapshot(new JSONObject(mergedText));
@@ -595,7 +595,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
                     String uploadResp = httpPostBinary(AUTH_BASE_URL + "/sync/upload", accessToken, mergedCompressed);
                     JSONObject uploadJson = new JSONObject(uploadResp);
                     if (!uploadJson.optBoolean("success", false)) {
-                        throw new Exception("服务器上传失败: " + uploadJson.optString("error", "未知错误"));
+                        throw new Exception("Server upload failed:" + uploadJson.optString("error", "Unknown error"));
                     }
                     markServerSynced(sha256(mergedText));
                     result.merged = true;
@@ -605,7 +605,7 @@ private static final String KEY_BACKGROUND_DIM_ENABLED = "background_dim_enabled
 
             } catch (Throwable t) {
                 Log.e(TAG, "syncToServer failed", t);
-                if (listener != null) listener.onError(t.getMessage() == null ? "同步失败" : t.getMessage());
+                if (listener != null) listener.onError(t.getMessage() == null ? "Sync failed" : t.getMessage());
             }
         });
     }

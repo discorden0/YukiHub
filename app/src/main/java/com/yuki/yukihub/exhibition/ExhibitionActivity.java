@@ -146,7 +146,7 @@ public class ExhibitionActivity extends AppCompatActivity {
             if (files != null) {
                 int n = 0;
                 for (File f : files) { if (f.delete()) n++; }
-                Log.i(TAG, "媒体缓存已清空: " + n + " 个文件");
+                Log.i(TAG, "Media cache cleared:" + n + "Files");
             }
         } catch (Throwable ignored) {}
     }
@@ -233,9 +233,9 @@ public class ExhibitionActivity extends AppCompatActivity {
             WindowManager.LayoutParams lp = getWindow().getAttributes();
             lp.preferredRefreshRate = best;
             getWindow().setAttributes(lp);
-            Log.i(TAG, "申请高刷新率: " + best + "Hz");
+            Log.i(TAG, "Apply for high refresh rate:" + best + "Hz");
         } catch (Throwable t) {
-            Log.w(TAG, "申请高刷新率失败（不影响使用）", t);
+            Log.w(TAG, "Failed to apply for high refresh rate (does not affect use)", t);
         }
     }
 
@@ -287,7 +287,7 @@ public class ExhibitionActivity extends AppCompatActivity {
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 if (request != null && request.isForMainFrame()) {
                     String desc = (error == null) ? "" : String.valueOf(error.getDescription());
-                    Log.w(TAG, "主文档加载失败: " + desc);
+                    Log.w(TAG, "Main document failed to load:" + desc);
                     webView.loadDataWithBaseURL(null, loadErrorHtml(desc), "text/html", "utf-8", null);
                 }
             }
@@ -336,7 +336,7 @@ public class ExhibitionActivity extends AppCompatActivity {
             // M4 落点：可在此先查缓存目录，未命中再回退 assets
             if ("index.html".equals(rel)) {
                 // 关键诊断点：这行出现就说明虚拟 origin 拦截生效了
-                Log.i(TAG, "拦截生效，主文档: " + path);
+                Log.i(TAG, "Interception takes effect, main document:" + path);
             }
             InputStream is = getAssets().open(ASSET_ROOT + rel);
             return new WebResourceResponse(
@@ -346,8 +346,8 @@ public class ExhibitionActivity extends AppCompatActivity {
                     noCacheHeaders(),
                     is);
         } catch (IOException e) {
-            Log.w(TAG, "资产缺失: " + rel);
-            return plainText(404, "资产缺失：" + rel);
+            Log.w(TAG, "Missing assets:" + rel);
+            return plainText(404, "Missing assets:" + rel);
         }
     }
 
@@ -359,33 +359,33 @@ public class ExhibitionActivity extends AppCompatActivity {
         try {
             id = Long.parseLong(idStr.trim());
         } catch (Throwable t) {
-            return plainText(404, "非法的封面 id");
+            return plainText(404, "Illegal cover id");
         }
 
         String uriStr = null;
         java.util.Map<Long, String> idx = coverIndex;
         if (idx != null) uriStr = idx.get(id);
         if (uriStr == null) uriStr = lookupCoverUri(id);   // 桥接尚未建索引时的兜底
-        if (uriStr == null) return plainText(404, "该游戏没有封面");
+        if (uriStr == null) return plainText(404, "This game has no cover");
 
         InputStream raw = null;
         try {
             raw = getContentResolver().openInputStream(Uri.parse(uriStr));
-            if (raw == null) return plainText(404, "无法打开封面流");
+            if (raw == null) return plainText(404, "Unable to open cover stream");
             PushbackInputStream in = new PushbackInputStream(raw, 12);
             // WebView 需要准确的图片 MIME，否则纹理加载会失败（封面多来自相册，扩展名不可信）
             String mime = sniffImageMime(in);
             if (coverReqCount < 40) {
                 coverReqCount++;
-                Log.i(TAG, "封面请求 #" + coverReqCount + " id=" + id + " mime=" + mime + " uri=" + uriStr);
+                Log.i(TAG, "Cover Request #" + coverReqCount + " id=" + id + " mime=" + mime + " uri=" + uriStr);
             }
             Map<String, String> h = new HashMap<>();
             h.put("Cache-Control", "max-age=86400");
             return new WebResourceResponse(mime, null, 200, "OK", h, in);
         } catch (Throwable t) {
-            Log.w(TAG, "封面读取失败 id=" + id + " uri=" + uriStr + " : " + t.getMessage());
+            Log.w(TAG, "Cover reading failed id=" + id + " uri=" + uriStr + " : " + t.getMessage());
             try { if (raw != null) raw.close(); } catch (Throwable ignored) { }
-            return plainText(404, "封面读取失败");
+            return plainText(404, "Cover read failed");
         }
     }
 
@@ -434,7 +434,7 @@ public class ExhibitionActivity extends AppCompatActivity {
         try {
             id = Long.parseLong(idStr.trim());
         } catch (Throwable t) {
-            return plainText(404, "非法 ID");
+            return plainText(404, "Illegal ID");
         }
 
         String uriStr = null;
@@ -448,21 +448,21 @@ public class ExhibitionActivity extends AppCompatActivity {
             uriStr = lookupMusicUri(id, false);
             if (uriStr == null) uriStr = lookupMusicUri(id, true); // 再试试当作 track
         }
-        if (uriStr == null) return plainText(404, "未找到封面");
+        if (uriStr == null) return plainText(404, "Cover not found");
 
         InputStream raw = null;
         try {
             raw = getContentResolver().openInputStream(Uri.parse(uriStr));
-            if (raw == null) return plainText(404, "无法打开封面流");
+            if (raw == null) return plainText(404, "Unable to open cover stream");
             PushbackInputStream in = new PushbackInputStream(raw, 12);
             String mime = sniffImageMime(in);
             Map<String, String> h = new HashMap<>();
             h.put("Cache-Control", "max-age=86400");
             return new WebResourceResponse(mime, null, 200, "OK", h, in);
         } catch (Throwable t) {
-            Log.w(TAG, "音乐封面读取失败 id=" + id + " uri=" + uriStr + " : " + t.getMessage());
+            Log.w(TAG, "Failed to read music cover id=" + id + " uri=" + uriStr + " : " + t.getMessage());
             try { if (raw != null) raw.close(); } catch (Throwable ignored) { }
-            return plainText(404, "封面读取失败");
+            return plainText(404, "Cover read failed");
         }
     }
 
@@ -482,7 +482,7 @@ public class ExhibitionActivity extends AppCompatActivity {
         try {
             id = Long.parseLong(idStr.trim());
         } catch (Throwable t) {
-            return plainText(404, "非法 ID");
+            return plainText(404, "Illegal ID");
         }
 
         // 先查索引
@@ -495,7 +495,7 @@ public class ExhibitionActivity extends AppCompatActivity {
         if (uriStr == null) {
             uriStr = lookupMusicUri(id, true); // 兜底查库
         }
-        if (uriStr == null) return plainText(404, "未找到媒体");
+        if (uriStr == null) return plainText(404, "Media not found");
         Uri uri = Uri.parse(uriStr);
 
         // ★★★ 坑 19（真机实录）：SAF 管道（AFD / openInputStream）的流定位
@@ -506,8 +506,8 @@ public class ExhibitionActivity extends AppCompatActivity {
         File local = mediaCacheFile(id, isAudio);
         if (local == null || !local.isFile() || local.length() <= 0) {
             if (!copyToCache(id, isAudio, uri)) {
-                Log.w(TAG, "缓存复制失败 id=" + id + " uri=" + uriStr);
-                return plainText(404, "媒体缓存失败");
+                Log.w(TAG, "Cache copy failed id=" + id + " uri=" + uriStr);
+                return plainText(404, "Media cache failed");
             }
             local = mediaCacheFile(id, isAudio);
         }
@@ -594,16 +594,16 @@ public class ExhibitionActivity extends AppCompatActivity {
             //   本设备反复证明可行的路径。本地缓存文件顺序读极快，全量秒级缓冲。
             if (musicReqCount < 12) {
                 musicReqCount++;
-                Log.i(TAG, "音乐流 #" + musicReqCount + " id=" + id + " mime=" + mime + " total=" + total
-                        + " range要求=" + (hasRange ? (start + "-" + end) + "(忽略)" : "-")
+                Log.i(TAG, "Music streaming #" + musicReqCount + " id=" + id + " mime=" + mime + " total=" + total
+                        + "Range requirement =" + (hasRange ? (start + "-" + end) + "(neglect)" : "-")
                         + " src=" + (local != null && local.isFile() ? "cache" : "saf"));
             }
             if (total > 0) h.put("Content-Length", String.valueOf(total));
             return new WebResourceResponse(mime, null, 200, "OK", h, in);
         } catch (Throwable t) {
-            Log.w(TAG, "媒体读取失败 id=" + id + " uri=" + uriStr + " : " + t.getMessage());
+            Log.w(TAG, "Media read failed id=" + id + " uri=" + uriStr + " : " + t.getMessage());
             try { if (in != null) in.close(); } catch (Throwable ignored) {}
-            return plainText(404, "媒体读取失败");
+            return plainText(404, "Media read failed");
         }
     }
 
@@ -642,11 +642,11 @@ public class ExhibitionActivity extends AppCompatActivity {
             }
             dst.flush();
             dst.getFD().sync();
-            Log.i(TAG, "媒体缓存完成 id=" + id + " bytes=" + copied
-                    + " 耗时=" + (android.os.SystemClock.elapsedRealtime() - t0) + "ms");
+            Log.i(TAG, "Media caching completed id=" + id + " bytes=" + copied
+                    + "Time consuming =" + (android.os.SystemClock.elapsedRealtime() - t0) + "ms");
             return copied > 0;
         } catch (Throwable t) {
-            Log.w(TAG, "媒体缓存异常 id=" + id + " : " + t.getMessage());
+            Log.w(TAG, "Media cache exception id=" + id + " : " + t.getMessage());
             return false;
         } finally {
             try { if (src != null) src.close(); } catch (Throwable ignored) {}
@@ -827,7 +827,7 @@ public class ExhibitionActivity extends AppCompatActivity {
             }
         } catch (Throwable t) {
             // 沉浸式失败不影响展厅使用，降级为带系统栏显示
-            Log.w(TAG, "沉浸式设置失败（已降级）: " + t.getMessage());
+            Log.w(TAG, "Immersive setup failed (downgraded):" + t.getMessage());
         }
     }
 
@@ -894,11 +894,11 @@ public class ExhibitionActivity extends AppCompatActivity {
     private static String onlinePlaceholderHtml() {
         return "<!DOCTYPE html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\">" + baseCss() + "</head><body>"
                 + "<div class=\"wrap\">"
-                + "<h2>在线多人展厅正在建设中</h2>"
-                + "<p>这里是<b>全站博物馆 + 玩家交流广场</b>，计划在 M2 上线（公共展厅数据、"
-                + "\"谁玩过这款\"、玩家化身走动）。<br>"
-                + "当前是 M0，先验证<b>离线个人展厅</b>的渲染性能与走动手感。</p>"
-                + "<p>目标地址：<code>" + ONLINE_URL + "</code></p>"
+                + "<h2>The online multi-person exhibition hall is under construction</h2>"
+                + "<p>This is <b>all-site museum + player communication square</b>, planned to be launched on M2 (public exhibition hall data,"
+                + "\"Who has played this?\", player avatar walking around). <br>"
+                + "Currently it is M0, first verify the rendering performance and walking feel of <b> offline personal exhibition hall </b>. </p>"
+                + "<p> Destination address: <code>" + ONLINE_URL + "</code></p>"
                 + "</div></body></html>";
     }
 
@@ -906,7 +906,7 @@ public class ExhibitionActivity extends AppCompatActivity {
         return "<!DOCTYPE html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\">" + baseCss() + "</head><body>"
                 + "<div class=\"wrap\">"
                 + "<h2>展厅页面加载失败</h2>"
-                + "<p>两种可能：<br>"
+                + "<p>Two possibilities: <br>"
                 + "① APK 里缺少资产 —— 确认 <code>assets/exhibition/</code> 下有 index.html、exh.js、"
                 + "vendor/three.module.min.js；<br>"
                 + "② 虚拟 origin 拦截未生效 —— 用 <code>adb logcat -s Exhibition</code> 看是否有"

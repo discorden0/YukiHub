@@ -162,7 +162,7 @@ private void showAiReviewDialogImpl() {
     root.setPadding(pad, dp(14), pad, dp(10));
 
     TextView privacy = new TextView(activity);
-    privacy.setText(settings.metadataEnhance ? "只会发送最近 7 天的游戏名、时长、次数、时段分布，以及已缓存的作品标签/开发商等资料；严格防剧透时不发送简介。不发送本地路径、存档路径或账号信息。" : "只会发送最近 7 天的游戏名、时长、次数和时段分布，不发送本地路径、TF/SD 卡路径、存档路径或账号信息。");
+    privacy.setText(settings.metadataEnhance ? "Only the game name, duration, frequency, time period distribution, and cached work tags/developers and other information in the last 7 days will be sent; no introduction will be sent when spoilers are strictly prevented. Do not send local paths, archive paths, or account information." : "Only the game name, duration, times and time period distribution of the last 7 days will be sent, but the local path, TF/SD card path, archive path or account information will not be sent.");
     privacy.setTextColor(getColorCompat(R.color.yh_text_muted));
     privacy.setTextSize(11);
     privacy.setLineSpacing(dp(1), 1.0f);
@@ -179,7 +179,7 @@ private void showAiReviewDialogImpl() {
     root.addView(cardContainer, cardLp);
 
     TextView placeholder = new TextView(activity);
-    placeholder.setText(stats.isEmpty() ? "最近 7 天还没有有效游玩记录。欧尼酱先去玩一会儿，再来接受 AI 周点评审判吧~" : "点击“生成点评”，让「" + AiReviewSettings.personaLabel(settings.personaPreset) + "」检查欧尼酱这周到底有没有认真清坑。\n\n当前接口：" + AiReviewSettings.providerLabel(settings.provider) + " · " + settings.model + " · " + AiReviewSettings.personaLabel(settings.personaPreset) + " · 防剧透" + AiReviewSettings.spoilerLabel(settings.spoilerLevel) + (settings.metadataEnhance ? " · 资料增强" : ""));
+    placeholder.setText(stats.isEmpty() ? "There are no active play records in the last 7 days. Onii-chan, let’s go play for a while and then accept the AI ​​Week review trial~" : "Click \"Generate Review\" and let \"" + AiReviewSettings.personaLabel(settings.personaPreset) + "\"Check whether Onii-chan has been serious about clearing the pit this week.\n\nCurrent interface:" + AiReviewSettings.providerLabel(settings.provider) + " · " + settings.model + " · " + AiReviewSettings.personaLabel(settings.personaPreset) + "· Spoiler-proof" + AiReviewSettings.spoilerLabel(settings.spoilerLevel) + (settings.metadataEnhance ? "· Data enhancement" : ""));
     placeholder.setTextColor(getColorCompat(R.color.yh_text_muted));
     placeholder.setTextSize(12);
     placeholder.setLineSpacing(dp(2), 1.0f);
@@ -189,9 +189,9 @@ private void showAiReviewDialogImpl() {
 
     LinearLayout actions = new LinearLayout(activity);
     actions.setOrientation(LinearLayout.HORIZONTAL);
-    Button generate = krButton("生成点评");
-    Button historyBtn = krButton("历史");
-    Button settingsBtn = krButton("AI 设置");
+    Button generate = krButton("Generate review");
+    Button historyBtn = krButton("History");
+    Button settingsBtn = krButton("AI settings");
     generate.setTextColor(getColorCompat(R.color.yh_primary));
     historyBtn.setTextColor(getColorCompat(R.color.yh_primary));
     settingsBtn.setTextColor(getColorCompat(R.color.yh_primary));
@@ -209,9 +209,9 @@ private void showAiReviewDialogImpl() {
     scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
     AlertDialog dialog = new AlertDialog.Builder(activity)
-            .setTitle("AI 周点评")
+            .setTitle("AI Week Review")
             .setView(scroll)
-            .setNegativeButton("关闭", null)
+            .setNegativeButton("Close", null)
             .show();
     styleAlertDialogDark(dialog);
     if (dialog.getWindow() != null) {
@@ -223,19 +223,19 @@ private void showAiReviewDialogImpl() {
     generate.setOnClickListener(v -> {
         AiReviewSettings current = AiReviewSettings.load(activity);
         if (current.apiKey == null || current.apiKey.trim().isEmpty()) {
-            Toast.makeText(activity, "请先在 AI 设置里填写 API Key", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Please fill in the API Key in the AI ​​settings first", Toast.LENGTH_LONG).show();
             showAiReviewSettingsDialog();
             return;
         }
         if (stats.isEmpty()) {
-            Toast.makeText(activity, "最近 7 天暂无有效游玩记录", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "There are no valid play records in the last 7 days", Toast.LENGTH_SHORT).show();
             return;
         }
         generate.setEnabled(false);
-        generate.setText("生成中...");
+        generate.setText("Generating...");
         cardContainer.removeAllViews();
         TextView loading = new TextView(activity);
-        loading.setText("「" + AiReviewSettings.personaLabel(current.personaPreset) + "」正在翻欧尼酱的游玩账本...\n如果模型比较慢，请稍等一下。");
+        loading.setText("「" + AiReviewSettings.personaLabel(current.personaPreset) + "\"Looking through Onii-chan's game ledger...\nIf the model is slow, please wait a moment.");
         loading.setTextColor(getColorCompat(R.color.yh_text_muted));
         loading.setTextSize(12);
         loading.setLineSpacing(dp(2), 1.0f);
@@ -251,7 +251,7 @@ private void showAiReviewDialogImpl() {
                 if (isActivityAlive()) {
                     activity.runOnUiThread(() -> {
                         generate.setEnabled(true);
-                        generate.setText("重新生成");
+                        generate.setText("Regenerate");
                         renderAiReviewResult(cardContainer, result);
                     });
                 }
@@ -260,10 +260,10 @@ private void showAiReviewDialogImpl() {
                 if (isActivityAlive()) {
                     activity.runOnUiThread(() -> {
                         generate.setEnabled(true);
-                        generate.setText("重新生成");
+                        generate.setText("Regenerate");
                         cardContainer.removeAllViews();
                         TextView error = new TextView(activity);
-                        error.setText("AI 点评失败：" + emptyText(t.getMessage(), t.getClass().getSimpleName()) + "\n\n请检查 API Key、Base URL、模型名和网络。DeepSeek 默认 Base URL 是 https://api.deepseek.com/v1");
+                        error.setText("AI review failed:" + emptyText(t.getMessage(), t.getClass().getSimpleName()) + "Please check the API Key, Base URL, Model Name, and Network. DeepSeek's default Base URL is https://api.deepseek.com/v1");
                         error.setTextColor(getColorCompat(R.color.yh_warning));
                         error.setTextSize(12);
                         error.setLineSpacing(dp(2), 1.0f);
@@ -283,13 +283,13 @@ private LinearLayout aiReviewSummaryView(WeeklyPlayStats stats, AiReviewSettings
     box.setBackgroundResource(R.drawable.bg_input);
     box.setPadding(dp(12), dp(10), dp(12), dp(10));
     TextView title = new TextView(activity);
-    title.setText("最近 7 天 · " + TimeFormatUtil.playTime(stats.totalDuration) + " · " + stats.gameCount() + " 款游戏 · " + stats.sessionCount + " 次启动");
+    title.setText("Last 7 days ·" + TimeFormatUtil.playTime(stats.totalDuration) + " · " + stats.gameCount() + "Games ·" + stats.sessionCount + "Startup");
     title.setTextColor(getColorCompat(R.color.yh_text));
     title.setTextSize(14);
     title.setTypeface(null, Typeface.BOLD);
     box.addView(title);
     TextView sub = new TextView(activity);
-    sub.setText("活跃 " + stats.activeDays + " 天 · 玩过 " + stats.completedGameCount + " 款 · 在玩 " + stats.playingGameCount + " 款 · 深夜 " + stats.nightCount + " 次 · " + AiReviewSettings.providerLabel(settings.provider) + "/" + settings.model);
+    sub.setText("Active" + stats.activeDays + "Days · played" + stats.completedGameCount + "Money · playing" + stats.playingGameCount + "Style · Late Night" + stats.nightCount + "Second-rate ·" + AiReviewSettings.providerLabel(settings.provider) + "/" + settings.model);
     sub.setTextColor(getColorCompat(R.color.yh_text_muted));
     sub.setTextSize(11);
     sub.setPadding(0, dp(4), 0, 0);
@@ -303,17 +303,17 @@ private void showAiReviewSettingsDialogImpl() {
     root.setOrientation(LinearLayout.VERTICAL);
     root.setPadding(dp(16), dp(12), dp(16), dp(4));
 
-    root.addView(profileLabel("服务商"));
-    Spinner provider = krSpinner(new String[]{"DeepSeek", "OpenAI", "自定义"}, AiReviewSettings.providerLabel(settings.provider));
+    root.addView(profileLabel("Service provider"));
+    Spinner provider = krSpinner(new String[]{"DeepSeek", "OpenAI", "Customize"}, AiReviewSettings.providerLabel(settings.provider));
     root.addView(provider, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
 
-    root.addView(profileLabel("API 地址 / Base URL"));
+    root.addView(profileLabel("API address/Base URL"));
     EditText baseUrl = profileEdit(settings.baseUrl, "https://api.deepseek.com/v1");
     root.addView(baseUrl, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
     CheckBox fullEndpoint = krCheckBox("这是完整接口地址（不自动补 /chat/completions）", settings.fullEndpointUrl);
     root.addView(fullEndpoint);
     TextView endpointHint = new TextView(activity);
-    endpointHint.setText("默认填写根地址，例如 https://api.deepseek.com/v1，软件会自动请求 /chat/completions。\n如果服务商给的是完整 URL，或带 ?api-version=... 的地址，请勾选上面的完整接口地址。");
+    endpointHint.setText("The root address is filled in by default, such as https://api.deepseek.com/v1, and the software will automatically request /chat/completions.\nIf the service provider provides a complete URL, or an address with ?api-version=..., please check the complete interface address above.");
     endpointHint.setTextColor(getColorCompat(R.color.yh_text_muted));
     endpointHint.setTextSize(10);
     endpointHint.setLineSpacing(dp(1), 1.0f);
@@ -350,13 +350,13 @@ private void showAiReviewSettingsDialogImpl() {
     });
     root.addView(keyRow, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
 
-    root.addView(profileLabel("模型"));
+    root.addView(profileLabel("Model"));
     EditText model = profileEdit(settings.model, "deepseek-chat / gpt-4o-mini");
     root.addView(model, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
 
     // 获取模型列表按钮
     Button fetchModelsBtn = new Button(activity);
-    fetchModelsBtn.setText("📋 获取模型列表");
+    fetchModelsBtn.setText("📋 Get model list");
     fetchModelsBtn.setTextColor(0xFFFFFFFF);
     fetchModelsBtn.setBackgroundColor(0xFF1A4A3A);
     fetchModelsBtn.setTextSize(11);
@@ -367,30 +367,30 @@ private void showAiReviewSettingsDialogImpl() {
         String currentKey = apiKey.getText().toString().trim();
         String currentUrl = baseUrl.getText().toString().trim();
         if (currentKey.isEmpty()) {
-            Toast.makeText(activity, "请先填写 API Key", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Please fill in the API Key first", Toast.LENGTH_SHORT).show();
             return;
         }
         fetchModelsBtn.setEnabled(false);
-        fetchModelsBtn.setText("获取中...");
+        fetchModelsBtn.setText("Getting...");
         AppExecutors.runOnIo(() -> {
             try {
                 java.util.List<String> models = com.yuki.yukihub.translate.OpenAiTranslationProvider.fetchModels(currentKey, currentUrl);
                 if (isActivityAlive()) {
                     activity.runOnUiThread(() -> {
                         fetchModelsBtn.setEnabled(true);
-                        fetchModelsBtn.setText("📋 获取模型列表");
+                        fetchModelsBtn.setText("📋 Get model list");
                         if (models.isEmpty()) {
-                            Toast.makeText(activity, "未获取到模型列表", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Model list not obtained", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         String[] items = models.toArray(new String[0]);
                         new AlertDialog.Builder(activity)
-                                .setTitle("选择模型（共 " + models.size() + " 个）")
+                                .setTitle("Select model (total" + models.size() + "Indivual)")
                                 .setItems(items, (d, which) -> {
                                     model.setText(items[which]);
-                                    Toast.makeText(activity, "已选择：" + items[which], Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, "Selected:" + items[which], Toast.LENGTH_SHORT).show();
                                 })
-                                .setNegativeButton("取消", null)
+                                .setNegativeButton("Cancel", null)
                                 .show();
                     });
                 }
@@ -398,8 +398,8 @@ private void showAiReviewSettingsDialogImpl() {
                 if (isActivityAlive()) {
                     activity.runOnUiThread(() -> {
                         fetchModelsBtn.setEnabled(true);
-                        fetchModelsBtn.setText("📋 获取模型列表");
-                        Toast.makeText(activity, "获取失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
+                        fetchModelsBtn.setText("📋 Get model list");
+                        Toast.makeText(activity, "Failed to get:" + t.getMessage(), Toast.LENGTH_LONG).show();
                     });
                 }
             }
@@ -419,25 +419,25 @@ private void showAiReviewSettingsDialogImpl() {
         @Override public void onNothingSelected(android.widget.AdapterView<?> parent) { }
     });
 
-    root.addView(profileLabel("点评人格"));
-    Spinner persona = krSpinner(new String[]{"小恶魔妹妹", "温柔学姐", "冷面鉴赏家", "自定义"}, AiReviewSettings.personaLabel(settings.personaPreset));
+    root.addView(profileLabel("Comment on personality"));
+    Spinner persona = krSpinner(new String[]{"Little devil sister", "Gentle senior sister", "Cold noodle connoisseur", "Customize"}, AiReviewSettings.personaLabel(settings.personaPreset));
     root.addView(persona, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
 
-    root.addView(profileLabel("防剧透等级"));
-    Spinner spoiler = krSpinner(new String[]{"严格", "适中", "开放"}, AiReviewSettings.spoilerLabel(settings.spoilerLevel));
+    root.addView(profileLabel("Spoiler-proof level"));
+    Spinner spoiler = krSpinner(new String[]{"Strict", "Moderate", "Open"}, AiReviewSettings.spoilerLabel(settings.spoilerLevel));
     root.addView(spoiler, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
 
-    CheckBox metadataEnhance = krCheckBox("作品资料增强（使用已缓存 VNDB/Bangumi/月幕 Gal 标签、开发商等）", settings.metadataEnhance);
-    CheckBox metadataOnline = krCheckBox("生成前联网补齐 Top 游戏资料（可能较慢，仍遵守防剧透）", settings.metadataOnlineLookup);
+    CheckBox metadataEnhance = krCheckBox("Work data enhancement (using cached VNDB/Bangumi/Moon Screen Gal tags, developers, etc.)", settings.metadataEnhance);
+    CheckBox metadataOnline = krCheckBox("Connect to the Internet to complete the Top game data before generating (it may be slow, but still abide by the anti-spoiler rules)", settings.metadataOnlineLookup);
     root.addView(metadataEnhance);
     root.addView(metadataOnline);
 
-    root.addView(profileLabel("温度 temperature（0~2）"));
+    root.addView(profileLabel("Temperature temperature (0~2)"));
     EditText temperature = profileEdit(String.valueOf(settings.temperature), "0.85");
     temperature.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
     root.addView(temperature, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(42)));
 
-    TextView promptLabel = profileLabel("默认人设提示词");
+    TextView promptLabel = profileLabel("Default character prompt word");
     promptLabel.setPadding(0, dp(10), 0, dp(4));
     root.addView(promptLabel);
     EditText prompt = profileEdit(settings.systemPrompt, AiReviewSettings.defaultSystemPrompt());
@@ -455,14 +455,14 @@ private void showAiReviewSettingsDialogImpl() {
     prompt.setGravity(Gravity.TOP | Gravity.START);
     root.addView(prompt, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(116)));
 
-    Button testConnection = krButton("测试连接");
+    Button testConnection = krButton("test connection");
     testConnection.setTextColor(getColorCompat(R.color.yh_primary));
     LinearLayout.LayoutParams testLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(40));
     testLp.setMargins(0, dp(10), 0, 0);
     root.addView(testConnection, testLp);
 
     TextView hint = new TextView(activity);
-    hint.setText("DeepSeek 默认：https://api.deepseek.com/v1 / deepseek-chat\nOpenAI 默认：https://api.openai.com/v1 / gpt-4o-mini\n默认会自动补 /chat/completions；完整接口地址模式则完全按填写地址请求。\nAPI Key 仅保存在本机应用数据中。自定义接口需兼容 OpenAI Chat Completions。");
+    hint.setText("DeepSeek default: https://api.deepseek.com/v1/deepseek-chat\nOpenAI default: https://api.openai.com/v1/gpt-4o-mini\nBy default, /chat/completions will be automatically filled in; in full interface address mode, fill in the address request exactly.\nAPI Keys are only saved in native app data. Custom interfaces need to be compatible with OpenAI Chat Completions.");
     hint.setTextColor(getColorCompat(R.color.yh_text_muted));
     hint.setTextSize(10);
     hint.setLineSpacing(dp(1), 1.0f);
@@ -473,11 +473,11 @@ private void showAiReviewSettingsDialogImpl() {
     scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
     AlertDialog dialog = new AlertDialog.Builder(activity)
-            .setTitle("AI 点评设置")
+            .setTitle("AI review settings")
             .setView(scroll)
-            .setPositiveButton("保存", null)
-            .setNeutralButton("重置人设", null)
-            .setNegativeButton("关闭", null)
+            .setPositiveButton("Save", null)
+            .setNeutralButton("Reset character", null)
+            .setNegativeButton("Close", null)
             .show();
     styleAlertDialogDark(dialog);
     if (dialog.getWindow() != null) {
@@ -486,7 +486,7 @@ private void showAiReviewSettingsDialogImpl() {
     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
         AiReviewSettings out = collectAiReviewSettingsFromForm(provider, baseUrl, fullEndpoint, apiKey, model, persona, spoiler, metadataEnhance, metadataOnline, temperature, prompt);
         out.save(activity);
-        Toast.makeText(activity, "AI 设置已保存", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "AI settings saved", Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     });
     testConnection.setOnClickListener(v -> {
@@ -522,15 +522,15 @@ private AiReviewSettings collectAiReviewSettingsFromForm(Spinner provider, EditT
 private void testAiReviewConnection(AiReviewSettings settings, Button button) {
     if (settings == null) return;
     if (settings.apiKey == null || settings.apiKey.trim().isEmpty()) {
-        Toast.makeText(activity, "请先填写 API Key", Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, "Please fill in the API Key first", Toast.LENGTH_LONG).show();
         return;
     }
     final String endpoint = settings.endpointUrl();
     if (button != null) {
         button.setEnabled(false);
-        button.setText("测试中...");
+        button.setText("Testing...");
     }
-    Toast.makeText(activity, "正在测试 AI 接口...", Toast.LENGTH_SHORT).show();
+    Toast.makeText(activity, "Testing AI interface...", Toast.LENGTH_SHORT).show();
     AppExecutors.runOnIo(() -> {
         try {
             String reply = new AiReviewClient().testConnection(settings);
@@ -538,11 +538,11 @@ private void testAiReviewConnection(AiReviewSettings settings, Button button) {
                     activity.runOnUiThread(() -> {
                         if (button != null) {
                             button.setEnabled(true);
-                            button.setText("测试连接");
+                            button.setText("test connection");
                         }
                         AlertDialog d = new AlertDialog.Builder(activity)
-                                .setTitle("AI 连接成功")
-                                .setMessage("实际请求地址：\n" + endpoint + "\n\n模型：" + settings.model + "\n返回：" + emptyText(reply, "OK"))
+                                .setTitle("AI connection successful")
+                                .setMessage("Actual request address:" + endpoint + "Model:" + settings.model + "Return:" + emptyText(reply, "OK"))
                                 .setPositiveButton("好", null)
                                 .show();
                         styleAlertDialogDark(d);
@@ -554,14 +554,14 @@ private void testAiReviewConnection(AiReviewSettings settings, Button button) {
                     activity.runOnUiThread(() -> {
                         if (button != null) {
                             button.setEnabled(true);
-                            button.setText("测试连接");
+                            button.setText("test connection");
                         }
                         AlertDialog d = new AlertDialog.Builder(activity)
-                                .setTitle("AI 连接失败")
-                                .setMessage("实际请求地址：\n" + endpoint + "\n\n模型：" + settings.model
-                                        + "\n\n错误：\n" + describeThrowable(t)
-                                        + "\n\n若是超时或连接中断，多为网络抖动，可再试一次；\n若显示 HTTP 401/403 请检查 API Key，HTTP 404 请检查接口地址，\nHTTP 400 多为模型名不对。")
-                                .setPositiveButton("知道了", null)
+                                .setTitle("AI connection failed")
+                                .setMessage("Actual request address:" + endpoint + "Model:" + settings.model
+                                        + "Mistake:" + describeThrowable(t)
+                                        + "If it times out or the connection is interrupted, it is mostly due to network jitter. You can try again;\nIf HTTP 401/403 is displayed, please check the API Key. If HTTP 404 is displayed, please check the interface address.\nHTTP 400 usually means the model name is incorrect.")
+                                .setPositiveButton("Knew", null)
                                 .show();
                         styleAlertDialogDark(d);
                     });
@@ -572,7 +572,7 @@ private void testAiReviewConnection(AiReviewSettings settings, Button button) {
 
 /** 异常信息可读化：message 为空时退回类名，并带上根因，避免弹窗只显示一个空白。 */
 private String describeThrowable(Throwable t) {
-    if (t == null) return "未知错误";
+    if (t == null) return "Unknown error";
     StringBuilder sb = new StringBuilder();
     String msg = t.getMessage();
     sb.append(msg == null || msg.trim().isEmpty() ? t.getClass().getSimpleName() : msg.trim());
@@ -589,13 +589,13 @@ private String describeThrowable(Throwable t) {
 
 private String providerValue(String label) {
     if ("OpenAI".equalsIgnoreCase(label)) return AiReviewSettings.PROVIDER_OPENAI;
-    if ("自定义".equals(label)) return AiReviewSettings.PROVIDER_CUSTOM;
+    if ("Customize".equals(label)) return AiReviewSettings.PROVIDER_CUSTOM;
     return AiReviewSettings.PROVIDER_DEEPSEEK;
 }
 
 private String spoilerValue(String label) {
-    if ("开放".equals(label)) return "open";
-    if ("适中".equals(label)) return "mild";
+    if ("Open".equals(label)) return "open";
+    if ("Moderate".equals(label)) return "mild";
     return "strict";
 }
 
@@ -605,11 +605,11 @@ private String textOf(EditText e) {
 
 private String aiPlayStatusLabel(String status) {
     String s = normalizePlayStatus(status);
-    if ("completed".equals(s)) return "🏆 玩过（等同通关/已完成）";
-    if ("playing".equals(s)) return "🎮 在玩（尚未通关）";
-    if ("onhold".equals(s)) return "⏸ 搁置（开过但暂时停下，之后还想继续）";
-    if ("dropped".equals(s)) return "🗑 抛弃（明确不再继续）";
-    return "☆ 未玩（未开始/未通关）";
+    if ("completed".equals(s)) return "🏆 Played (equivalent to clearing/completed)";
+    if ("playing".equals(s)) return "🎮 Playing (not finished yet)";
+    if ("onhold".equals(s)) return "⏸ Shelved (drove it but stopped temporarily, want to continue later)";
+    if ("dropped".equals(s)) return "🗑 Abandon (clearly not to continue)";
+    return "☆ Not played (not started/not completed)";
 }
 
 
@@ -678,7 +678,7 @@ private PlayActivity copyPlayActivity(PlayActivity src) {
 }
 
 private String aiSessionTitle(PlayActivity a) {
-    if (a == null || a.gameTitle == null || a.gameTitle.trim().isEmpty()) return "未命名游戏";
+    if (a == null || a.gameTitle == null || a.gameTitle.trim().isEmpty()) return "Unnamed game";
     return a.gameTitle;
 }
 
@@ -832,19 +832,19 @@ private String buildAiMetadataLine(Game game, VnMetadata meta, String spoilerLev
     StringBuilder sb = new StringBuilder();
     if (meta != null) {
         String title = emptyText(meta.chineseTitle, emptyText(meta.originalTitle, meta.romanTitle));
-        if (!title.isEmpty() && game != null && game.title != null && !title.equals(game.title)) sb.append("资料标题：").append(compactAiText(title, 40)).append("；");
-        appendAiMeta(sb, "开发商", meta.developer, 50);
-        appendAiMeta(sb, "标签", meta.tagsText, 80);
-        appendAiMeta(sb, "长度", meta.lengthText, 40);
-        appendAiMeta(sb, "评分", meta.ratingText, 40);
+        if (!title.isEmpty() && game != null && game.title != null && !title.equals(game.title)) sb.append("Data title:").append(compactAiText(title, 40)).append("；");
+        appendAiMeta(sb, "Developer", meta.developer, 50);
+        appendAiMeta(sb, "Tag", meta.tagsText, 80);
+        appendAiMeta(sb, "Length", meta.lengthText, 40);
+        appendAiMeta(sb, "Score", meta.ratingText, 40);
         if (!"strict".equals(spoilerLevel)) {
             String desc = emptyText(meta.translatedDescription, meta.description);
-            appendAiMeta(sb, "简介摘要", desc, "open".equals(spoilerLevel) ? 220 : 150);
+            appendAiMeta(sb, "Introduction summary", desc, "open".equals(spoilerLevel) ? 220 : 150);
         }
     }
     if (game != null) {
-        if (sb.length() == 0) appendAiMeta(sb, "本地标签", game.tags, 80);
-        if (!"strict".equals(spoilerLevel) && sb.indexOf("简介摘要") < 0) appendAiMeta(sb, "本地简介摘要", game.description, "open".equals(spoilerLevel) ? 180 : 120);
+        if (sb.length() == 0) appendAiMeta(sb, "Local label", game.tags, 80);
+        if (!"strict".equals(spoilerLevel) && sb.indexOf("Introduction summary") < 0) appendAiMeta(sb, "Local profile summary", game.description, "open".equals(spoilerLevel) ? 180 : 120);
     }
     return sb.toString();
 }
@@ -872,7 +872,7 @@ private void renderAiReviewResult(LinearLayout container, AiReviewResult result)
     card.setBackground(aiReviewCardBackground());
 
     TextView badge = new TextView(activity);
-    badge.setText("✦ AI 周点评 ✦");
+    badge.setText("✦ AI Week Review ✦");
     badge.setTextColor(getColorCompat(R.color.yh_secondary));
     badge.setTextSize(11);
     badge.setTypeface(null, Typeface.BOLD);
@@ -923,18 +923,18 @@ private void renderAiReviewResult(LinearLayout container, AiReviewResult result)
     card.addView(roast, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
     if (!result.highlights.isEmpty()) {
-        card.addView(aiSectionTitle("本周抓包"));
+        card.addView(aiSectionTitle("Packet capture this week"));
         for (String h : result.highlights) card.addView(aiChip("• " + h));
     }
     if (!result.topGamesComment.isEmpty()) {
-        card.addView(aiSectionTitle("重点游戏吐槽"));
+        card.addView(aiSectionTitle("Complaints about key games"));
         for (AiReviewResult.GameComment gc : result.topGamesComment) {
-            String text = (gc.game == null || gc.game.isEmpty() ? "游戏" : "《" + gc.game + "》") + "：" + gc.comment;
+            String text = (gc.game == null || gc.game.isEmpty() ? "Games" : "《" + gc.game + "》") + "：" + gc.comment;
             card.addView(aiChip(text));
         }
     }
     if (!result.advice.isEmpty()) {
-        card.addView(aiSectionTitle("下周处方"));
+        card.addView(aiSectionTitle("Next week's prescription"));
         for (String a : result.advice) card.addView(aiChip("✧ " + a));
     }
     if (result.oneLine != null && !result.oneLine.trim().isEmpty()) {
@@ -949,8 +949,8 @@ private void renderAiReviewResult(LinearLayout container, AiReviewResult result)
 
     LinearLayout shareRow = new LinearLayout(activity);
     shareRow.setOrientation(LinearLayout.HORIZONTAL);
-    Button copy = krButton("复制点评");
-    Button share = krButton("分享文本");
+    Button copy = krButton("Copy review");
+    Button share = krButton("Share text");
     copy.setTextColor(getColorCompat(R.color.yh_primary));
     share.setTextColor(getColorCompat(R.color.yh_primary));
     copy.setOnClickListener(v -> copyAiReviewText(result));
@@ -963,7 +963,7 @@ private void renderAiReviewResult(LinearLayout container, AiReviewResult result)
     copyLp.setMargins(0, dp(10), 0, 0);
     card.addView(shareRow, copyLp);
 
-    Button imageShare = krButton("分享模板长图");
+    Button imageShare = krButton("Share template long image");
     imageShare.setTextColor(getColorCompat(R.color.yh_secondary));
     imageShare.setOnClickListener(v -> showAiReviewImageTemplateDialog(result));
     LinearLayout.LayoutParams imageShareLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(40));
@@ -1023,10 +1023,10 @@ private void copyAiReviewText(AiReviewResult result) {
         Object service = activity.getSystemService(Context.CLIPBOARD_SERVICE);
         if (service instanceof android.content.ClipboardManager) {
             ((android.content.ClipboardManager) service).setPrimaryClip(android.content.ClipData.newPlainText("YukiHub AI Review", result.toShareText()));
-            Toast.makeText(activity, "点评已复制", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Review copied", Toast.LENGTH_SHORT).show();
         }
     } catch (Throwable t) {
-        Toast.makeText(activity, "复制失败：" + t.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Copy failed:" + t.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
     }
 }
 
@@ -1035,22 +1035,22 @@ private void shareAiReviewText(AiReviewResult result) {
     try {
         Intent send = new Intent(Intent.ACTION_SEND);
         send.setType("text/plain");
-        send.putExtra(Intent.EXTRA_SUBJECT, "YukiHub AI 周点评");
+        send.putExtra(Intent.EXTRA_SUBJECT, "YukiHub AI Weekly Review");
         send.putExtra(Intent.EXTRA_TEXT, result.toShareText());
-        activity.startActivity(Intent.createChooser(send, "分享 AI 周点评"));
+        activity.startActivity(Intent.createChooser(send, "Share AI Week Comments"));
     } catch (Throwable t) {
-        Toast.makeText(activity, "分享失败：" + t.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Sharing failed:" + t.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
     }
 }
 
 private void showAiReviewImageTemplateDialog(AiReviewResult result) {
     if (result == null) return;
-    final String[] labels = new String[]{"霓虹周报", "手账风报告", "极简主义报告"};
+    final String[] labels = new String[]{"Neon Weekly", "Handbook wind report", "Minimalist report"};
     LinearLayout root = new LinearLayout(activity);
     root.setOrientation(LinearLayout.VERTICAL);
     root.setPadding(dp(14), dp(10), dp(14), dp(6));
     TextView hint = new TextView(activity);
-    hint.setText("选择一套导出长图模板。手账风更接近 LunaBox 的报告预览，霓虹周报适合深色二次元风格。");
+    hint.setText("Choose a set of templates for exporting long images. The handbook style is closer to LunaBox’s report preview, and the neon weekly report is suitable for the dark two-dimensional style.");
     hint.setTextColor(getColorCompat(R.color.yh_text_muted));
     hint.setTextSize(12);
     hint.setLineSpacing(dp(1), 1.0f);
@@ -1075,9 +1075,9 @@ private void showAiReviewImageTemplateDialog(AiReviewResult result) {
         });
     }
     AlertDialog dialog = new AlertDialog.Builder(activity)
-            .setTitle("选择导出模板")
+            .setTitle("Select export template")
             .setView(root)
-            .setNegativeButton("取消", null)
+            .setNegativeButton("Cancel", null)
             .show();
     ref[0] = dialog;
     styleAlertDialogDark(dialog);
@@ -1085,7 +1085,7 @@ private void showAiReviewImageTemplateDialog(AiReviewResult result) {
 
 private void prepareAiReviewImagePreview(AiReviewResult result, int templateStyle, String templateLabel) {
     if (result == null) return;
-    Toast.makeText(activity, "正在生成 AI 周点评预览...", Toast.LENGTH_SHORT).show();
+    Toast.makeText(activity, "Generating AI Week Review Preview...", Toast.LENGTH_SHORT).show();
     AppExecutors.runOnIo(() -> {
         try {
             Bitmap bitmap = buildAiReviewShareBitmap(result, templateStyle);
@@ -1106,7 +1106,7 @@ private void prepareAiReviewImagePreview(AiReviewResult result, int templateStyl
         } catch (Throwable t) {
             Log.w("YukiHub", "prepare AI review image preview failed", t);
             if (isActivityAlive()) {
-                    activity.runOnUiThread(() -> Toast.makeText(activity, "生成预览失败：" + emptyText(t.getMessage(), t.getClass().getSimpleName()), Toast.LENGTH_LONG).show());
+                    activity.runOnUiThread(() -> Toast.makeText(activity, "Failed to generate preview:" + emptyText(t.getMessage(), t.getClass().getSimpleName()), Toast.LENGTH_LONG).show());
                 }
         }
     });
@@ -1154,7 +1154,7 @@ private void showAiReviewImagePreview(Uri uri, String templateLabel, int imageW,
     root.setPadding(dp(12), dp(8), dp(12), dp(8));
 
     TextView info = new TextView(activity);
-    info.setText(emptyText(templateLabel, "模板") + " · " + imageW + "×" + imageH + "\n普通预览已按窗口缩放；长图可上下滚动，想看细节点“全屏预览”。");
+    info.setText(emptyText(templateLabel, "Template") + " · " + imageW + "×" + imageH + "The normal preview has been zoomed according to the window; long images can be scrolled up and down. If you want to see details, click \"Full Screen Preview\".");
     info.setTextColor(getColorCompat(R.color.yh_text_muted));
     info.setTextSize(12);
     info.setLineSpacing(dp(1), 1.0f);
@@ -1163,8 +1163,8 @@ private void showAiReviewImagePreview(Uri uri, String templateLabel, int imageW,
 
     LinearLayout actionRow = new LinearLayout(activity);
     actionRow.setOrientation(LinearLayout.HORIZONTAL);
-    Button full = krButton("全屏预览");
-    Button save = krButton("保存到相册");
+    Button full = krButton("Full screen preview");
+    Button save = krButton("Save to album");
     full.setTextColor(getColorCompat(R.color.yh_primary));
     save.setTextColor(getColorCompat(R.color.yh_primary));
     full.setOnClickListener(v -> showAiReviewImageFullPreview(uri, templateLabel, imageW, imageH));
@@ -1192,11 +1192,11 @@ private void showAiReviewImagePreview(Uri uri, String templateLabel, int imageW,
     scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
     AlertDialog dialog = new AlertDialog.Builder(activity)
-            .setTitle("预览导出图片")
+            .setTitle("Preview exported pictures")
             .setView(scroll)
-            .setPositiveButton("分享图片", null)
-            .setNeutralButton("保存相册", null)
-            .setNegativeButton("取消", null)
+            .setPositiveButton("Share pictures", null)
+            .setNeutralButton("Save album", null)
+            .setNegativeButton("Cancel", null)
             .show();
     styleAlertDialogDark(dialog);
     if (dialog.getWindow() != null) dialog.getWindow().setLayout(dialogW, dialogH);
@@ -1217,14 +1217,14 @@ private void showAiReviewImageFullPreview(Uri uri, String templateLabel, int ima
     top.setOrientation(LinearLayout.HORIZONTAL);
     top.setGravity(Gravity.CENTER_VERTICAL);
     TextView title = new TextView(activity);
-    title.setText(emptyText(templateLabel, "AI 周点评") + " · 全屏预览");
+    title.setText(emptyText(templateLabel, "AI Week Review") + "· Full screen preview");
     title.setTextColor(0xFFFFFFFF);
     title.setTextSize(16);
     title.setTypeface(null, Typeface.BOLD);
     top.addView(title, new LinearLayout.LayoutParams(0, dp(44), 1));
-    Button save = krButton("保存");
-    Button share = krButton("分享");
-    Button close = krButton("关闭");
+    Button save = krButton("Save");
+    Button share = krButton("Share");
+    Button close = krButton("Close");
     save.setTextColor(getColorCompat(R.color.yh_primary));
     share.setTextColor(getColorCompat(R.color.yh_primary));
     close.setTextColor(getColorCompat(R.color.yh_text_muted));
@@ -1272,11 +1272,11 @@ private void shareAiReviewImageUri(Uri uri) {
         Intent send = new Intent(Intent.ACTION_SEND);
         send.setType("image/png");
         send.putExtra(Intent.EXTRA_STREAM, uri);
-        send.putExtra(Intent.EXTRA_TEXT, "YukiHub AI 周点评");
+        send.putExtra(Intent.EXTRA_TEXT, "YukiHub AI Weekly Review");
         send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        activity.startActivity(Intent.createChooser(send, "分享 AI 周点评长图"));
+        activity.startActivity(Intent.createChooser(send, "Share the long picture of AI Weekly Comments"));
     } catch (Throwable t) {
-        Toast.makeText(activity, "分享长图失败：" + t.getClass().getSimpleName(), Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, "Failed to share long image:" + t.getClass().getSimpleName(), Toast.LENGTH_LONG).show();
     }
 }
 
@@ -1284,21 +1284,21 @@ private void saveAiReviewImageToGallery(Uri sourceUri, String templateLabel) {
     if (sourceUri == null) return;
     if (Build.VERSION.SDK_INT < 29 && Build.VERSION.SDK_INT >= 23 && activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
         activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1002);
-        Toast.makeText(activity, "请授权存储权限后再点一次保存", Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, "Please grant storage permission and click save again.", Toast.LENGTH_LONG).show();
         return;
     }
-    Toast.makeText(activity, "正在保存到相册...", Toast.LENGTH_SHORT).show();
+    Toast.makeText(activity, "Saving to album...", Toast.LENGTH_SHORT).show();
     AppExecutors.runOnIo(() -> {
         try {
             String name = "YukiHub_AI_Review_" + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new java.util.Date()) + ".png";
             Uri saved = savePngUriToGallery(sourceUri, name);
             if (isActivityAlive()) {
-                    activity.runOnUiThread(() -> Toast.makeText(activity, saved == null ? "保存失败" : "已保存到相册：Pictures/YukiHub", Toast.LENGTH_LONG).show());
+                    activity.runOnUiThread(() -> Toast.makeText(activity, saved == null ? "Save failed" : "已保存到相册：Pictures/YukiHub", Toast.LENGTH_LONG).show());
                 }
         } catch (Throwable t) {
             Log.w("YukiHub", "save AI review image to gallery failed", t);
             if (isActivityAlive()) {
-                    activity.runOnUiThread(() -> Toast.makeText(activity, "保存失败：" + emptyText(t.getMessage(), t.getClass().getSimpleName()), Toast.LENGTH_LONG).show());
+                    activity.runOnUiThread(() -> Toast.makeText(activity, "Save failed:" + emptyText(t.getMessage(), t.getClass().getSimpleName()), Toast.LENGTH_LONG).show());
                 }
         }
     });
@@ -1332,11 +1332,11 @@ private Uri savePngUriToGallery(Uri sourceUri, String displayName) throws Except
 
     if (Build.VERSION.SDK_INT >= 23 && activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
         activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1002);
-        throw new Exception("请授权存储权限后再点一次保存");
+        throw new Exception("Please grant storage permission and click save again.");
     }
     File base = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     File dir = new File(base, "YukiHub");
-    if (!dir.exists() && !dir.mkdirs()) throw new Exception("创建相册目录失败");
+    if (!dir.exists() && !dir.mkdirs()) throw new Exception("Failed to create album directory");
     File outFile = new File(dir, displayName);
     try (InputStream in = activity.getContentResolver().openInputStream(sourceUri); FileOutputStream out = new FileOutputStream(outFile)) {
         if (in == null) throw new Exception("open source failed");
@@ -1398,8 +1398,8 @@ private Bitmap buildAiReviewShareBitmap(AiReviewResult result, int templateStyle
     h += 168;                                         // 评分卡
     if (!coverGames.isEmpty()) h += 34 + 250 + 88;    // 封面小节
     h += 72 + roastLines.size() * 46 + 54;            // 吐槽卡
-    h += 44 + measureBulletSection(highlights, "还没有抓到太多证据，欧尼酱下周多玩点再来挨点评。", smallPaint, pad, 36, 36, 10);
-    h += 28 + 44 + measureBulletSection(advice, "保持记录，别让清坑计划又被新坑偷袭。", smallPaint, pad, 36, 36, 10);
+    h += 44 + measureBulletSection(highlights, "We haven’t found much evidence yet, so I’ll play more with Onii-chan next week and come back for comments.", smallPaint, pad, 36, 36, 10);
+    h += 28 + 44 + measureBulletSection(advice, "Keep records and don’t let the pit clearing plan be attacked by new pits again.", smallPaint, pad, 36, 36, 10);
     if (!oneLines.isEmpty()) h += 28 + oneLines.size() * 40;
     h += CARD_FOOTER_ZONE;
     // 只保留下限保证短内容也有卡片感；不设上限，内容多就让图变长，不截断。
@@ -1417,9 +1417,9 @@ private Bitmap buildAiReviewShareBitmap(AiReviewResult result, int templateStyle
     c.drawCircle(80, h - 80, 260, p);
 
     int y = 78;
-    drawRoundText(c, "YukiHub · AI 周点评", 64, y, smallPaint, 0x22FFFFFF, 22, 26, 14);
+    drawRoundText(c, "YukiHub · AI Week Review", 64, y, smallPaint, 0x22FFFFFF, 22, 26, 14);
     y += 96;
-    c.drawText(emptyText(result.title, "AI 周点评"), pad, y, titlePaint);
+    c.drawText(emptyText(result.title, "AI Week Review"), pad, y, titlePaint);
     y += 48;
     for (String line : subtitleLines) {
         c.drawText(line, pad, y, subPaint);
@@ -1429,7 +1429,7 @@ private Bitmap buildAiReviewShareBitmap(AiReviewResult result, int templateStyle
 
     RectF scoreCard = new RectF(pad, y, w - pad, y + 132);
     drawGlass(c, scoreCard, 0x33111A36, 0x558AB4FF, 28);
-    c.drawText(emptyText(result.scoreName, "沉迷指数"), pad + 30, y + 50, smallPaint);
+    c.drawText(emptyText(result.scoreName, "Addiction index"), pad + 30, y + 50, smallPaint);
     Paint scorePaint = aiPaint(46, 0xFFFFFFFF, true);
     c.drawText(Math.max(0, Math.min(100, result.score)) + "/100", w - pad - 210, y + 58, scorePaint);
     RectF barBg = new RectF(pad + 30, y + 86, w - pad - 30, y + 104);
@@ -1440,7 +1440,7 @@ private Bitmap buildAiReviewShareBitmap(AiReviewResult result, int templateStyle
     y += 168;
 
     if (!coverGames.isEmpty()) {
-        c.drawText("本周封面抓包", pad, y, accentPaint);
+        c.drawText("This week’s cover grab bag", pad, y, accentPaint);
         y += 34;
         int gap = 22;
         int cw = (w - pad * 2 - gap * 2) / 3;
@@ -1462,18 +1462,18 @@ private Bitmap buildAiReviewShareBitmap(AiReviewResult result, int templateStyle
     }
     y = (int) roastCard.bottom + 54;
 
-    c.drawText("本周抓包", pad, y, accentPaint);
+    c.drawText("Packet capture this week", pad, y, accentPaint);
     y += 44;
     if (highlights.isEmpty()) {
-        y = drawBulletLine(c, "还没有抓到太多证据，欧尼酱下周多玩点再来挨点评。", pad, y, smallPaint);
+        y = drawBulletLine(c, "We haven’t found much evidence yet, so I’ll play more with Onii-chan next week and come back for comments.", pad, y, smallPaint);
     } else {
         for (String item : highlights) y = drawBulletLine(c, item, pad, y, smallPaint);
     }
     y += 28;
-    c.drawText("下周处方", pad, y, accentPaint);
+    c.drawText("Next week's prescription", pad, y, accentPaint);
     y += 44;
     if (advice.isEmpty()) {
-        y = drawBulletLine(c, "保持记录，别让清坑计划又被新坑偷袭。", pad, y, smallPaint);
+        y = drawBulletLine(c, "Keep records and don’t let the pit clearing plan be attacked by new pits again.", pad, y, smallPaint);
     } else {
         for (String item : advice) y = drawBulletLine(c, item, pad, y, smallPaint);
     }
@@ -1508,8 +1508,8 @@ private Bitmap buildAiReviewNotebookBitmap(AiReviewResult result) {
     h += 225;                                            // 三张统计卡
     if (!coverGames.isEmpty()) h += 34 + 230 + 78;       // 封面贴纸
     h += 70 + roastLines.size() * 42 + 56;               // 便签卡
-    h += 44 + measureBulletSection(result.highlights, "证据不足，下周多记录一点再来写手账。", smallPaint, pad, 44, 36, 10);
-    h += 28 + 44 + measureBulletSection(result.advice, "保持记录，清坑和回味都值得被好好写下来。", smallPaint, pad, 44, 36, 10);
+    h += 44 + measureBulletSection(result.highlights, "There is insufficient evidence. I will write more notes next week.", smallPaint, pad, 44, 36, 10);
+    h += 28 + 44 + measureBulletSection(result.advice, "Keeping records, clearing pits and recalling memories all deserve to be well written down.", smallPaint, pad, 44, 36, 10);
     if (!oneLines.isEmpty()) h += 30 + oneLines.size() * 40;
     h += CARD_FOOTER_ZONE;
     h = Math.max(1720, h);
@@ -1525,23 +1525,23 @@ private Bitmap buildAiReviewNotebookBitmap(AiReviewResult result) {
     tape.setColor(0x55F5A29B);
     c.drawRoundRect(new RectF(w / 2f - 96, 62, w / 2f + 96, 92), 5, 5, tape);
     Paint logoPaint = aiPaint(40, 0xFF9A4E42, true);
-    c.drawText("🎮 YukiHub 游戏手账", header.left + 54, 160, logoPaint);
+    c.drawText("🎮 YukiHub game account", header.left + 54, 160, logoPaint);
 
     int y = 300;
-    c.drawText(emptyText(result.title, "AI 周点评"), pad, y, titlePaint);
+    c.drawText(emptyText(result.title, "AI Week Review"), pad, y, titlePaint);
     y += 44;
     for (String line : subtitleLines) { c.drawText(line, pad, y, subPaint); y += 38; }
     y += 32;
 
     WeeklyPlayStats stats = buildWeeklyPlayStats();
     int cardW = 250;
-    drawNotebookStatCard(c, pad + 54, y, cardW, 170, "游玩次数", String.valueOf(stats.sessionCount));
-    drawNotebookStatCard(c, pad + 54 + cardW + 54, y + 10, cardW, 170, emptyText(result.scoreName, "沉迷指数"), Math.max(0, Math.min(100, result.score)) + "分");
-    drawNotebookStatCard(c, pad + 54 + (cardW + 54) * 2, y, cardW, 170, "游戏数", String.valueOf(stats.gameCount()));
+    drawNotebookStatCard(c, pad + 54, y, cardW, 170, "Play times", String.valueOf(stats.sessionCount));
+    drawNotebookStatCard(c, pad + 54 + cardW + 54, y + 10, cardW, 170, emptyText(result.scoreName, "Addiction index"), Math.max(0, Math.min(100, result.score)) + "分");
+    drawNotebookStatCard(c, pad + 54 + (cardW + 54) * 2, y, cardW, 170, "Number of games", String.valueOf(stats.gameCount()));
     y += 225;
 
     if (!coverGames.isEmpty()) {
-        c.drawText("本周封面贴纸", pad, y, accentPaint);
+        c.drawText("Cover Sticker of the Week", pad, y, accentPaint);
         y += 34;
         int gap = 22;
         int cw = (w - pad * 2 - gap * 2) / 3;
@@ -1560,12 +1560,12 @@ private Bitmap buildAiReviewNotebookBitmap(AiReviewResult result) {
     for (String line : roastLines) { c.drawText(line, pad + 28, ty, bodyPaint); ty += 42; }
     y = (int) note.bottom + 56;
 
-    c.drawText("本周抓包", pad, y, accentPaint); y += 44;
-    if (result.highlights.isEmpty()) y = drawNotebookBullet(c, "证据不足，下周多记录一点再来写手账。", pad, y, smallPaint);
+    c.drawText("Packet capture this week", pad, y, accentPaint); y += 44;
+    if (result.highlights.isEmpty()) y = drawNotebookBullet(c, "There is insufficient evidence. I will write more notes next week.", pad, y, smallPaint);
     else for (String item : result.highlights) y = drawNotebookBullet(c, item, pad, y, smallPaint);
     y += 28;
-    c.drawText("下周处方", pad, y, accentPaint); y += 44;
-    if (result.advice.isEmpty()) y = drawNotebookBullet(c, "保持记录，清坑和回味都值得被好好写下来。", pad, y, smallPaint);
+    c.drawText("Next week's prescription", pad, y, accentPaint); y += 44;
+    if (result.advice.isEmpty()) y = drawNotebookBullet(c, "Keeping records, clearing pits and recalling memories all deserve to be well written down.", pad, y, smallPaint);
     else for (String item : result.advice) y = drawNotebookBullet(c, item, pad, y, smallPaint);
     if (!oneLines.isEmpty()) {
         y += 30;
@@ -1594,8 +1594,8 @@ private Bitmap buildAiReviewMinimalBitmap(AiReviewResult result) {
     h += 140;                                            // 大号分数与进度条
     if (!coverGames.isEmpty()) h += 220 + 58;             // 封面（无小标题）
     h += 48 + roastLines.size() * 42 + 40;                // COMMENT
-    h += 42 + measureBulletSection(result.highlights, "暂无明显亮点，继续记录后再分析。", smallPaint, pad, 34, 34, 8);
-    h += 24 + 42 + measureBulletSection(result.advice, "保持记录，按自己的节奏清坑。", smallPaint, pad, 34, 34, 8);
+    h += 42 + measureBulletSection(result.highlights, "There are no obvious highlights yet. We will continue to record and analyze later.", smallPaint, pad, 34, 34, 8);
+    h += 24 + 42 + measureBulletSection(result.advice, "Keep records and clear the pit at your own pace.", smallPaint, pad, 34, 34, 8);
     if (!oneLines.isEmpty()) h += 28 + oneLines.size() * 40;
     h += CARD_FOOTER_ZONE;
     h = Math.max(1480, h);
@@ -1610,7 +1610,7 @@ private Bitmap buildAiReviewMinimalBitmap(AiReviewResult result) {
     Paint badge = aiPaint(25, 0xFF64748B, false);
     c.drawText("YukiHub / AI WEEKLY REVIEW", pad, 122, badge);
     int y = 205;
-    c.drawText(emptyText(result.title, "AI 周点评"), pad, y, titlePaint);
+    c.drawText(emptyText(result.title, "AI Week Review"), pad, y, titlePaint);
     y += 46;
     for (String line : subtitleLines) { c.drawText(line, pad, y, subPaint); y += 38; }
     y += 36;
@@ -1618,7 +1618,7 @@ private Bitmap buildAiReviewMinimalBitmap(AiReviewResult result) {
     Paint scorePaint = aiPaint(64, 0xFF111827, true);
     c.drawText(String.valueOf(Math.max(0, Math.min(100, result.score))), pad, y + 66, scorePaint);
     c.drawText("/100", pad + 108, y + 62, aiPaint(28, 0xFF64748B, true));
-    c.drawText(emptyText(result.scoreName, "指数"), pad + 210, y + 40, accentPaint);
+    c.drawText(emptyText(result.scoreName, "Index"), pad + 210, y + 40, accentPaint);
     RectF line = new RectF(pad + 210, y + 66, w - pad, y + 78);
     p.setColor(0xFFE2E8F0); c.drawRoundRect(line, 6, 6, p);
     p.setColor(0xFF2563EB); c.drawRoundRect(new RectF(line.left, line.top, line.left + line.width() * Math.max(0, Math.min(100, result.score)) / 100f, line.bottom), 6, 6, p);
@@ -1636,11 +1636,11 @@ private Bitmap buildAiReviewMinimalBitmap(AiReviewResult result) {
     for (String l : roastLines) { c.drawText(l, pad, y, bodyPaint); y += 42; }
     y += 40;
     c.drawText("HIGHLIGHTS", pad, y, accentPaint); y += 42;
-    if (result.highlights.isEmpty()) y = drawMinimalLine(c, "暂无明显亮点，继续记录后再分析。", pad, y, smallPaint);
+    if (result.highlights.isEmpty()) y = drawMinimalLine(c, "There are no obvious highlights yet. We will continue to record and analyze later.", pad, y, smallPaint);
     else for (String item : result.highlights) y = drawMinimalLine(c, item, pad, y, smallPaint);
     y += 24;
     c.drawText("NEXT", pad, y, accentPaint); y += 42;
-    if (result.advice.isEmpty()) y = drawMinimalLine(c, "保持记录，按自己的节奏清坑。", pad, y, smallPaint);
+    if (result.advice.isEmpty()) y = drawMinimalLine(c, "Keep records and clear the pit at your own pace.", pad, y, smallPaint);
     else for (String item : result.advice) y = drawMinimalLine(c, item, pad, y, smallPaint);
     if (!oneLines.isEmpty()) { y += 28; for (String l : oneLines) { c.drawText(l, pad, y, accentPaint); y += 40; } }
     c.drawText("Generated by YukiHub", pad, h - 54, aiPaint(23, 0xFF94A3B8, false));
@@ -1761,7 +1761,7 @@ private void drawNotebookCoverBlock(Canvas c, Game game, int x, int y, int w, in
         c.drawText(initial, x + (w - b.width()) / 2f, y + h / 2f, ph);
     }
     Paint labelPaint = aiPaint(22, 0xFF6E4034, true);
-    String title = game == null ? "未命名游戏" : emptyText(game.title, "未命名游戏");
+    String title = game == null ? "Unnamed game" : emptyText(game.title, "Unnamed game");
     List<String> lines = clampTitleLines(title, labelPaint, w - 14, 1);
     if (!lines.isEmpty()) c.drawText(lines.get(0), x + 7, y + h + 27, labelPaint);
     c.restore();
@@ -1791,7 +1791,7 @@ private void drawMinimalCoverBlock(Canvas c, Game game, int x, int y, int w, int
     p.setColor(0xAA111827);
     c.drawRoundRect(new RectF(x, y + h - 56, x + w, y + h), 18, 18, p);
     Paint labelPaint = aiPaint(22, 0xFFFFFFFF, true);
-    String title = game == null ? "未命名游戏" : emptyText(game.title, "未命名游戏");
+    String title = game == null ? "Unnamed game" : emptyText(game.title, "Unnamed game");
     List<String> lines = clampTitleLines(title, labelPaint, w - 20, 1);
     if (!lines.isEmpty()) c.drawText(lines.get(0), x + 10, y + h - 20, labelPaint);
 }
@@ -1922,7 +1922,7 @@ private void drawGameCoverBlock(Canvas c, Game game, int x, int y, int w, int h)
         c.drawText(initial, x + (w - b.width()) / 2f, y + h / 2f, ph);
     }
     Paint namePaint = aiPaint(24, 0xFFFFFFFF, true);
-    String title = game == null ? "未命名游戏" : emptyText(game.title, "未命名游戏");
+    String title = game == null ? "Unnamed game" : emptyText(game.title, "Unnamed game");
     List<String> lines = clampTitleLines(title, namePaint, w - 24, 2);
     // 从下往上排：两行时上移一行高度，保证末行仍落在原基线上
     int ty = y + h - 46 - (lines.size() - 1) * 28;
@@ -1967,7 +1967,7 @@ private void showAiReviewHistoryDialogImpl() {
     root.setPadding(dp(16), dp(12), dp(16), dp(4));
     if (entries.isEmpty()) {
         TextView empty = new TextView(activity);
-        empty.setText("还没有 AI 周点评历史。生成一次后，这里会保存最近 20 条记录。");
+        empty.setText("There is no review history for AI Week yet. After being generated once, the most recent 20 records will be saved here.");
         empty.setTextColor(getColorCompat(R.color.yh_text_muted));
         empty.setTextSize(12);
         empty.setLineSpacing(dp(2), 1.0f);
@@ -1992,10 +1992,10 @@ private void showAiReviewHistoryDialogImpl() {
     ScrollView scroll = new ScrollView(activity);
     scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
     AlertDialog dialog = new AlertDialog.Builder(activity)
-            .setTitle("AI 周点评历史")
+            .setTitle("AI Week Review History")
             .setView(scroll)
-            .setNeutralButton("清空", null)
-            .setNegativeButton("关闭", null)
+            .setNeutralButton("Clear", null)
+            .setNegativeButton("Close", null)
             .show();
     styleAlertDialogDark(dialog);
     if (dialog.getWindow() != null) {
@@ -2003,14 +2003,14 @@ private void showAiReviewHistoryDialogImpl() {
     }
     dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
         new AlertDialog.Builder(activity)
-                .setTitle("清空历史")
-                .setMessage("确定要清空所有 AI 周点评历史吗？")
-                .setPositiveButton("清空", (d, w) -> {
+                .setTitle("Clear history")
+                .setMessage("Are you sure you want to clear all AI Week review history?")
+                .setPositiveButton("Clear", (d, w) -> {
                     AiReviewHistoryStore.clear(activity);
                     dialog.dismiss();
-                    Toast.makeText(activity, "AI 周点评历史已清空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "AI Week review history has been cleared", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     });
 }
@@ -2035,7 +2035,7 @@ private void showAiReviewHistoryDetail(AiReviewHistoryStore.Entry entry) {
     AlertDialog dialog = new AlertDialog.Builder(activity)
             .setTitle(entry.displayTitle())
             .setView(scroll)
-            .setNegativeButton("关闭", null)
+            .setNegativeButton("Close", null)
             .show();
     styleAlertDialogDark(dialog);
     if (dialog.getWindow() != null) {

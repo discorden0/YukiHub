@@ -64,7 +64,7 @@ public class SocialApiClient {
     /** 指定读超时的 GET（给需要服务端现查上游的代理端点用） */
     private String doGetWithTimeout(String path, String queryParams, int readTimeoutMillis) throws Exception {
         String token = getToken();
-        if (token == null) throw new IllegalStateException("未登录");
+        if (token == null) throw new IllegalStateException("Not logged in");
 
         String url = AUTH_BASE_URL + path;
         if (queryParams != null && !queryParams.isEmpty()) url += "?" + queryParams;
@@ -81,7 +81,7 @@ public class SocialApiClient {
             String body = readAll(conn, code);
             if (code == 403 && body.contains("ACCOUNT_DISABLED")) {
                 clearAuthSession();
-                throw new AccountDisabledException("该账号已被禁用");
+                throw new AccountDisabledException("This account has been disabled");
             }
             if (code != 200) {
                 throw new RuntimeException("HTTP " + code + (body.isEmpty() ? "" : ": " + extractError(body)));
@@ -94,7 +94,7 @@ public class SocialApiClient {
 
     private String doPost(String path, JSONObject body) throws Exception {
         String token = getToken();
-        if (token == null) throw new IllegalStateException("未登录");
+        if (token == null) throw new IllegalStateException("Not logged in");
 
         String url = AUTH_BASE_URL + path;
         HttpURLConnection conn = null;
@@ -116,7 +116,7 @@ public class SocialApiClient {
             String respBody = readAll(conn, code);
             if (code == 403 && respBody.contains("ACCOUNT_DISABLED")) {
                 clearAuthSession();
-                throw new AccountDisabledException("该账号已被禁用");
+                throw new AccountDisabledException("This account has been disabled");
             }
             if (code != 200 && code != 201) {
                 throw new RuntimeException("HTTP " + code + (respBody.isEmpty() ? "" : ": " + extractError(respBody)));
@@ -377,7 +377,7 @@ public class SocialApiClient {
         String resp = doPost("/chat/send", body);
         JSONObject root = new JSONObject(resp);
         JSONObject msg = root.optJSONObject("message");
-        if (msg == null) throw new RuntimeException("发送消息失败");
+        if (msg == null) throw new RuntimeException("Failed to send message");
         ChatMessage parsed = parseMessage(msg);
         // 双保险：服务端已返回 isMine=true，这里再兜一层，
         // 避免老版本服务端漏字段导致本地缓存把自己的消息标成对方发的
@@ -392,10 +392,10 @@ public class SocialApiClient {
      * @return 服务器返回的相对 URL（如 /uploads/chat/xxx/1_ab.jpg）
      */
     public String uploadChatImage(byte[] data, String mimeType) throws Exception {
-        if (data == null || data.length == 0) throw new IllegalArgumentException("图片数据为空");
-        if (data.length > 500 * 1024) throw new IllegalArgumentException("图片超过 500KB");
+        if (data == null || data.length == 0) throw new IllegalArgumentException("Image data is empty");
+        if (data.length > 500 * 1024) throw new IllegalArgumentException("Image exceeds 500KB");
         String token = getToken();
-        if (token == null) throw new IllegalStateException("未登录");
+        if (token == null) throw new IllegalStateException("Not logged in");
 
         HttpURLConnection conn = null;
         try {
@@ -415,14 +415,14 @@ public class SocialApiClient {
             String respBody = readAll(conn, code);
             if (code == 403 && respBody.contains("ACCOUNT_DISABLED")) {
                 clearAuthSession();
-                throw new AccountDisabledException("该账号已被禁用");
+                throw new AccountDisabledException("This account has been disabled");
             }
             if (code != 200 && code != 201) {
                 throw new RuntimeException(extractError(respBody));
             }
             JSONObject root = new JSONObject(respBody);
             String url = root.optString("url", "");
-            if (url.isEmpty()) throw new RuntimeException("上传失败：服务器未返回图片地址");
+            if (url.isEmpty()) throw new RuntimeException("Upload failed: The server did not return the image address");
             return url;
         } finally {
             if (conn != null) conn.disconnect();
@@ -445,9 +445,9 @@ public class SocialApiClient {
         String resp = doPost("/community/report", body);
         JSONObject root = new JSONObject(resp);
         if (!root.optBoolean("success", false)) {
-            throw new RuntimeException(root.optString("error", "举报失败"));
+            throw new RuntimeException(root.optString("error", "Report failed"));
         }
-        return root.optString("message", "举报已提交");
+        return root.optString("message", "Report submitted");
     }
 
 
@@ -515,7 +515,7 @@ public class SocialApiClient {
         String resp = doPost("/user/update_nickname", body);
         JSONObject root = new JSONObject(resp);
         if (!root.optBoolean("success", false)) {
-            throw new RuntimeException(root.optString("error", "修改失败"));
+            throw new RuntimeException(root.optString("error", "Modification failed"));
         }
         JSONObject user = root.optJSONObject("user");
         return user != null ? user.optString("nickname", nickname) : nickname;
@@ -642,7 +642,7 @@ public class SocialApiClient {
         String resp = doPost("/groups/send", body);
         JSONObject root = new JSONObject(resp);
         JSONObject msg = root.optJSONObject("message");
-        if (msg == null) throw new RuntimeException("发送消息失败");
+        if (msg == null) throw new RuntimeException("Failed to send message");
         GroupMessage parsed = parseGroupMessage(msg);
         parsed.isMine = true;
         return parsed;
@@ -673,7 +673,7 @@ public class SocialApiClient {
             ReplyAlert a = new ReplyAlert();
             a.id = o.optInt("id", 0);
             a.groupId = o.optInt("groupId", 0);
-            a.groupName = o.optString("groupName", "群聊");
+            a.groupName = o.optString("groupName", "Group chat");
             a.groupIcon = o.optString("groupIcon", "");
             a.messageId = o.optInt("messageId", 0);
             a.actorNickname = o.optString("actorNickname", "");

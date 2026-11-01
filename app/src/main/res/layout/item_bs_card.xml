@@ -101,7 +101,7 @@
         android:paddingEnd="6dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        android:text="Ⓐ 启动"
+        android:text="Ⓐ Start"
         android:textSize="9.5sp"
         android:textColor="#E6ECFF"
         android:background="@drawable/bg_bs_kbadge"

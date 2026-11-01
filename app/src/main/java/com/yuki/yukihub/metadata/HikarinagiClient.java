@@ -125,7 +125,7 @@ public class HikarinagiClient {
         JSONObject root = new JSONObject(result.body);
         String token = root.optString("access_token", "");
         int expires = root.optInt("expires_in", 3600);
-        if (token.isEmpty()) throw new RuntimeException("Hikarinagi Token 响应为空");
+        if (token.isEmpty()) throw new RuntimeException("Hikarinagi Token response is empty");
 
         cachedAccessToken = token;
         cachedTokenExpiresAt = now + Math.max(300, expires - 60) * 1000L;
@@ -148,7 +148,7 @@ public class HikarinagiClient {
                 MetadataUtils.sleepBeforeRetry(RETRY_DELAY_MS * (attempt + 1));
             }
         }
-        throw last == null ? new IllegalStateException("Hikarinagi API 调用失败") : last;
+        throw last == null ? new IllegalStateException("Hikarinagi API call failed") : last;
     }
 
     private static JSONObject apiGetOnce(String path, String[][] params, boolean allowRefresh) throws Exception {
@@ -176,7 +176,7 @@ public class HikarinagiClient {
         // 统一信封：{ success, data, request_id, timestamp }
         boolean success = root.optBoolean("success", true);
         if (!success) {
-            throw new RuntimeException("Hikarinagi API 错误: " + root.optString("error", "未知错误"));
+            throw new RuntimeException("Hikarinagi API error:" + root.optString("error", "Unknown error"));
         }
         JSONObject data = root.optJSONObject("data");
         return data == null ? new JSONObject() : data;
@@ -374,9 +374,9 @@ public class HikarinagiClient {
     private static String devStatusLabel(String status) {
         if (status == null) return "";
         switch (status) {
-            case "RELEASED": return "已发售";
-            case "IN_DEVELOPMENT": return "开发中";
-            case "CANCELLED": return "已取消";
+            case "RELEASED": return "Already on sale";
+            case "IN_DEVELOPMENT": return "Under development";
+            case "CANCELLED": return "Canceled";
             default: return "";
         }
     }

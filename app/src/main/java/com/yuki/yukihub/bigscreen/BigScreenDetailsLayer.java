@@ -379,12 +379,12 @@ public class BigScreenDetailsLayer {
         if (hintText == null) { return; }
         // M18-9：触摸模式别显示按键提示（没有手柄），改成点按说明
         if (touchUi) {
-            hintText.setText("点按按钮执行　↕ 滑动查看简介/截图　✕ 关闭（右上角）");
+            hintText.setText("Click the button to execute ↕ Slide to view introduction/screenshot ✕ Close (upper right corner)");
             return;
         }
         BigScreenKeys k = new BigScreenKeys(keyStyle);
-        hintText.setText("← → 选择操作　" + k.confirm() + " 执行　↑↓ 滚动内容　"
-                + k.third() + " 收藏　" + k.back() + " 关闭");
+        hintText.setText("← → Select action" + k.confirm() + "Execute ↑↓ scroll content"
+                + k.third() + "Collect" + k.back() + "Closure");
     }
 
     /** 详情层左列滚动（手柄方向键）：一次滚半屏，到底就停住 */
@@ -445,7 +445,7 @@ public class BigScreenDetailsLayer {
             }
         }
 
-        titleView.setText(TextUtils.isEmpty(game.title) ? "未命名" : game.title);
+        titleView.setText(TextUtils.isEmpty(game.title) ? "Unnamed" : game.title);
 
         // 副标题 / 开发商行：先用本地信息兜底，元数据到了再补全
         subView.setText(buildSubLine(game, null));
@@ -506,11 +506,11 @@ public class BigScreenDetailsLayer {
      */
     private void buildStats(Game game, BigScreenMeta.Data meta) {
         statsView.removeAllViews();
-        addStat("游玩时长", formatHours(game.totalPlayTime));
-        addStat("上次游玩", formatLastPlayed(game.lastPlayedAt));
-        addStat("状态", statusLabel(game.playStatus));
+        addStat("Play time", formatHours(game.totalPlayTime));
+        addStat("Last time played", formatLastPlayed(game.lastPlayedAt));
+        addStat("State", statusLabel(game.playStatus));
         // M15：**删掉「引擎」**（用户反馈"不太需要"）
-        if (meta != null && !meta.rating.isEmpty()) { addStat("评分", shortRating(meta.rating)); }
+        if (meta != null && !meta.rating.isEmpty()) { addStat("Score", shortRating(meta.rating)); }
     }
 
     /** 简介块显隐（M10）：没有简介就把小节标题和滚动区一起收掉，不留空框 */
@@ -584,17 +584,17 @@ public class BigScreenDetailsLayer {
 
     private void buildActions(Game game) {
         actsView.removeAllViews();
-        addAction("游玩", true, () -> {
+        addAction("Play", true, () -> {
             if (listener != null) { listener.onRequestLaunch(current()); }
         });
         // M15：有 PV 才显示「观看 PV」—— 全屏预览，任意键返回
         final Game cur = current();
         if (cur != null && !android.text.TextUtils.isEmpty(cur.trailerPath)) {
-            addAction("观看 PV", false, () -> {
+            addAction("Watch PV", false, () -> {
                 if (listener != null) { listener.onRequestWatchTrailer(cur); }
             });
         }
-        addAction("详细", false, () -> {
+        addAction("Detailed", false, () -> {
             if (listener != null) { listener.onRequestGameMenu(current()); }
         });
     }
@@ -621,33 +621,33 @@ public class BigScreenDetailsLayer {
     // ================= 其它 =================
 
     private String engineLabel(Game game) {
-        if (game == null || game.engine == null) { return "未知引擎"; }
+        if (game == null || game.engine == null) { return "Unknown engine"; }
         return game.engine.getDisplayName();
     }
 
     private static String statusLabel(String status) {
-        if (status == null) { return "未游玩"; }
+        if (status == null) { return "Not played"; }
         switch (status) {
-            case "playing":   return "游玩中";
-            case "completed": return "已完成";
-            default:          return "未游玩";
+            case "playing":   return "Playing";
+            case "completed": return "Completed";
+            default:          return "Not played";
         }
     }
 
     private static String formatHours(long ms) {
-        if (ms <= 0) { return "未游玩"; }
+        if (ms <= 0) { return "Not played"; }
         double hours = ms / 3600000.0;
-        return hours >= 10 ? String.format(Locale.getDefault(), "%.0f 小时", hours)
-                : String.format(Locale.getDefault(), "%.1f 小时", hours);
+        return hours >= 10 ? String.format(Locale.getDefault(), "%.0f hours", hours)
+                : String.format(Locale.getDefault(), "%.1f hours", hours);
     }
 
     private static String formatLastPlayed(long timestamp) {
-        if (timestamp <= 0) { return "从未"; }
+        if (timestamp <= 0) { return "Never"; }
         long diff = System.currentTimeMillis() - timestamp;
         long days = diff / 86400000L;
-        if (days <= 0) { return "今天"; }
-        if (days == 1) { return "昨天"; }
-        if (days < 30) { return days + " 天前"; }
+        if (days <= 0) { return "Today"; }
+        if (days == 1) { return "Yesterday"; }
+        if (days < 30) { return days + "Days ago"; }
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date(timestamp));
     }
 }

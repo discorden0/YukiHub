@@ -64,7 +64,7 @@ public class HikarinagiOAuthCallbackActivity extends AppCompatActivity {
         status.setGravity(Gravity.CENTER);
         status.setTextColor(0xFFEAF7FF);
         status.setTextSize(15);
-        status.setText("正在完成 Hikarinagi 快捷登录...");
+        status.setText("Completing Hikarinagi quick login...");
         status.setBackgroundColor(0xFF0B1020);
         setContentView(status);
 
@@ -73,12 +73,12 @@ public class HikarinagiOAuthCallbackActivity extends AppCompatActivity {
 
     private void handleCallback(Uri uri) {
         if (uri == null) {
-            fail("未收到登录回调");
+            fail("Login callback not received");
             return;
         }
         String error = uri.getQueryParameter("error");
         if (error != null && !error.trim().isEmpty()) {
-            fail("Hikarinagi 登录取消或失败：" + error);
+            fail("Hikarinagi login canceled or failed:" + error);
             return;
         }
         String code = uri.getQueryParameter("code");
@@ -89,19 +89,19 @@ public class HikarinagiOAuthCallbackActivity extends AppCompatActivity {
         long startedAt = prefs == null ? 0L : prefs.getLong(KEY_HIKARINAGI_OAUTH_STARTED_AT, 0L);
 
         if (code == null || code.trim().isEmpty()) {
-            fail("登录回调缺少授权码");
+            fail("Login callback is missing authorization code");
             return;
         }
         if (state == null || expectedState == null || !state.equals(expectedState)) {
-            fail("登录状态校验失败，请重新尝试");
+            fail("Login status verification failed, please try again");
             return;
         }
         if (verifier == null || verifier.trim().isEmpty()) {
-            fail("PKCE 校验信息已丢失，请重新尝试");
+            fail("PKCE verification information has been lost, please try again");
             return;
         }
         if (startedAt <= 0 || System.currentTimeMillis() - startedAt > 10L * 60L * 1000L) {
-            fail("授权已超时，请重新登录");
+            fail("Authorization has timed out, please log in again");
             return;
         }
 
@@ -130,16 +130,16 @@ public class HikarinagiOAuthCallbackActivity extends AppCompatActivity {
                     prefs.edit().putBoolean(KEY_HIKARINAGI_BOUND, true).apply();
                 }
                 clearPendingOAuth();
-                runOnUiThread(() -> openProfile("Hikarinagi 账号绑定成功"));
+                runOnUiThread(() -> openProfile("Hikarinagi account bound successfully"));
             } else {
                 JSONObject resp = postJson(AUTH_BASE_URL + "/auth/hikarinagi/android_callback", body, null);
                 saveSession(resp);
                 clearPendingOAuth();
-                runOnUiThread(() -> openProfile("Hikarinagi 快捷登录成功"));
+                runOnUiThread(() -> openProfile("Hikarinagi quick login successful"));
             }
         } catch (Throwable t) {
             String mode = prefs == null ? "" : prefs.getString(KEY_HIKARINAGI_OAUTH_MODE, "");
-            runOnUiThread(() -> fail((HIKARINAGI_OAUTH_MODE_BIND.equals(mode) ? "Hikarinagi 账号绑定失败：" : "Hikarinagi 快捷登录失败：") + readableError(t)));
+            runOnUiThread(() -> fail((HIKARINAGI_OAUTH_MODE_BIND.equals(mode) ? "Hikarinagi account binding failed:" : "Hikarinagi quick login failed:") + readableError(t)));
         }
     }
 
@@ -159,7 +159,7 @@ public class HikarinagiOAuthCallbackActivity extends AppCompatActivity {
         try (OutputStream os = new BufferedOutputStream(c.getOutputStream())) { os.write(data); }
         int http = c.getResponseCode();
         String text = readSmallText(http >= 200 && http < 300 ? c.getInputStream() : c.getErrorStream());
-        if (text != null && text.trim().startsWith("<")) throw new RuntimeException("服务器返回了 HTML 页面，请稍后重试");
+        if (text != null && text.trim().startsWith("<")) throw new RuntimeException("The server returned an HTML page, please try again later");
         if (http < 200 || http >= 300) throw new RuntimeException("HTTP " + http + ": " + text);
         return text == null || text.trim().isEmpty() ? new JSONObject() : new JSONObject(text);
     }
@@ -178,7 +178,7 @@ public class HikarinagiOAuthCallbackActivity extends AppCompatActivity {
         String access = firstString(resp, "accessToken", "access_token", "token");
         String refresh = firstString(resp, "refreshToken", "refresh_token");
         JSONObject user = resp.optJSONObject("user");
-        if (access == null || access.trim().isEmpty()) throw new RuntimeException("服务器未返回令牌");
+        if (access == null || access.trim().isEmpty()) throw new RuntimeException("Server did not return token");
         String userId = user == null ? firstString(resp, "userId", "user_id", "id") : firstString(user, "id", "userId", "user_id");
         String nickname = user == null ? firstString(resp, "nickname", "name", "username") : firstString(user, "nickname", "name", "username");
         String email = user == null ? firstString(resp, "email") : firstString(user, "email");
@@ -229,7 +229,7 @@ public class HikarinagiOAuthCallbackActivity extends AppCompatActivity {
     }
 
     private String readableError(Throwable t) {
-        if (t == null || t.getMessage() == null) return "请检查网络或稍后重试";
+        if (t == null || t.getMessage() == null) return "Please check the network or try again later";
         String msg = t.getMessage();
         if (msg.startsWith("HTTP ")) {
             int idx = msg.indexOf(": ");
@@ -247,7 +247,7 @@ public class HikarinagiOAuthCallbackActivity extends AppCompatActivity {
 
     private void fail(String message) {
         clearPendingOAuth();
-        if (status != null) status.setText(message + "\n\n请返回 YukiHub 重新尝试。");
+        if (status != null) status.setText(message + "\\n\\nPlease return to YukiHub and try again.");
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }

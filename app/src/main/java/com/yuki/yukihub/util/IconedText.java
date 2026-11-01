@@ -129,10 +129,10 @@ public final class IconedText {
     /** 游玩状态的纯文字（不含图标）。 */
     public static String labelForStatus(String status) {
         String s = status == null ? "unplayed" : status;
-        if ("completed".equals(s)) return "玩过";
-        if ("playing".equals(s)) return "在玩";
-        if ("onhold".equals(s)) return "搁置";
-        if ("dropped".equals(s)) return "抛弃";
-        return "未玩";
+        if ("completed".equals(s)) return "Played";
+        if ("playing".equals(s)) return "Playing";
+        if ("onhold".equals(s)) return "Put on hold";
+        if ("dropped".equals(s)) return "Abandon";
+        return "Not played";
     }
 }

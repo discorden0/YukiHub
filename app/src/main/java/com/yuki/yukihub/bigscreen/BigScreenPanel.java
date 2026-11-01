@@ -125,7 +125,7 @@ public class BigScreenPanel {
         panel.addView(scroller);
         // M16：底部"关闭"按钮 —— 仅触摸模式显示
         closeBtn = new TextView(container.getContext());
-        closeBtn.setText("关闭");
+        closeBtn.setText("Close");
         closeBtn.setGravity(Gravity.CENTER);
         closeBtn.setTextSize(14f);
         closeBtn.setPadding(0, dp(12), 0, dp(12));

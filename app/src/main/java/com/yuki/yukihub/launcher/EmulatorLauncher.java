@@ -245,7 +245,7 @@ if (rootUri != null && !rootUri.trim().isEmpty()) {
     }
 
     private static String guessName(String target, String rootText) {
-        if (target != null && !target.trim().isEmpty() && !"[游戏目录]".equals(target)) return target;
+        if (target != null && !target.trim().isEmpty() && !"[Game Catalog]".equals(target)) return target;
         if (rootText == null || rootText.isEmpty()) return "YukiHubGame";
         int slash = Math.max(rootText.lastIndexOf('/'), rootText.lastIndexOf('%'));
         return slash >= 0 && slash + 1 < rootText.length() ? rootText.substring(slash + 1) : "YukiHubGame";
@@ -594,7 +594,7 @@ if (rootUri != null && !rootUri.trim().isEmpty()) {
         DocumentFile dir = documentFromUri(context, rootUri);
         String target = launchTarget == null || launchTarget.isEmpty() ? "data.xp3" : launchTarget;
         if (dir != null && dir.isDirectory()) {
-            if ("[游戏目录]".equals(target) || "DIR".equalsIgnoreCase(target)) {
+            if ("[Game Catalog]".equals(target) || "DIR".equalsIgnoreCase(target)) {
                 uris.add(root);
             } else if ("XP3_FIRST".equalsIgnoreCase(target)) {
                 addFirstXp3(uris, dir);
@@ -695,7 +695,7 @@ if (rootUri != null && !rootUri.trim().isEmpty()) {
         String rootPath = uriToFilePath(rootUri);
         if (rootPath == null || rootPath.isEmpty()) return rootUri;
         String target = launchTarget == null ? "" : launchTarget.trim();
-        if (target.isEmpty() || "[游戏目录]".equals(target) || "DIR".equalsIgnoreCase(target)) return rootPath;
+        if (target.isEmpty() || "[Game Catalog]".equals(target) || "DIR".equalsIgnoreCase(target)) return rootPath;
         if (target.startsWith("/")) {
             File f = new File(target);
             return f.isFile() ? f.getParent() : target;
@@ -1242,7 +1242,7 @@ private static String resolveInternalArtemisPath(String rootUri, String launchTa
         String rootPath = stripFileScheme(uriToFilePath(rootUri));
         if (rootPath == null || rootPath.isEmpty()) return rootUri;
         String target = launchTarget == null ? "" : launchTarget.trim();
-        if (target.isEmpty() || "[游戏目录]".equals(target) || "DIR".equalsIgnoreCase(target)) {
+        if (target.isEmpty() || "[Game Catalog]".equals(target) || "DIR".equalsIgnoreCase(target)) {
             return rootPath;
         }
         if ("XP3_FIRST".equalsIgnoreCase(target)) {

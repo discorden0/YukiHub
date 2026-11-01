@@ -41,7 +41,7 @@
         android:paddingBottom="10dp"
         android:background="@drawable/bg_bs_chip"
         android:elevation="12dp"
-        android:text="✕ 退出"
+        android:text="✕ Exit"
         android:textColor="@color/bs_text"
         android:textSize="14sp"
         android:clickable="true"
@@ -118,7 +118,7 @@
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="5dp"
                 android:letterSpacing="0.14"
-                android:text="简　介"
+                android:text="Introduction"
                 android:textColor="@color/bs_text_muted"
                 android:textSize="10.5sp"
                 android:textStyle="bold" />
@@ -184,7 +184,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="14dp"
-        android:text="← → 切换游戏　Ⓐ 启动　Ⓧ 收藏　Ⓨ 操作菜单　Ⓑ 关闭"
+        android:text="← → Switch game Ⓐ Start Ⓧ Collection Ⓨ Operation menu Ⓑ Close"
         android:textSize="12sp"
         android:textColor="#7C89AF" />
 </FrameLayout>

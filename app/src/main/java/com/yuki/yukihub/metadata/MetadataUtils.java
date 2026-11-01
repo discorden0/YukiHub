@@ -54,7 +54,7 @@ final class MetadataUtils {
     static String cleanTitle(String s) {
         if (s == null) return "";
         String x = s.replaceAll("[\\[\\]【】（）()].*", " ")
-                .replaceAll("(?i)complete|汉化|中文版|日文版|体验版|trial|patch", " ")
+                .replaceAll("(?i)complete|Chinese|Chinese version|Japanese version|Trial version|trial|patch", " ")
                 .replace('_', ' ')
                 .trim();
         return x.isEmpty() ? s.trim() : x;

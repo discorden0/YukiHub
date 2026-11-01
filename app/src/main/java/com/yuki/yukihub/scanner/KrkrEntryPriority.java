@@ -46,8 +46,8 @@ public final class KrkrEntryPriority {
         String lower = base.toLowerCase(Locale.ROOT);
 
         if (lower.endsWith(".xp3")) {
-            boolean hasLaunchWord = base.contains("启动") || base.contains("啟動") || base.contains("起動");
-            boolean hasGameWord = base.contains("游戏") || base.contains("遊戲") || base.contains("遊戏") || base.contains("游戲");
+            boolean hasLaunchWord = base.contains("start up") || base.contains("Start") || base.contains("Start");
+            boolean hasGameWord = base.contains("Games") || base.contains("Game") || base.contains("Game") || base.contains("Game");
             if (hasLaunchWord && hasGameWord) return 120;
             if (hasLaunchWord) return 110;
             if (hasGameWord) return 100;

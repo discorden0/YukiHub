@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="10dp"
-            android:text="正在复制到内部存储"
+            android:text="Copying to internal storage"
             android:textColor="@color/yh_text"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -91,7 +91,7 @@
         android:layout_marginTop="12dp"
         android:gravity="center"
         android:lineSpacingExtra="3dp"
-        android:text="首次复制需要一些时间，请勿退出应用\n复制完成后将自动启动游戏"
+        android:text="The first copy will take some time, please do not exit the application\nThe game will automatically start after the copy is completed"
         android:textColor="@color/yh_text_muted"
         android:textSize="11sp" />
 </LinearLayout>

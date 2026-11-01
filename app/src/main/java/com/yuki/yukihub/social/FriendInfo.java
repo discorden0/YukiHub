@@ -35,8 +35,8 @@ public class FriendInfo {
 
     /** 平台中文短标签（未知按手机处理，与网页端口径一致） */
     public String platformLabel() {
-        if ("pc".equals(platform)) return "电脑";
-        if ("web".equals(platform)) return "网页";
-        return "手机";
+        if ("pc".equals(platform)) return "Computer";
+        if ("web".equals(platform)) return "Web page";
+        return "Cell phone";
     }
 }

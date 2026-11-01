@@ -276,13 +276,13 @@ public class OnsButtonLayoutActivity extends Activity {
         if (hintText == null) return;
         if (toggleSelected) {
             hintText.setText(String.format(java.util.Locale.ROOT,
-                    "收起按钮  (%.0f%%, %.0f%%)  ·  拖动改位置", cfg.toggleX, cfg.toggleY));
+                    "Collapse button (%.0f%%, %.0f%%) · Drag to change position", cfg.toggleX, cfg.toggleY));
         } else if (selected != null) {
             hintText.setText(String.format(java.util.Locale.ROOT,
-                    "%s  (%.0f%%, %.0f%%)  ·  拖动改位置",
+                    "%s (%.0f%%, %.0f%%) · Drag to change position",
                     displayName(selected), selected.x, selected.y));
         } else {
-            hintText.setText("拖动按钮改位置  ·  点一下选中后可删除 / 改按键");
+            hintText.setText("Drag the button to change its position · Click to select and delete/change the button");
         }
     }
 
@@ -326,9 +326,9 @@ public class OnsButtonLayoutActivity extends Activity {
     /** 工具条内容随选中状态变化：没选中显示全局操作，选中了显示该按钮的操作。 */
     private void fillToolbar(LinearLayout bar) {
         if (selected != null) {
-            addToolButton(bar, "改按键", this::editSelectedKey);
-            addToolButton(bar, "删除", this::deleteSelected);
-            addToolButton(bar, "取消选中", () -> {
+            addToolButton(bar, "Change button", this::editSelectedKey);
+            addToolButton(bar, "Delete", this::deleteSelected);
+            addToolButton(bar, "Uncheck", () -> {
                 selected = null;
                 toggleSelected = false;
                 applySelectionHighlight();
@@ -338,14 +338,14 @@ public class OnsButtonLayoutActivity extends Activity {
             return;
         }
         if (toggleSelected) {
-            addToolButton(bar, "隐藏收起键", () -> {
+            addToolButton(bar, "Hide close button", () -> {
                 cfg.toggleEnabled = false;
                 toggleSelected = false;
                 dirty = true;
                 rebuild();
                 rebuildToolbar();
             });
-            addToolButton(bar, "取消选中", () -> {
+            addToolButton(bar, "Uncheck", () -> {
                 toggleSelected = false;
                 applySelectionHighlight();
                 rebuildToolbar();
@@ -354,11 +354,11 @@ public class OnsButtonLayoutActivity extends Activity {
             return;
         }
 
-        addToolButton(bar, "+ 按钮", this::showAddDialog);
-        addToolButton(bar, "样式", this::showStyleDialog);
-        addToolButton(bar, "预设", this::showPresetDialog);
-        addToolButton(bar, "保存", this::saveAndFinish);
-        addToolButton(bar, "退出", this::confirmExit);
+        addToolButton(bar, "+ button", this::showAddDialog);
+        addToolButton(bar, "Style", this::showStyleDialog);
+        addToolButton(bar, "Default", this::showPresetDialog);
+        addToolButton(bar, "Save", this::saveAndFinish);
+        addToolButton(bar, "Exit", this::confirmExit);
     }
 
     private void addToolButton(LinearLayout bar, String text, Runnable action) {
@@ -409,15 +409,15 @@ public class OnsButtonLayoutActivity extends Activity {
         final List<String> keyNames = new ArrayList<>(OnsButtonConfig.KEY_TABLE.keySet());
 
         if (item.isCustom()) {
-            form.addView(formLabel("图标（1~2 字符）"));
+            form.addView(formLabel("Icon (1~2 characters)"));
             iconEdit = formEdit(item.icon());
             form.addView(iconEdit);
 
-            form.addView(formLabel("标签（可留空）"));
+            form.addView(formLabel("Tag (can be left blank)"));
             labelEdit = formEdit(item.label());
             form.addView(labelEdit);
 
-            form.addView(formLabel("键位"));
+            form.addView(formLabel("Key position"));
             int cur = keyNames.indexOf(OnsButtonConfig.keyName(item.keyCode));
             keySpinner = formSpinner(keyNames.toArray(new String[0]), Math.max(0, cur));
             form.addView(keySpinner);
@@ -433,28 +433,28 @@ public class OnsButtonLayoutActivity extends Activity {
             form.addView(info);
         }
 
-        form.addView(formLabel("交互模式"));
+        form.addView(formLabel("Interactive mode"));
         final String[] modes = {
                 OnsButtonConfig.MODE_PRESS,
                 OnsButtonConfig.MODE_HOLD,
                 OnsButtonConfig.MODE_TOGGLE};
         int modeIdx = indexOf(modes, item.mode());
         final Spinner modeSpinner = formSpinner(
-                new String[]{"点按一次", "按住生效", "切换开关"}, modeIdx);
+                new String[]{"Click once", "Press and hold to take effect", "Toggle switch"}, modeIdx);
         form.addView(modeSpinner);
 
         TextView tip = new TextView(this);
-        tip.setText("点按：发一次按键。按住：按下持续生效、松手停止（快进）。"
-                + "切换：点一下发一次按键并高亮（自动播放）。");
+        tip.setText("Click: Send a keystroke. Press and hold: Press and hold to take effect, release to stop (fast forward)."
+                + "Switch: Click the Send Once button and highlight it (auto-play).");
         tip.setTextSize(10.5f);
         tip.setTextColor(0xFF9A9AA0);
         tip.setPadding(0, OnsButtonRenderer.dp(this, 6), 0, 0);
         form.addView(tip);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("按钮设置")
+                .setTitle("Button settings")
                 .setView(wrapScroll(form))
-                .setPositiveButton("确定", (d, w) -> {
+                .setPositiveButton("OK", (d, w) -> {
                     if (item.isCustom()) {
                         String ic = iconEdit.getText().toString().trim();
                         if (ic.isEmpty()) ic = "●";
@@ -474,7 +474,7 @@ public class OnsButtonLayoutActivity extends Activity {
                     dirty = true;
                     rebuild();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .create();
         showDark(dialog);
     }
@@ -490,10 +490,10 @@ public class OnsButtonLayoutActivity extends Activity {
             OnsButtonConfig.Def d = e.getValue();
             names.add(d.icon + "  " + d.label + " · " + d.desc);
         }
-        names.add("＋  自定义按键（自选键位）");
+        names.add("+ Customized keys (customized keys)");
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("添加按钮")
+                .setTitle("Add button")
                 .setItems(names.toArray(new String[0]), (d, which) -> {
                     if (which < ids.size()) {
                         cfg.addBuiltin(ids.get(which));
@@ -510,7 +510,7 @@ public class OnsButtonLayoutActivity extends Activity {
                         showCustomKeyDialog();
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .create();
         showDark(dialog);
     }
@@ -521,32 +521,32 @@ public class OnsButtonLayoutActivity extends Activity {
         int p = OnsButtonRenderer.dp(this, 16);
         form.setPadding(p, p, p, p);
 
-        form.addView(formLabel("图标（1~2 字符）"));
+        form.addView(formLabel("Icon (1~2 characters)"));
         final EditText icon = formEdit("▲");
         form.addView(icon);
 
-        form.addView(formLabel("标签（可留空）"));
+        form.addView(formLabel("Tag (can be left blank)"));
         final EditText label = formEdit("");
         form.addView(label);
 
-        form.addView(formLabel("键位"));
+        form.addView(formLabel("Key position"));
         final List<String> keyNames = new ArrayList<>(OnsButtonConfig.KEY_TABLE.keySet());
         final Spinner keySpinner = formSpinner(keyNames.toArray(new String[0]), 0);
         form.addView(keySpinner);
 
-        form.addView(formLabel("交互模式"));
+        form.addView(formLabel("Interactive mode"));
         final String[] modes = {
                 OnsButtonConfig.MODE_PRESS,
                 OnsButtonConfig.MODE_HOLD,
                 OnsButtonConfig.MODE_TOGGLE};
         final Spinner modeSpinner = formSpinner(
-                new String[]{"点按一次", "按住生效", "切换开关"}, 0);
+                new String[]{"Click once", "Press and hold to take effect", "Toggle switch"}, 0);
         form.addView(modeSpinner);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("自定义按键")
+                .setTitle("Custom buttons")
                 .setView(wrapScroll(form))
-                .setPositiveButton("添加", (d, w) -> {
+                .setPositiveButton("Add", (d, w) -> {
                     String ic = icon.getText().toString().trim();
                     if (ic.isEmpty()) ic = "●";
                     if (ic.length() > 2) ic = ic.substring(0, 2);
@@ -554,12 +554,12 @@ public class OnsButtonLayoutActivity extends Activity {
                     if (lb.length() > 6) lb = lb.substring(0, 6);
                     int kp = keySpinner.getSelectedItemPosition();
                     if (kp < 0 || kp >= keyNames.size()) {
-                        toast("请选择键位");
+                        toast("Please select a key");
                         return;
                     }
                     Integer code = OnsButtonConfig.KEY_TABLE.get(keyNames.get(kp));
                     if (code == null) {
-                        toast("键位无效");
+                        toast("Invalid key");
                         return;
                     }
                     int mp = modeSpinner.getSelectedItemPosition();
@@ -573,7 +573,7 @@ public class OnsButtonLayoutActivity extends Activity {
                     rebuild();
                     rebuildToolbar();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .create();
         showDark(dialog);
     }
@@ -586,34 +586,34 @@ public class OnsButtonLayoutActivity extends Activity {
         int p = OnsButtonRenderer.dp(this, 16);
         form.setPadding(p, p, p, p);
 
-        addSlider(form, "按钮大小", cfg.size, 38, 66, "dp", v -> {
+        addSlider(form, "Button size", cfg.size, 38, 66, "dp", v -> {
             cfg.size = v; dirty = true; rebuild();
         });
-        addSlider(form, "不透明度", cfg.opacity, 20, 100, "%", v -> {
+        addSlider(form, "Opacity", cfg.opacity, 20, 100, "%", v -> {
             cfg.opacity = v; dirty = true; rebuild();
         });
-        addSlider(form, "收起键大小", cfg.toggleSize, 28, 56, "dp", v -> {
+        addSlider(form, "Collapse key size", cfg.toggleSize, 28, 56, "dp", v -> {
             cfg.toggleSize = v; dirty = true; rebuild();
         });
 
         // 收起键被隐藏时给个恢复入口
         if (!cfg.toggleEnabled) {
             Button restore = new Button(this);
-            restore.setText("显示收起按钮");
+            restore.setText("Show collapse button");
             restore.setAllCaps(false);
             restore.setOnClickListener(v -> {
                 cfg.toggleEnabled = true;
                 dirty = true;
                 rebuild();
-                toast("收起按钮已显示");
+                toast("Collapse button is shown");
             });
             form.addView(restore);
         }
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("全局样式")
+                .setTitle("Global style")
                 .setView(wrapScroll(form))
-                .setPositiveButton("完成", null)
+                .setPositiveButton("Done", null)
                 .create();
         showDark(dialog);
     }
@@ -664,11 +664,11 @@ public class OnsButtonLayoutActivity extends Activity {
 
     private void showPresetDialog() {
         final String[] names = {
-                "默认（左三右三）",
-                "精简（SKIP / OK / AUTO）",
-                "左手模式（左右镜像）"};
+                "Default (third from left and third from right)",
+                "Streamline (SKIP/OK/AUTO)",
+                "Left-hand mode (left and right mirroring)"};
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("套用预设")
+                .setTitle("Apply default")
                 .setItems(names, (d, which) -> {
                     OnsButtonConfig preset;
                     if (which == 1) preset = OnsButtonConfig.presetMinimal();
@@ -681,7 +681,7 @@ public class OnsButtonLayoutActivity extends Activity {
                     rebuild();
                     rebuildToolbar();
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .create();
         showDark(dialog);
     }
@@ -690,11 +690,11 @@ public class OnsButtonLayoutActivity extends Activity {
 
     private void saveAndFinish() {
         if (cfg.items.isEmpty()) {
-            toast("至少保留一个按钮");
+            toast("Keep at least one button");
             return;
         }
         cfg.save(this);
-        toast("已保存，下次进入游戏生效");
+        toast("Saved, it will take effect next time you enter the game");
         setResult(RESULT_OK);
         finish();
     }
@@ -705,10 +705,10 @@ public class OnsButtonLayoutActivity extends Activity {
             return;
         }
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("放弃修改？")
-                .setMessage("有未保存的改动，退出后会丢失。")
-                .setPositiveButton("放弃退出", (d, w) -> finish())
-                .setNegativeButton("继续编辑", null)
+                .setTitle("Give up the modification?")
+                .setMessage("There are unsaved changes and they will be lost after exiting.")
+                .setPositiveButton("Give up and exit", (d, w) -> finish())
+                .setNegativeButton("Continue editing", null)
                 .create();
         showDark(dialog);
     }

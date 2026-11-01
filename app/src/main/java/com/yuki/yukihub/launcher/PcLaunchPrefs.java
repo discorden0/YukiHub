@@ -59,8 +59,8 @@ public final class PcLaunchPrefs {
 
     /** 图形驱动：Vulkan 驱动（Turnip/Vortek）× OpenGL 驱动（Zink/VirGL/Gladio）组合。 */
     public static final String[] GRAPHICS_DRIVER_LABELS = {
-            "跟随容器配置", "Turnip + Zink（通用推荐）", "Turnip + VirGL（旧游戏兼容）", "Turnip + Gladio",
-            "Vortek + Zink（默认驱动）", "Vortek + VirGL", "Vortek + Gladio"
+            "Follow container configuration", "Turnip + Zink (generally recommended)", "Turnip + VirGL (old game compatible)", "Turnip + Gladio",
+            "Vortek + Zink (default driver)", "Vortek + VirGL", "Vortek + Gladio"
     };
     public static final String[] GRAPHICS_DRIVER_VALUES = {
             FOLLOW, "turnip,zink", "turnip,virgl", "turnip,gladio",
@@ -69,7 +69,7 @@ public final class PcLaunchPrefs {
 
     /** 图形加速。 */
     public static final String[] DXWRAPPER_LABELS = {
-            "跟随容器配置", "DXVK（D3D 转 Vulkan）", "WineD3D（兼容优先）"
+            "Follow container configuration", "DXVK (D3D to Vulkan)", "WineD3D (compatible first)"
     };
     public static final String[] DXWRAPPER_VALUES = {
             FOLLOW, "dxvk", "wined3d"
@@ -77,7 +77,7 @@ public final class PcLaunchPrefs {
 
     /** 分辨率固定档位（对齐 winlator-cn ≥320x160 校验）。 */
     public static final String[] SCREEN_SIZE_LABELS = {
-            "跟随容器配置", "640x360", "640x480", "800x600", "1024x768",
+            "Follow container configuration", "640x360", "640x480", "800x600", "1024x768",
             "1280x720", "1600x900", "1920x1080"
     };
     public static final String[] SCREEN_SIZE_VALUES = {
@@ -87,7 +87,7 @@ public final class PcLaunchPrefs {
 
     /** 语言环境（日文 Gal 常需 ja_JP.UTF-8）。 */
     public static final String[] LC_ALL_LABELS = {
-            "跟随容器配置", "ja_JP.UTF-8（日文游戏）", "zh_CN.utf8（中文游戏）", "en_US.UTF-8"
+            "Follow container configuration", "Ja_JP.UTF-8 (Japanese game)", "Zh_CN.utf8 (Chinese game)", "en_US.UTF-8"
     };
     public static final String[] LC_ALL_VALUES = {
             FOLLOW, "ja_JP.UTF-8", "zh_CN.utf8", "en_US.UTF-8"
@@ -95,7 +95,7 @@ public final class PcLaunchPrefs {
 
     /** Box64 预设：中文标签 ↔ winlator-cn Box64Preset 枚举值。 */
     public static final String[] BOX64_LABELS = {
-            "跟随容器配置", "稳定模式", "兼容模式", "均衡模式", "性能模式"
+            "Follow container configuration", "Stable mode", "Compatibility mode", "Equilibrium mode", "Performance mode"
     };
     public static final String[] BOX64_VALUES = {
             FOLLOW, "STABILITY", "CONSERVATIVE", "INTERMEDIATE", "PERFORMANCE"
@@ -103,7 +103,7 @@ public final class PcLaunchPrefs {
 
     /** 通用「1/0」三态（强制全屏、可切换全屏等）：空 = 不下发（此处无法表达覆盖为 0 的语义差异，按容器配置走）。 */
     public static final String[] BOOL10_LABELS = {
-            "跟随容器配置", "开启", "关闭"
+            "Follow container configuration", "Turn on", "Close"
     };
     public static final String[] BOOL10_VALUES = {
             FOLLOW, "1", "0"
@@ -111,7 +111,7 @@ public final class PcLaunchPrefs {
 
     /** 屏幕方向：winlator-cn 仅接受 landscape / portrait。 */
     public static final String[] ORIENTATION_LABELS = {
-            "跟随容器配置", "横屏（landscape）", "竖屏（portrait）"
+            "Follow container configuration", "Landscape", "Portrait"
     };
     public static final String[] ORIENTATION_VALUES = {
             FOLLOW, "landscape", "portrait"
@@ -119,7 +119,7 @@ public final class PcLaunchPrefs {
 
     /** 交换宽高：winlator-cn 接受 true / false。 */
     public static final String[] SWAP_LABELS = {
-            "跟随容器配置", "交换宽高", "不交换宽高"
+            "Follow container configuration", "Swap width and height", "Do not swap width and height"
     };
     public static final String[] SWAP_VALUES = {
             FOLLOW, "true", "false"
@@ -127,14 +127,14 @@ public final class PcLaunchPrefs {
 
     /** 音频驱动：winlator-cn 仅接受 alsa / pulseaudio。 */
     public static final String[] AUDIO_LABELS = {
-            "跟随容器配置", "ALSA", "PulseAudio"
+            "Follow container configuration", "ALSA", "PulseAudio"
     };
     public static final String[] AUDIO_VALUES = {
             FOLLOW, "alsa", "pulseaudio"
     };
 
     /** save 开关的两态（沿用「跟随含义」：关 = 不写回容器配置）。 */
-    public static final String[] SAVE_LABELS = {"关（不写入容器配置）", "开（写入容器配置）"};
+    public static final String[] SAVE_LABELS = {"Off (do not write container configuration)", "On (write container configuration)"};
 
     // ================= 读写 =================
 

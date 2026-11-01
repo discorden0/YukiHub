@@ -68,14 +68,14 @@ public final class OnsButtonConfig {
     }
 
     public static String sideLabel(String side) {
-        if (side == null) return "右中";
+        if (side == null) return "Middle right";
         switch (side) {
-            case "left-top":     return "左上";
-            case "left-mid":     return "左中";
-            case "left-bottom":  return "左下";
-            case "right-top":    return "右上";
-            case "right-mid":    return "右中";
-            case "right-bottom": return "右下";
+            case "left-top":     return "Upper left";
+            case "left-mid":     return "Middle left";
+            case "left-bottom":  return "Lower left";
+            case "right-top":    return "Upper right";
+            case "right-mid":    return "Middle right";
+            case "right-bottom": return "Lower right";
             default:             return side;
         }
     }
@@ -104,17 +104,17 @@ public final class OnsButtonConfig {
     /** 内置功能，顺序即「添加」菜单里的顺序。 */
     public static final Map<String, Def> DEFS = new LinkedHashMap<>();
     static {
-        def("OK",   "✓", "OK",   KeyEvent.KEYCODE_ENTER,     MODE_PRESS,  "确认 / 推进对话");
-        def("NEXT", "›", "NEXT", KeyEvent.KEYCODE_SPACE,     MODE_PRESS,  "推进文本");
-        def("SKIP", "»", "SKIP", KeyEvent.KEYCODE_CTRL_LEFT, MODE_HOLD,   "按住快进，松手停止");
-        def("AUTO", "▶", "AUTO", KeyEvent.KEYCODE_A,         MODE_TOGGLE, "切换自动播放");
+        def("OK",   "✓", "OK",   KeyEvent.KEYCODE_ENTER,     MODE_PRESS,  "Confirm / advance conversation");
+        def("NEXT", "›", "NEXT", KeyEvent.KEYCODE_SPACE,     MODE_PRESS,  "Advance text");
+        def("SKIP", "»", "SKIP", KeyEvent.KEYCODE_CTRL_LEFT, MODE_HOLD,   "Press and hold to fast forward, release to stop");
+        def("AUTO", "▶", "AUTO", KeyEvent.KEYCODE_A,         MODE_TOGGLE, "Toggle autoplay");
         def("ESC",  "↩", "ESC",  KeyEvent.KEYCODE_ESCAPE,    MODE_PRESS,  "返回 / 取消");
-        def("MENU", "☰", "MENU", KeyEvent.KEYCODE_MENU,      MODE_PRESS,  "呼出游戏菜单");
-        def("SAVE", "⤓", "SAVE", KeyEvent.KEYCODE_S,         MODE_PRESS,  "快速存档（依脚本支持）");
-        def("LOAD", "⤒", "LOAD", KeyEvent.KEYCODE_L,         MODE_PRESS,  "快速读档（依脚本支持）");
-        def("LOG",  "≡", "LOG",  KeyEvent.KEYCODE_DPAD_UP,   MODE_PRESS,  "回顾历史文本");
-        def("HIDE", "◌", "HIDE", KeyEvent.KEYCODE_H,         MODE_TOGGLE, "隐藏 / 显示文本框");
-        def("FULL", "⛶", "FULL", KeyEvent.KEYCODE_F10,       MODE_TOGGLE, "切换拉伸全屏");
+        def("MENU", "☰", "MENU", KeyEvent.KEYCODE_MENU,      MODE_PRESS,  "Call game menu");
+        def("SAVE", "⤓", "SAVE", KeyEvent.KEYCODE_S,         MODE_PRESS,  "Quick archive (supported by script)");
+        def("LOAD", "⤒", "LOAD", KeyEvent.KEYCODE_L,         MODE_PRESS,  "Quick file reading (supported by script)");
+        def("LOG",  "≡", "LOG",  KeyEvent.KEYCODE_DPAD_UP,   MODE_PRESS,  "Review historical texts");
+        def("HIDE", "◌", "HIDE", KeyEvent.KEYCODE_H,         MODE_TOGGLE, "Hide/show text box");
+        def("FULL", "⛶", "FULL", KeyEvent.KEYCODE_F10,       MODE_TOGGLE, "Toggle stretch to full screen");
     }
     private static void def(String id, String ic, String lb, int kc, String md, String ds) {
         DEFS.put(id, new Def(id, ic, lb, kc, md, ds));
@@ -125,25 +125,25 @@ public final class OnsButtonConfig {
     /** 键位名 → keyCode，供「自定义按键」下拉选择。 */
     public static final Map<String, Integer> KEY_TABLE = new LinkedHashMap<>();
     static {
-        KEY_TABLE.put("Enter 回车",      KeyEvent.KEYCODE_ENTER);
-        KEY_TABLE.put("Space 空格",      KeyEvent.KEYCODE_SPACE);
-        KEY_TABLE.put("Esc 退出",        KeyEvent.KEYCODE_ESCAPE);
-        KEY_TABLE.put("Ctrl 快进",       KeyEvent.KEYCODE_CTRL_LEFT);
-        KEY_TABLE.put("Menu 菜单",       KeyEvent.KEYCODE_MENU);
-        KEY_TABLE.put("↑ 上",            KeyEvent.KEYCODE_DPAD_UP);
-        KEY_TABLE.put("↓ 下",            KeyEvent.KEYCODE_DPAD_DOWN);
-        KEY_TABLE.put("← 左",            KeyEvent.KEYCODE_DPAD_LEFT);
-        KEY_TABLE.put("→ 右",            KeyEvent.KEYCODE_DPAD_RIGHT);
-        KEY_TABLE.put("PageUp 上一页",   KeyEvent.KEYCODE_PAGE_UP);
-        KEY_TABLE.put("PageDown 下一页", KeyEvent.KEYCODE_PAGE_DOWN);
+        KEY_TABLE.put("Enter",      KeyEvent.KEYCODE_ENTER);
+        KEY_TABLE.put("Space space",      KeyEvent.KEYCODE_SPACE);
+        KEY_TABLE.put("Esc to exit",        KeyEvent.KEYCODE_ESCAPE);
+        KEY_TABLE.put("Ctrl fast forward",       KeyEvent.KEYCODE_CTRL_LEFT);
+        KEY_TABLE.put("Menu",       KeyEvent.KEYCODE_MENU);
+        KEY_TABLE.put("↑ Previous",            KeyEvent.KEYCODE_DPAD_UP);
+        KEY_TABLE.put("↓ Next",            KeyEvent.KEYCODE_DPAD_DOWN);
+        KEY_TABLE.put("← left",            KeyEvent.KEYCODE_DPAD_LEFT);
+        KEY_TABLE.put("→ right",            KeyEvent.KEYCODE_DPAD_RIGHT);
+        KEY_TABLE.put("PageUp Previous page",   KeyEvent.KEYCODE_PAGE_UP);
+        KEY_TABLE.put("PageDown next page", KeyEvent.KEYCODE_PAGE_DOWN);
         KEY_TABLE.put("Tab",             KeyEvent.KEYCODE_TAB);
         KEY_TABLE.put("Shift",           KeyEvent.KEYCODE_SHIFT_LEFT);
         KEY_TABLE.put("Alt",             KeyEvent.KEYCODE_ALT_LEFT);
         for (char c = 'A'; c <= 'Z'; c++) {
-            KEY_TABLE.put("按键 " + c, KeyEvent.KEYCODE_A + (c - 'A'));
+            KEY_TABLE.put("Button" + c, KeyEvent.KEYCODE_A + (c - 'A'));
         }
         for (int i = 0; i <= 9; i++) {
-            KEY_TABLE.put("数字 " + i, KeyEvent.KEYCODE_0 + i);
+            KEY_TABLE.put("Number" + i, KeyEvent.KEYCODE_0 + i);
         }
         for (int i = 1; i <= 12; i++) {
             KEY_TABLE.put("F" + i, KeyEvent.KEYCODE_F1 + (i - 1));
@@ -205,7 +205,7 @@ public final class OnsButtonConfig {
         }
 
         public String desc() {
-            if (isCustom()) return keyName(keyCode) + " · 自定义";
+            if (isCustom()) return keyName(keyCode) + "· Customized";
             Def d = DEFS.get(id);
             return d != null ? d.desc : "";
         }

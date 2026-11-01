@@ -47,7 +47,7 @@ public class Game {
         game.title = title;
         game.engine = engine;
         game.rootUri = "sample://" + title;
-        game.description = "示例条目：可删除或编辑。";
+        game.description = "Sample entry: Can be deleted or edited.";
         return game;
     }
 }

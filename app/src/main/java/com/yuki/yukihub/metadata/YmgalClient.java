@@ -80,7 +80,7 @@ public class YmgalClient {
         JSONObject root = new JSONObject(text);
         String token = root.optString("access_token", "");
         int expires = root.optInt("expires_in", 3600);
-        if (token.isEmpty()) throw new RuntimeException("月幕 Gal Token 响应为空");
+        if (token.isEmpty()) throw new RuntimeException("Moon Curtain Gal Token response is empty");
         cachedAccessToken = token;
         cachedTokenExpiresAt = now + Math.max(300, expires - 60) * 1000L;
         return cachedAccessToken;
@@ -100,7 +100,7 @@ public class YmgalClient {
                 MetadataUtils.sleepBeforeRetry(RETRY_DELAY_MS * (attempt + 1));
             }
         }
-        throw last == null ? new IllegalStateException("月幕 Gal API 调用失败") : last;
+        throw last == null ? new IllegalStateException("Moon Curtain Gal API call failed") : last;
     }
 
     private static JSONObject apiGetOnce(String path, String[][] params, boolean allowRefresh) throws Exception {
@@ -115,7 +115,7 @@ public class YmgalClient {
             return apiGetOnce(path, params, false);
         }
         if (!result.isSuccessful()) {
-            throw new RuntimeException("月幕 Gal HTTP " + result.code + ": " + result.body);
+            throw new RuntimeException("Moon Curtain Gal HTTP" + result.code + ": " + result.body);
         }
 
         String text = result.body;
@@ -131,7 +131,7 @@ public class YmgalClient {
             return apiGetOnce(path, params, false);
         }
         if (!success || apiCode != 0) {
-            throw new RuntimeException("月幕 Gal API " + apiCode + ": " + root.optString("msg", "调用失败"));
+            throw new RuntimeException("Moon Curtain Gal API" + apiCode + ": " + root.optString("msg", "Call failed"));
         }
         JSONObject data = root.optJSONObject("data");
         return data == null ? new JSONObject() : data;
@@ -221,10 +221,10 @@ public class YmgalClient {
         List<String> tags = new ArrayList<>();
         String type = o.optString("typeDesc", "");
         if (type != null && !type.trim().isEmpty()) tags.add(type.trim());
-        if (o.has("haveChinese") && o.optBoolean("haveChinese", false)) tags.add("有中文版");
-        if (o.has("restricted") && o.optBoolean("restricted", false)) tags.add("限制级");
+        if (o.has("haveChinese") && o.optBoolean("haveChinese", false)) tags.add("There is a Chinese version");
+        if (o.has("restricted") && o.optBoolean("restricted", false)) tags.add("Restricted level");
         String country = o.optString("country", "");
-        if (country != null && !country.trim().isEmpty()) tags.add("地区：" + country.trim().toUpperCase(Locale.ROOT));
+        if (country != null && !country.trim().isEmpty()) tags.add("Area:" + country.trim().toUpperCase(Locale.ROOT));
         JSONArray releases = o.optJSONArray("releases");
         if (releases != null) {
             boolean pc = false, cn = false;
@@ -234,10 +234,10 @@ public class YmgalClient {
                 String platform = r.optString("platform", "");
                 String lang = r.optString("releaseLanguage", "");
                 if (platform.toLowerCase(Locale.ROOT).contains("windows") || platform.toLowerCase(Locale.ROOT).contains("pc")) pc = true;
-                if (lang.toLowerCase(Locale.ROOT).contains("chinese") || lang.contains("中文")) cn = true;
+                if (lang.toLowerCase(Locale.ROOT).contains("chinese") || lang.contains("Chinese")) cn = true;
             }
             if (pc) tags.add("PC");
-            if (cn && !tags.contains("有中文版")) tags.add("有中文版");
+            if (cn && !tags.contains("There is a Chinese version")) tags.add("There is a Chinese version");
         }
         return MetadataUtils.join(tags, "  ");
     }
