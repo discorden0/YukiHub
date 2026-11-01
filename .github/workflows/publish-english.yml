@@ -1,0 +1,64 @@
+name: Build English APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag for the English build
+        required: true
+        default: yukihub-en-2026-11-01
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-33 build-tools;33.0.0'
+
+      - name: Build debug APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Collect APK
+        run: |
+          mkdir -p out
+          APK=$(find app/build/outputs/apk/debug -name '*.apk' | head -1)
+          test -n "$APK"
+          cp "$APK" out/YukiHub-English-debug.apk
+          ls -l out
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: yukihub-english-apk
+          path: out/*.apk
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          gh release create "$TAG" out/YukiHub-English-debug.apk \
+            -R "${{ github.repository }}" \
+            --title "YukiHub English build $TAG" \
+            --notes "English-translated build of YukiHub, built from source by GitHub Actions.
+
+          Debug-signed APK, installable directly (allow installation from unknown sources).
+
+          Based on https://github.com/xm486/YukiHub (GPL-3.0)."
